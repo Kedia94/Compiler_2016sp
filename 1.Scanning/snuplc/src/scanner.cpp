@@ -45,12 +45,12 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
-// tken names
+// token names
 //
-#define TOKEN_STRLEN 16
+#define TOKEN_STRLEN 37
 
 char ETokenName[][TOKEN_STRLEN] = {
-	"tNumber" =0,                   ///< a number
+	"tNumber" ,                   ///< a number
 	"tIdent",                       ///< a ident
 
 	"tEOF",                         ///< end of file
@@ -337,35 +337,56 @@ CToken* CScanner::Scan()
 	EToken token;
 	string tokval;
 	char c;
+	bool divider;
 
-	while (_in->good() && IsWhite(_in->peek())) GetChar();
+	while (1) {
+		divider = false;										/// initialize divider flag to false
 
-	RecordStreamPosition();
+		while (_in->good() && IsWhite(_in->peek()))				/// consumes all whitespaces
+			GetChar();
 
-	if (_in->eof()) return NewToken(tEOF);
-	if (!_in->good()) return NewToken(tIOError);
+		if (_in->good() && _in->peek() == '/') {				/// if starts with "/"
+			RecordStreamPosition();								/// record current position
+			c = GetChar();										
+			divider = true;										/// divider flag on
+			if (_in->good() && _in->peek() == '/') {			/// if it is comment "//"
+				divider = false;								/// divider flag down
+				while (_in->good() && _in->peek() != '\n')		/// consumes all comments
+					GetChar();
+			}
+			else												/// it is "/" sign so break
+				break;
+		}
+		else													/// it is not white space nor comment so break 
+			break;
+	}		
 
-	c = GetChar();
-	tokval = c;
-	token = tUndefined;
-	/*  if (c == '/') {
-		if (_in->peek() == '/') {
-		while ((c = GetChar()) != '\n')
-		;
+	if (!divider) {
+		RecordStreamPosition();										/// record current position
+
+		if (_in->eof()) return NewToken(tEOF);						/// if inputstream ended
+		if (!_in->good()) return NewToken(tIOError);				/// if IOerror ouccured
+
 		c = GetChar();
-		}
-		}
-	 */  switch (c) {
+		tokval = c;
+		token = tUndefined;
+	}
+	else {
+		tokval = c;
+		return NewToken(tFactOp, tokval);
+	}
 
+
+	switch (c) {
 		 /*
 		  * case for Assign, Colon
 		  */
 		 case ':':
-			 if (_in->peek() == '=') {
+			 if (_in->peek() == '=') {							/// case ":=", tAssign
 				 tokval += GetChar();
 				 token = tAssign;
 			 }
-			 else {
+			 else {												/// case ":", tColon
 				 token = tColon;
 			 }
 			 break;
@@ -375,11 +396,11 @@ CToken* CScanner::Scan()
 			  */
 		 case '+':
 		 case '-':
-			 token = tTermOp;
+			 token = tTermOp;									/// case "+" | "-", tTermOp
 			 break;
 
 		 case '|':
-			 if (_in->peek() == '|') {
+			 if (_in->peek() == '|') {							/// case "||", tTermOp
 				 token = tTermOp;
 				 tokval += GetChar();
 			 }
@@ -389,11 +410,10 @@ CToken* CScanner::Scan()
 			  * case for FactOp
 			  */
 		 case '*':
-		 case '/':
 			 token = tFactOp;
 			 break;
 
-		 case '&':
+		 case '&':												/// case "&&", tFactOp
 			 if (_in->peek() == '&') {
 				 token = tFactOp;
 				 tokval += GetChar();
@@ -458,17 +478,17 @@ CToken* CScanner::Scan()
 			  * case for character
 			  */
 		 case '\'':
-			 if (IsASCII(_in->peek())) {
+			 if (IsASCII(_in->peek())) {								/// if [a-zA-Z0-9]
 				 tokval += GetChar();
 				 if (_in->peek() == '\'') {
 					 tokval += GetChar();
 					 token = tCharacter;
 				 }
-				 break;
 			 }
-			 if (_in->peek() == '\\') {
-				 tokval += GetChar();
-				 if (_in->peek() == 'n' || _in->peek() == 't' || _in->peek() == '\"' || _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0' ) {
+			 else if (_in->peek() == '\\') {							/// if starts with "\\"	
+				 tokval += GetChar();									/// if "\n" | "\t" | "\"" | "\'" | "\\" | "\0" 
+				 if (_in->peek() == 'n' || _in->peek() == 't' || _in->peek() == '\"' || 
+					 _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0' ) {
 					 tokval += GetChar();
 					 if (_in->peek() == '\'') {
 						 tokval += GetChar();
