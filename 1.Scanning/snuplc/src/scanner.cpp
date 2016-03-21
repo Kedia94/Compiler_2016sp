@@ -50,65 +50,48 @@ using namespace std;
 #define TOKEN_STRLEN 16
 
 char ETokenName[][TOKEN_STRLEN] = {
-	"tNumber",                         ///< a digit -> changed to number
-	"tIdent",                          ///< a letter -> changed to ident
+	"tNumber" =0,                   ///< a number
+	"tIdent",                       ///< a ident
 
-	"tEOF",                             ///< end of file
-	"tIOError",                         ///< I/O error
-	"tUndefined",                       ///< undefined
+	"tEOF",                         ///< end of file
+	"tIOError",                     ///< I/O error
+	"tUndefined",                   ///< undefined
 
-	"tModule",                          ///< keywords
-	"tProcedure",
-	"tFunction",
-	"tVar",
-	"tInteger",
-	"tBoolean",
-	"tChar",
-	"tBegin",
-	"tEnd",
-	"tIf",
-	"tThen",
-	"tElse",
-	"tWhile",
-	"tDo",
-	"tReturn",
-	"tTrue",
-	"tFalse",
+	"tModule",						///< keyword "module"
+	"tProcedure",					///< keyword "module"
+	"tFunction",					///< keyword "function"
+	"tVar",							///< keyword "var"
+	"tInteger",						///< keyword "integer"	
+	"tBoolean",						///< keyword "boolean"
+	"tChar",						///< keyword "char"
+	"tBegin",						///< keyword "begin"
+	"tEnd",							///< keyword "end"
+	"tIf",							///< keyword "if"
+	"tThen",						///< keyword "then"
+	"tElse",						///< keyword "else"
+	"tWhile",						///< keyword "while"
+	"tDo",							///< keyword "do"
+	"tReturn",						///< keyword "return"
+	"tTrue",						///< keyword "true"
+	"tFalse",						///< keyword "false"
 
-	"tAssign",                          ///< assignment operator
-	"tTermOp",                          ///< '+' or '-' or '||'
-	"tFactOp",                          ///< '*' or '/' or '&&'
-	"tNot",                             ///< '!'
-	"tRelOp",                           ///< relational operator
+	"tAssign",						///< assignment operator
+	"tTermOp",						///< '+' or '-' or '||'
+	"tFactOp",						///< '*' or '/' or '&&'
+	"tNot", 						///< '!'
+	"tRelOp",                       ///< relational operator
 
-	"tCharacter",                       ///< a char such as 'a'
-	"tString",                          ///< a string such as "Hello"
+	"tCharacter",					///< a char such as 'a'
+	"tString",						///< a string such as "Hello"
 
-	"tSemicolon",                       ///< a semicolon
-	"tColon",                           ///< a colon
-	"tDot",                             ///< a dot
-	"tComma",                           ///< a comma
-	"tLBrak",                           ///< a left bracket '('
-	"tRBrak",                           ///< a right bracket ')'
-	"tLLBrak",                          ///< a left square bracket '['
-	"tRRBrak",                          ///< a right square bracket ']' 
-	/* previous tokens
-	 *
-	 "tNumber",                         ///< a digit
-	 "tIdent",                        ///< a letter
-	 "tTermOp",                     ///< '+' or '-'
-	 "tFactOp",                        ///< '*' or '/'
-	 "tRelOp",                         ///< relational operator
-	 "tAssign",                        ///< assignment operator
-	 "tSemicolon",                     ///< a semicolon
-	 "tDot",                           ///< a dot
-	 "tLBrak",                         ///< a left bracket
-	 "tRBrak",                         ///< a right bracket
-
-	 "tEOF",                           ///< end of file
-	 "tIOError",                       ///< I/O error
-	 "tUndefined",                     ///< undefined
-	 */
+	"tSemicolon",                   ///< a semicolon
+	"tColon",						///< a colon
+	"tDot",                         ///< a dot
+	"tComma", 						///< a comma
+	"tLBrak",                       ///< a left bracket '('
+	"tRBrak",                       ///< a right bracket ')'
+	"tLLBrak",						///< a left square bracket '['
+	"tRRBrak",						///< a right square bracket ']' 
 };
 
 
@@ -117,65 +100,49 @@ char ETokenName[][TOKEN_STRLEN] = {
 //
 
 char ETokenStr[][TOKEN_STRLEN] = {
-	"tNumber (%s)",                         ///< a digit -> changed to number
-	"tIdent (%s)",                          ///< a letter -> changed to ident
+	"tNumber (%s)",					///< a number
+	"tIdent (%s)",					///< a ident
 
-	"tEOF",                             ///< end of file
-	"tIOError",                         ///< I/O error
-	"tUndefined",                       ///< undefined
+	"tEOF",                         ///< end of file
+	"tIOError",                     ///< I/O error
+	"tUndefined",                   ///< undefined
 
-	"tModule",                          ///< keywords
-	"tProcedure",
-	"tFunction",
-	"tVar",
-	"tInteger",
-	"tBoolean",
-	"tChar",
-	"tBegin",
-	"tEnd",
-	"tIf",
-	"tThen",
-	"tElse",
-	"tWhile",
-	"tDo",
-	"tReturn",
-	"tTrue",
-	"tFalse",
+	"tModule",						///< keyword "module"
+	"tProcedure",					///< keyword "module"
+	"tFunction",					///< keyword "function"
+	"tVar",							///< keyword "var"
+	"tInteger",						///< keyword "integer"	
+	"tBoolean",						///< keyword "boolean"
+	"tChar",						///< keyword "char"
+	"tBegin",						///< keyword "begin"
+	"tEnd",							///< keyword "end"
+	"tIf",							///< keyword "if"
+	"tThen",						///< keyword "then"
+	"tElse",						///< keyword "else"
+	"tWhile",						///< keyword "while"
+	"tDo",							///< keyword "do"
+	"tReturn",						///< keyword "return"
+	"tTrue",						///< keyword "true"
+	"tFalse",						///< keyword "false"
 
-	"tAssign",                          ///< assignment operator
-	"tTermOp (%s)",                          ///< '+' or '-' or '||'
-	"tFactOp (%s)",                          ///< '*' or '/' or '&&'
-	"tNot",                             ///< '!'
-	"tRelOp (%s)",                           ///< relational operator
+	"tAssign",						///< assignment operator
+	"tTermOp (%s)",					///< '+' or '-' or '||'
+	"tFactOp (%s)",					///< '*' or '/' or '&&'
+	"tNot", 						///< '!'
+	"tRelOp (%s)",                  ///< relational operator
 
-	"tCharacter (%s)",                       ///< a char such as 'a'
-	"tString (%s)",                          ///< a string such as "Hello"
+	"tCharacter (%s)",				///< a char such as 'a'
+	"tString (%s)",					///< a string such as "Hello"
 
-	"tSemicolon",                       ///< a semicolon
-	"tColon",                           ///< a colon
-	"tDot",                             ///< a dot
-	"tComma",                           ///< a comma
-	"tLBrak",                           ///< a left bracket '('
-	"tRBrak",                           ///< a right bracket ')'
-	"tLLBrak",                          ///< a left square bracket '['
-	"tRRBrak",                          ///< a right square bracket ']' 
-	/* previous tokens
-	 *
-	 "tNumber (%s)",                    ///< a digit
-	 "tIdent (%s)",                   ///< a letter
-	 "tTermOp (%s)",                ///< '+' or '-'
-	 "tFactOp (%s)",                   ///< '*' or '/'
-	 "tRelOp (%s)",                    ///< relational operator
-	 "tAssign",                        ///< assignment operator
-	 "tSemicolon",                     ///< a semicolon
-	 "tDot",                           ///< a dot
-	 "tLBrak",                         ///< a left bracket
-	 "tRBrak",                         ///< a right bracket
+	"tSemicolon",                   ///< a semicolon
+	"tColon",						///< a colon
+	"tDot",                         ///< a dot
+	"tComma", 						///< a comma
+	"tLBrak",                       ///< a left bracket '('
+	"tRBrak",                       ///< a right bracket ')'
+	"tLLBrak",						///< a left square bracket '['
+	"tRRBrak",						///< a right square bracket ']' 
 
-	 "tEOF",                           ///< end of file
-	 "tIOError",                       ///< I/O error
-	 "tUndefined (%s)",                ///< undefined
-	 */
 };
 
 
