@@ -1,0 +1,108 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CC	snuplc/Makefile	/^CC=g++$/;"	m
+CCFLAGS	snuplc/Makefile	/^CCFLAGS=-std=c++0x -g -O0$/;"	m
+CScanner	snuplc/src/scanner.cpp	/^CScanner::CScanner(istream *in)$/;"	f	class:CScanner
+CScanner	snuplc/src/scanner.cpp	/^CScanner::CScanner(string in)$/;"	f	class:CScanner
+CScanner	snuplc/src/scanner.h	/^class CScanner {$/;"	c
+CToken	snuplc/src/scanner.cpp	/^CToken::CToken()$/;"	f	class:CToken
+CToken	snuplc/src/scanner.cpp	/^CToken::CToken(const CToken &token)$/;"	f	class:CToken
+CToken	snuplc/src/scanner.cpp	/^CToken::CToken(const CToken *token)$/;"	f	class:CToken
+CToken	snuplc/src/scanner.cpp	/^CToken::CToken(int line, int charpos, EToken type, const string value)$/;"	f	class:CToken
+CToken	snuplc/src/scanner.h	/^class CToken {$/;"	c
+DEPS	snuplc/Makefile	/^DEPS=scanner.h$/;"	m
+DEPS_	snuplc/Makefile	/^DEPS_=$(patsubst %,$(SRC_DIR)\/%,$(DEPS))$/;"	m
+EToken	snuplc/src/scanner.h	/^enum EToken {$/;"	g
+ETokenName	snuplc/src/scanner.cpp	/^char ETokenName[][TOKEN_STRLEN] = {$/;"	v
+ETokenStr	snuplc/src/scanner.cpp	/^char ETokenStr[][TOKEN_STRLEN] = {$/;"	v
+Get	snuplc/src/scanner.cpp	/^CToken CScanner::Get()$/;"	f	class:CScanner
+GetChar	snuplc/src/scanner.cpp	/^char CScanner::GetChar()$/;"	f	class:CScanner
+GetChar	snuplc/src/scanner.cpp	/^string CScanner::GetChar(int n)$/;"	f	class:CScanner
+GetCharPosition	snuplc/src/scanner.h	/^		int GetCharPosition() const { return _char; };$/;"	f	class:CScanner
+GetCharPosition	snuplc/src/scanner.h	/^	int GetCharPosition(void) const { return _char; };$/;"	f	class:CToken
+GetLineNumber	snuplc/src/scanner.h	/^		int GetLineNumber(void) const { return _line; };$/;"	f	class:CScanner
+GetLineNumber	snuplc/src/scanner.h	/^	int GetLineNumber(void) const { return _line; };$/;"	f	class:CToken
+GetName	snuplc/src/scanner.cpp	/^const string CToken::GetName(void) const$/;"	f	class:CToken
+GetRecordedStreamPosition	snuplc/src/scanner.cpp	/^void CScanner::GetRecordedStreamPosition(int *lineno, int *charpos)$/;"	f	class:CScanner
+GetType	snuplc/src/scanner.h	/^	EToken GetType(void) const { return _type; };$/;"	f	class:CToken
+GetValue	snuplc/src/scanner.h	/^	string GetValue(void) const { return _value; };$/;"	f	class:CToken
+Good	snuplc/src/scanner.h	/^		bool Good(void) const { return _good; };$/;"	f	class:CScanner
+InitKeywords	snuplc/src/scanner.cpp	/^void CScanner::InitKeywords(void)$/;"	f	class:CScanner
+IsASCII	snuplc/src/scanner.cpp	/^bool CScanner::IsASCII(char c) const$/;"	f	class:CScanner
+IsDigit	snuplc/src/scanner.cpp	/^bool CScanner::IsDigit(char c) const$/;"	f	class:CScanner
+IsLetter	snuplc/src/scanner.cpp	/^bool CScanner::IsLetter(char c) const$/;"	f	class:CScanner
+IsWhite	snuplc/src/scanner.cpp	/^bool CScanner::IsWhite(char c) const$/;"	f	class:CScanner
+Keywords	snuplc/src/scanner.cpp	/^pair<const char*, EToken> Keywords[] =$/;"	v
+Name	snuplc/src/scanner.cpp	/^const string CToken::Name(EToken type)$/;"	f	class:CToken
+NewToken	snuplc/src/scanner.cpp	/^CToken* CScanner::NewToken(EToken type, const string token)$/;"	f	class:CScanner
+NextToken	snuplc/src/scanner.cpp	/^void CScanner::NextToken()$/;"	f	class:CScanner
+OBJ_DIR	snuplc/Makefile	/^OBJ_DIR=obj$/;"	m
+OBJ_SCANNER	snuplc/Makefile	/^OBJ_SCANNER=$(patsubst %.cpp,$(OBJ_DIR)\/%.o,$(SCANNER))$/;"	m
+Peek	snuplc/src/scanner.cpp	/^CToken CScanner::Peek() const$/;"	f	class:CScanner
+RecordStreamPosition	snuplc/src/scanner.cpp	/^void CScanner::RecordStreamPosition()$/;"	f	class:CScanner
+SCANNER	snuplc/Makefile	/^SCANNER=scanner.cpp$/;"	m
+SRC_DIR	snuplc/Makefile	/^SRC_DIR=src$/;"	m
+Scan	snuplc/src/scanner.cpp	/^CToken* CScanner::Scan()$/;"	f	class:CScanner
+TOKEN_STRLEN	snuplc/src/scanner.cpp	50;"	d	file:
+__SnuPL1_SCANNER_H__	snuplc/src/scanner.h	37;"	d
+_char	snuplc/src/scanner.h	/^		int     _char;                  \/\/\/< current stream position (character pos)$/;"	m	class:CScanner
+_char	snuplc/src/scanner.h	/^	int    _char;                   \/\/\/< input stream position (character pos)$/;"	m	class:CToken
+_delete_in	snuplc/src/scanner.h	/^		bool    _delete_in;             \/\/\/< delete input stream upon destruction$/;"	m	class:CScanner
+_good	snuplc/src/scanner.h	/^		bool    _good;                  \/\/\/< scanner status flag$/;"	m	class:CScanner
+_in	snuplc/src/scanner.h	/^		istream *_in;                   \/\/\/< input stream$/;"	m	class:CScanner
+_line	snuplc/src/scanner.h	/^		int     _line;                  \/\/\/< current stream position (line)$/;"	m	class:CScanner
+_line	snuplc/src/scanner.h	/^	int    _line;                   \/\/\/< input stream position (line)$/;"	m	class:CToken
+_saved_char	snuplc/src/scanner.h	/^		int     _saved_char;            \/\/\/< saved stream position (character pos)$/;"	m	class:CScanner
+_saved_line	snuplc/src/scanner.h	/^		int     _saved_line;            \/\/\/< saved stream position (line)$/;"	m	class:CScanner
+_token	snuplc/src/scanner.h	/^		CToken *_token;                 \/\/\/< next token in input stream$/;"	m	class:CScanner
+_type	snuplc/src/scanner.h	/^	EToken _type;                   \/\/\/< token type$/;"	m	class:CToken
+_value	snuplc/src/scanner.h	/^	string _value;                  \/\/\/< token value$/;"	m	class:CToken
+escape	snuplc/src/scanner.cpp	/^string CToken::escape(const string text)$/;"	f	class:CToken
+keywords	snuplc/src/scanner.cpp	/^map<string, EToken> CScanner::keywords;$/;"	m	class:CScanner	file:
+keywords	snuplc/src/scanner.h	/^		static map<string, EToken> keywords;\/\/\/< reserved keywords with corr. tokens$/;"	m	class:CScanner
+main	snuplc/src/test_scanner.cpp	/^int main(int argc, char *argv[])$/;"	f
+operator <<	snuplc/src/scanner.cpp	/^ostream& operator<<(ostream &out, const CToken &t)$/;"	f
+operator <<	snuplc/src/scanner.cpp	/^ostream& operator<<(ostream &out, const CToken *t)$/;"	f
+print	snuplc/src/scanner.cpp	/^ostream& CToken::print(ostream &out) const$/;"	f	class:CToken
+tAssign	snuplc/src/scanner.h	/^	tAssign,						\/\/\/< assignment operator$/;"	e	enum:EToken
+tBegin	snuplc/src/scanner.h	/^	tBegin,$/;"	e	enum:EToken
+tBoolean	snuplc/src/scanner.h	/^	tBoolean,$/;"	e	enum:EToken
+tChar	snuplc/src/scanner.h	/^	tChar,$/;"	e	enum:EToken
+tCharacter	snuplc/src/scanner.h	/^	tCharacter,						\/\/\/< a char such as 'a'$/;"	e	enum:EToken
+tColon	snuplc/src/scanner.h	/^	tColon,							\/\/\/< a colon$/;"	e	enum:EToken
+tComma	snuplc/src/scanner.h	/^	tComma, 						\/\/\/< a comma$/;"	e	enum:EToken
+tDo	snuplc/src/scanner.h	/^	tDo,$/;"	e	enum:EToken
+tDot	snuplc/src/scanner.h	/^	tDot,                           \/\/\/< a dot$/;"	e	enum:EToken
+tEOF	snuplc/src/scanner.h	/^	tEOF,                           \/\/\/< end of file$/;"	e	enum:EToken
+tElse	snuplc/src/scanner.h	/^	tElse,$/;"	e	enum:EToken
+tEnd	snuplc/src/scanner.h	/^	tEnd,$/;"	e	enum:EToken
+tFactOp	snuplc/src/scanner.h	/^	tFactOp,						\/\/\/< '*' or '\/' or '&&'$/;"	e	enum:EToken
+tFalse	snuplc/src/scanner.h	/^	tFalse,$/;"	e	enum:EToken
+tFunction	snuplc/src/scanner.h	/^	tFunction,$/;"	e	enum:EToken
+tIOError	snuplc/src/scanner.h	/^	tIOError,                       \/\/\/< I\/O error$/;"	e	enum:EToken
+tIdent	snuplc/src/scanner.h	/^	tIdent,                         \/\/\/< a letter -> changed to ident$/;"	e	enum:EToken
+tIf	snuplc/src/scanner.h	/^	tIf,$/;"	e	enum:EToken
+tInteger	snuplc/src/scanner.h	/^	tInteger,$/;"	e	enum:EToken
+tLBrak	snuplc/src/scanner.h	/^	tLBrak,                         \/\/\/< a left bracket '('$/;"	e	enum:EToken
+tLLBrak	snuplc/src/scanner.h	/^	tLLBrak,						\/\/\/< a left square bracket '['$/;"	e	enum:EToken
+tModule	snuplc/src/scanner.h	/^	tModule,						\/\/\/< keywords$/;"	e	enum:EToken
+tNot	snuplc/src/scanner.h	/^	tNot, 							\/\/\/< '!'$/;"	e	enum:EToken
+tNumber	snuplc/src/scanner.h	/^	tNumber=0,                      \/\/\/< a digit -> changed to number$/;"	e	enum:EToken
+tProcedure	snuplc/src/scanner.h	/^	tProcedure,$/;"	e	enum:EToken
+tRBrak	snuplc/src/scanner.h	/^	tRBrak,                         \/\/\/< a right bracket ')'$/;"	e	enum:EToken
+tRRBrak	snuplc/src/scanner.h	/^	tRRBrak,						\/\/\/< a right square bracket ']' $/;"	e	enum:EToken
+tRelOp	snuplc/src/scanner.h	/^	tRelOp,                         \/\/\/< relational operator$/;"	e	enum:EToken
+tReturn	snuplc/src/scanner.h	/^	tReturn,$/;"	e	enum:EToken
+tSemicolon	snuplc/src/scanner.h	/^	tSemicolon,                     \/\/\/< a semicolon$/;"	e	enum:EToken
+tString	snuplc/src/scanner.h	/^	tString,						\/\/\/< a string such as "Hello"$/;"	e	enum:EToken
+tTermOp	snuplc/src/scanner.h	/^	tTermOp,						\/\/\/< '+' or '-' or '||'$/;"	e	enum:EToken
+tThen	snuplc/src/scanner.h	/^	tThen,$/;"	e	enum:EToken
+tTrue	snuplc/src/scanner.h	/^	tTrue,$/;"	e	enum:EToken
+tUndefined	snuplc/src/scanner.h	/^	tUndefined,                     \/\/\/< undefined$/;"	e	enum:EToken
+tVar	snuplc/src/scanner.h	/^	tVar,$/;"	e	enum:EToken
+tWhile	snuplc/src/scanner.h	/^	tWhile,$/;"	e	enum:EToken
+~CScanner	snuplc/src/scanner.cpp	/^CScanner::~CScanner()$/;"	f	class:CScanner

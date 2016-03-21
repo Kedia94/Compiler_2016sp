@@ -49,48 +49,48 @@ using namespace std;
 /// each member of this enumeration represents a token in SnuPL/0
 ///
 enum EToken {
-  tNumber=0,                         ///< a digit -> changed to number
-  tIdent,                          ///< a letter -> changed to ident
+	tNumber=0,                      ///< a number
+	tIdent,                         ///< a ident
 
-  tEOF,                             ///< end of file
-  tIOError,                         ///< I/O error
-  tUndefined,                       ///< undefined
+	tEOF,                           ///< end of file
+	tIOError,                       ///< I/O error
+	tUndefined,                     ///< undefined
 
-  tModule,							///< keywords
-  tProcedure,
-  tFunction,
-  tVar,
-  tInteger,
-  tBoolean,
-  tChar,
-  tBegin,
-  tEnd,
-  tIf,
-  tThen,
-  tElse,
-  tWhile,
-  tDo,
-  tReturn,
-  tTrue,
-  tFalse,
+	tModule,						///< keyword "module"
+	tProcedure,						///< keyword "module"
+	tFunction,						///< keyword "function"
+	tVar,							///< keyword "var"
+	tInteger,						///< keyword "integer"	
+	tBoolean,						///< keyword "boolean"
+	tChar,							///< keyword "char"
+	tBegin,							///< keyword "begin"
+	tEnd,							///< keyword "end"
+	tIf,							///< keyword "if"
+	tThen,							///< keyword "then"
+	tElse,							///< keyword "else"
+	tWhile,							///< keyword "while"
+	tDo,							///< keyword "do"
+	tReturn,						///< keyword "return"
+	tTrue,							///< keyword "true"
+	tFalse,							///< keyword "false"
 
-  tAssign,                          ///< assignment operator
-  tTermOp,                       	///< '+' or '-' or '||'
-  tFactOp,                          ///< '*' or '/' or '&&'
-  tNot, 							///< '!'
-  tRelOp,                           ///< relational operator
+	tAssign,						///< assignment operator
+	tTermOp,						///< '+' or '-' or '||'
+	tFactOp,						///< '*' or '/' or '&&'
+	tNot, 							///< '!'
+	tRelOp,                         ///< relational operator
 
-  tCharacter,						///< a char such as 'a'
-  tString,							///< a string such as "Hello"
+	tCharacter,						///< a char such as 'a'
+	tString,						///< a string such as "Hello"
 
-  tSemicolon,                       ///< a semicolon
-  tColon,							///< a colon
-  tDot,                             ///< a dot
-  tComma, 							///< a comma
-  tLBrak,                           ///< a left bracket '('
-  tRBrak,                           ///< a right bracket ')'
-  tLLBrak,							///< a left square bracket '['
-  tRRBrak,							///< a right square bracket ']' 
+	tSemicolon,                     ///< a semicolon
+	tColon,							///< a colon
+	tDot,                           ///< a dot
+	tComma, 						///< a comma
+	tLBrak,                         ///< a left bracket '('
+	tRBrak,                         ///< a right bracket ')'
+	tLLBrak,						///< a left square bracket '['
+	tRRBrak,						///< a right square bracket ']' 
 
 };
 
@@ -103,90 +103,90 @@ enum EToken {
 /// in the input stream (line/column).
 ///
 class CToken {
-  friend class CScanner;
-  public:
-    /// @name constructors
-    /// @{
+	friend class CScanner;
+	public:
+	/// @name constructors
+	/// @{
 
-    /// @brief default constructor
-    CToken();
+	/// @brief default constructor
+	CToken();
 
-    /// @brief constructor taking initialization values
-    ///
-    /// @param line line number in the input stream
-    /// @param charpos character position in the input stream
-    /// @param type token type
-    /// @param value token value
-    CToken(int line, int charpos, EToken type, const string value="");
+	/// @brief constructor taking initialization values
+	///
+	/// @param line line number in the input stream
+	/// @param charpos character position in the input stream
+	/// @param type token type
+	/// @param value token value
+	CToken(int line, int charpos, EToken type, const string value="");
 
-    /// @brief copy contructor
-    ///
-    /// @param token token to copy
-    CToken(const CToken &token);
+	/// @brief copy contructor
+	///
+	/// @param token token to copy
+	CToken(const CToken &token);
 
-    /// @brief copy contructor
-    ///
-    /// @param token token to copy
-    CToken(const CToken *token);
-    /// @}
+	/// @brief copy contructor
+	///
+	/// @param token token to copy
+	CToken(const CToken *token);
+	/// @}
 
-    /// @name token attributes
-    /// @{
+	/// @name token attributes
+	/// @{
 
-    /// @brief return the name for a given token
-    ///
-    /// @retval token name
-    static const string Name(EToken type);
+	/// @brief return the name for a given token
+	///
+	/// @retval token name
+	static const string Name(EToken type);
 
-    /// @brief return the token name
-    ///
-    /// @retval token name
-    const string GetName(void) const;
+	/// @brief return the token name
+	///
+	/// @retval token name
+	const string GetName(void) const;
 
-    /// @brief return the token type
-    ///
-    /// @retval token type
-    EToken GetType(void) const { return _type; };
+	/// @brief return the token type
+	///
+	/// @retval token type
+	EToken GetType(void) const { return _type; };
 
-    /// @brief return the token value
-    ///
-    /// @retval token value
-    string GetValue(void) const { return _value; };
-    /// @}
+	/// @brief return the token value
+	///
+	/// @retval token value
+	string GetValue(void) const { return _value; };
+	/// @}
 
-    /// @name stream attributes
-    /// @{
+	/// @name stream attributes
+	/// @{
 
-    /// @brief return the line number
-    ///
-    /// @retval line number of the token in the input stream
-    int GetLineNumber(void) const { return _line; };
+	/// @brief return the line number
+	///
+	/// @retval line number of the token in the input stream
+	int GetLineNumber(void) const { return _line; };
 
-    /// @brief return the character position
-    ///
-    /// @retval character position of the token in the input stream
-    int GetCharPosition(void) const { return _char; };
+	/// @brief return the character position
+	///
+	/// @retval character position of the token in the input stream
+	int GetCharPosition(void) const { return _char; };
 
-    /// @}
-
-
-    /// @brief print the token to an output stream
-    ///
-    /// @param out output stream
-    ostream&  print(ostream &out) const;
-
-  private:
-    EToken _type;                   ///< token type
-    string _value;                  ///< token value
-    int    _line;                   ///< input stream position (line)
-    int    _char;                   ///< input stream position (character pos)
+	/// @}
 
 
-    /// @brief escape special characters in a string
-    ///
-    /// @param text string
-    /// @retval escaped string
-    string escape(const string text);
+	/// @brief print the token to an output stream
+	///
+	/// @param out output stream
+	ostream&  print(ostream &out) const;
+
+	private:
+	EToken _type;                   ///< token type
+	string _value;                  ///< token value
+	int    _line;                   ///< input stream position (line)
+	int    _char;                   ///< input stream position (character pos)
+
+
+	/// @brief escape special characters in a string
+	///
+	/// @param text string
+	/// @retval escaped string
+	string escape(const string text);
 };
 
 /// @name CToken output operators
@@ -215,135 +215,135 @@ ostream& operator<<(ostream &out, const CToken *t);
 /// used by CParser to scan (tokenize) SnuPL/0 code
 ///
 class CScanner {
-  public:
-    /// @name construction/destruction
-    /// @{
+	public:
+		/// @name construction/destruction
+		/// @{
 
-    /// @brief constructor
-    ///
-    /// @param in input stream containing the source code
-    CScanner(istream *in);
+		/// @brief constructor
+		///
+		/// @param in input stream containing the source code
+		CScanner(istream *in);
 
-    /// @brief constructor
-    ///
-    /// @param in input stream containing the source code
-    CScanner(string in);
+		/// @brief constructor
+		///
+		/// @param in input stream containing the source code
+		CScanner(string in);
 
-    /// @brief destructor
-    ~CScanner();
+		/// @brief destructor
+		~CScanner();
 
-    /// @}
+		/// @}
 
-    /// @brief return and remove the next token from the input stream
-    ///
-    /// @retval token token
-    CToken Get(void);
+		/// @brief return and remove the next token from the input stream
+		///
+		/// @retval token token
+		CToken Get(void);
 
-    /// @brief peek at the next token in the input stream (without removing it)
-    ///
-    /// @retval token token
-    CToken Peek(void) const;
+		/// @brief peek at the next token in the input stream (without removing it)
+		///
+		/// @retval token token
+		CToken Peek(void) const;
 
-    /// @brief check the status of the scanner
-    ///
-    /// @retval true if the scanner is in an operating (i.e., normal) state
-    /// @retval false if an error has occurred
-    bool Good(void) const { return _good; };
+		/// @brief check the status of the scanner
+		///
+		/// @retval true if the scanner is in an operating (i.e., normal) state
+		/// @retval false if an error has occurred
+		bool Good(void) const { return _good; };
 
-    /// @brief get the line number of the next token in the input stream
-    ///
-    /// @retval line number
-    int GetLineNumber(void) const { return _line; };
+		/// @brief get the line number of the next token in the input stream
+		///
+		/// @retval line number
+		int GetLineNumber(void) const { return _line; };
 
-    /// @brief get the character position of the next token in the input stream
-    ///
-    /// @retval character position
-    int GetCharPosition() const { return _char; };
+		/// @brief get the character position of the next token in the input stream
+		///
+		/// @retval character position
+		int GetCharPosition() const { return _char; };
 
-  private:
-    /// @brief initialize list of reserved keywords
-    void InitKeywords(void);
+	private:
+		/// @brief initialize list of reserved keywords
+		void InitKeywords(void);
 
-    /// @brief scan the next token
-    void NextToken(void);
+		/// @brief scan the next token
+		void NextToken(void);
 
-    /// @brief store the current position of the input stream internally
-    void RecordStreamPosition();
+		/// @brief store the current position of the input stream internally
+		void RecordStreamPosition();
 
-    /// @brief return the previously recorded input stream position
-    ///
-    /// @param lineno line number
-    /// @param charpos character position
-    void GetRecordedStreamPosition(int *lineno, int *charpos);
+		/// @brief return the previously recorded input stream position
+		///
+		/// @param lineno line number
+		/// @param charpos character position
+		void GetRecordedStreamPosition(int *lineno, int *charpos);
 
-    /// @brief create and return a new token
-    ///
-    /// @param type token type
-    /// @param token  token value
-    /// @retval CToken instance
-    CToken* NewToken(EToken type, const string token="");
-
-
-    /// @name low-level scanner routines
-    /// @{
-
-    /// @brief scan the input stream and return the next token
-    ///
-    /// @retval CToken instance
-    CToken* Scan(void);
-
-    /// @brief return the next character from the input stream
-    ///
-    /// @retval next character in the input stream
-    char GetChar(void);
-
-    /// @brief return the next 'n' characters from the input stream
-    ///
-    /// @param n number of characters to read
-    /// @retval string containing the characters read
-    string GetChar(int n);
-
-    /// @brief check if a character is a white character
-    ///
-    /// @param c character
-    /// @retval true character is white space
-    /// @retval false character is not white space
-    bool IsWhite(char c) const;
-	
-	/* @ brief check if a character is letter
-	 *
-	 * @ retval true character is letter
-	 * @ retval false else
-	 */
-    bool IsLetter(char c) const;
-
-    /* @ brief check if a character is digit
-     *
-     * @ retval true character is digit
-     * @ retval false else
-     */
-    bool IsDigit(char c) const;
-
-	/* @ brief check if a character is digit
-	 *
-	 * @retval true character is ASCII
-	 * @ retval false else
-	 */
-	bool IsASCII(char c) const;
-
-    /// @}
+		/// @brief create and return a new token
+		///
+		/// @param type token type
+		/// @param token  token value
+		/// @retval CToken instance
+		CToken* NewToken(EToken type, const string token="");
 
 
-  private:
-    static map<string, EToken> keywords;///< reserved keywords with corr. tokens
-    istream *_in;                   ///< input stream
-    bool    _delete_in;             ///< delete input stream upon destruction
-    bool    _good;                  ///< scanner status flag
-    int     _line;                  ///< current stream position (line)
-    int     _char;                  ///< current stream position (character pos)
-    int     _saved_line;            ///< saved stream position (line)
-    int     _saved_char;            ///< saved stream position (character pos)
-    CToken *_token;                 ///< next token in input stream
+		/// @name low-level scanner routines
+		/// @{
+
+		/// @brief scan the input stream and return the next token
+		///
+		/// @retval CToken instance
+		CToken* Scan(void);
+
+		/// @brief return the next character from the input stream
+		///
+		/// @retval next character in the input stream
+		char GetChar(void);
+
+		/// @brief return the next 'n' characters from the input stream
+		///
+		/// @param n number of characters to read
+		/// @retval string containing the characters read
+		string GetChar(int n);
+
+		/// @brief check if a character is a white character
+		///
+		/// @param c character
+		/// @retval true character is white space
+		/// @retval false character is not white space
+		bool IsWhite(char c) const;
+
+		/* @ brief check if a character is letter
+		 *
+		 * @ retval true character is letter
+		 * @ retval false else
+		 */
+		bool IsLetter(char c) const;
+
+		/* @ brief check if a character is digit
+		 *
+		 * @ retval true character is digit
+		 * @ retval false else
+		 */
+		bool IsDigit(char c) const;
+
+		/* @ brief check if a character is digit
+		 *
+		 * @retval true character is ASCII
+		 * @ retval false else
+		 */
+		bool IsASCII(char c) const;
+
+		/// @}
+
+
+	private:
+		static map<string, EToken> keywords;///< reserved keywords with corr. tokens
+		istream *_in;                   ///< input stream
+		bool    _delete_in;             ///< delete input stream upon destruction
+		bool    _good;                  ///< scanner status flag
+		int     _line;                  ///< current stream position (line)
+		int     _char;                  ///< current stream position (character pos)
+		int     _saved_line;            ///< saved stream position (line)
+		int     _saved_char;            ///< saved stream position (character pos)
+		CToken *_token;                 ///< next token in input stream
 };
 
 
