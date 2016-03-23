@@ -495,6 +495,15 @@ CToken* CScanner::Scan()
 						 token = tCharacter;
 					 }
 				 }
+				 else {
+				 	 tokval += GetChar();
+				 }
+			 }
+			 else {
+			 	 tokval += GetChar();
+			 	 if (_in->peek() =='\'') {
+			 	 	 tokval += GetChar();
+				 }
 			 }
 			 break;
 
@@ -502,12 +511,29 @@ CToken* CScanner::Scan()
 			  * case for string
 			  */
 		 case '\"':
+		 	 token = tString;
 			 while (_in->good() && _in->peek() != '\"') {
-				 tokval += GetChar();
+			 	 if (_in->peek() == '\\') {
+			 	 	 tokval += GetChar();
+			 	 	 if (_in->peek() == 'n' || _in->peek() == 't' || _in->peek() == '\"' ||
+			 	 	 	 _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0') {
+			 	 	 	 tokval += GetChar();
+					 }
+					 else {
+					 	 tokval += GetChar();
+					 	 token = tUndefined;
+					 }
+				 }
+				 else if (IsASCII(_in->peek())) {
+				 	  tokval += GetChar();
+				 }
+				 else {
+				 	tokval += GetChar();
+				 	token = tUndefined;
+				 }
 			 }
 			 if (_in->peek() == '\"') {
 				 tokval += GetChar();
-				 token = tString;
 			 }
 			 break;
 
@@ -574,5 +600,10 @@ bool CScanner::IsDigit(char c) const
 
 bool CScanner::IsASCII(char c) const
 {
-	return IsLetter(c) || IsDigit(c);
+	if (c == '\\')
+		return false;
+	else if (' ' <= c && c <= '~')
+		return true;
+	else
+		return false;
 }

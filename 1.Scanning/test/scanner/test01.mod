@@ -1,4 +1,3 @@
-//
 // test01
 //
 // scanner test: contains only valid tokens
@@ -83,3 +82,6 @@ false
 "hello, world!"
 "this\tis\ta\ttab!"
 "a"
+"
+wefuwefhwe\"wegwee"w
+'\t'
