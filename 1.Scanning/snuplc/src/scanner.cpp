@@ -337,7 +337,8 @@ CToken* CScanner::Scan()
 	EToken token;
 	string tokval;
 	char c;
-	bool divider;
+	bool divider;												/// true: "/" is divider sign
+																/// false: "/" is part of comment "//"
 
 	while (1) {
 		divider = false;										/// initialize divider flag to false
@@ -371,19 +372,16 @@ CToken* CScanner::Scan()
 		tokval = c;
 		token = tUndefined;
 	}
-	else {
-		tokval = c;
+	else {															/// if divider token
+		tokval = c;													/// return divider token
 		return NewToken(tFactOp, tokval);
 	}
 
 
 	switch (c) {
-		 /*
-		  * case for Assign, Colon
-		  */
-		 case ':':
-			 if (_in->peek() == '=') {							/// case ":=", tAssign
-				 tokval += GetChar();
+		 case ':':												/// case ":"
+			 if (_in->peek() == '=') {							/// if next char is '='	
+				 tokval += GetChar();							/// case ":=", tAssign
 				 token = tAssign;
 			 }
 			 else {												/// case ":", tColon
@@ -391,45 +389,36 @@ CToken* CScanner::Scan()
 			 }
 			 break;
 
-			 /*
-			  * case for TermOp
-			  */
 		 case '+':
 		 case '-':
 			 token = tTermOp;									/// case "+" | "-", tTermOp
 			 break;
 
-		 case '|':
-			 if (_in->peek() == '|') {							/// case "||", tTermOp
-				 token = tTermOp;
+		 case '|':												/// case "'"
+			 if (_in->peek() == '|') {							/// if next char is '|'	
+				 token = tTermOp;								/// case "||", tTermOp
 				 tokval += GetChar();
 			 }
 			 break;
 
-			 /*
-			  * case for FactOp
-			  */
-		 case '*':
+		 case '*':												/// case "*", tFactOp
 			 token = tFactOp;
 			 break;
 
-		 case '&':												/// case "&&", tFactOp
-			 if (_in->peek() == '&') {
-				 token = tFactOp;
+		 case '&':												/// case "&"
+			 if (_in->peek() == '&') {							/// if next char is '&'
+				 token = tFactOp;								/// case "&&", tFactOp
 				 tokval += GetChar();
 			 }
 			 break;
 
-			 /*
-			  * case for !
-			  */
-		 case '!':
+		/// simple cases
+		/// just return keyword
+
+		 case '!':											
 			 token = tNot;
 			 break;
 
-			 /*
-			  * case for RelOp
-			  */
 		 case '=':
 		 case '#':
 			 token = tRelOp;
@@ -443,55 +432,47 @@ CToken* CScanner::Scan()
 			 }
 			 break;
 
-			 /* 
-			  * case for special characters
-			  */
 		 case ';':
 			 token = tSemicolon;
 			 break;
-
 		 case ',':
 			 token = tComma;
 			 break;
-
 		 case '.':
 			 token = tDot;
 			 break;
-
 		 case '(':
 			 token = tLBrak;
 			 break;
-
 		 case ')':
 			 token = tRBrak;
 			 break;
-
 		 case '[':
 			 token = tLLBrak;
 			 break;
-
 		 case ']':
 			 token = tRRBrak;
 			 break;
 
-			 /*
-			  * case for character
-			  */
+		/// case for character
+		/// if next char of '\'' isn't an ASCIIchar or an escape character('\\') return tUndefined
+		/// else if it is an ASCIIchar check next char is closing quoate('\')
+		/// else check if it is accepting escape characters
 		 case '\'':
-			 if (IsASCII(_in->peek())) {								/// if [a-zA-Z0-9]
+			 if (IsASCII(_in->peek())) {								/// if it's printable ASCII except '\\' 
 				 tokval += GetChar();
-				 if (_in->peek() == '\'') {
-					 tokval += GetChar();
+				 if (_in->peek() == '\'') {								/// if it ends with '\''
+					 tokval += GetChar();								/// it's valid character
 					 token = tCharacter;
 				 }
 			 }
-			 else if (_in->peek() == '\\') {							/// if starts with "\\"	
-				 tokval += GetChar();									/// if "\n" | "\t" | "\"" | "\'" | "\\" | "\0" 
+			 else if (_in->peek() == '\\') {							/// if starts with '\\'	
+				 tokval += GetChar();									/// if '\n' | '\t' | '\'' | '\'' | '\\' | '\0' 
 				 if (_in->peek() == 'n' || _in->peek() == 't' || _in->peek() == '\"' || 
 					 _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0' ) {
 					 tokval += GetChar();
-					 if (_in->peek() == '\'') {
-						 tokval += GetChar();
+					 if (_in->peek() == '\'') {							/// if it ends with '\''
+						 tokval += GetChar();							/// it's valid character
 						 token = tCharacter;
 					 }
 				 }
@@ -507,49 +488,48 @@ CToken* CScanner::Scan()
 			 }
 			 break;
 
-			 /*
-			  * case for string
-			  */
+		/// case for string
+		/// if next characters of '\"' aren't characters then tUndefined
+		/// else consumes input stream unitl closing quoates appeared('\"')
 		 case '\"':
 		 	 token = tString;
-			 while (_in->good() && _in->peek() != '\"') {
-			 	 if (_in->peek() == '\\') {
+			 while (_in->good() && _in->peek() != '\"') {				/// if it starts with '\"'
+			 	 if (_in->peek() == '\\') {								/// if it can be escape character
 			 	 	 tokval += GetChar();
 			 	 	 if (_in->peek() == 'n' || _in->peek() == 't' || _in->peek() == '\"' ||
-			 	 	 	 _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0') {
-			 	 	 	 tokval += GetChar();
+			 	 	 	 _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0') { 
+			 	 	 	 tokval += GetChar();							/// if it is valid escape character
 					 }
-					 else {
+					 else {												/// if not, tUndefined
 					 	 tokval += GetChar();
 					 	 token = tUndefined;
 					 }
 				 }
-				 else if (IsASCII(_in->peek())) {
+				 else if (IsASCII(_in->peek())) {						/// if ASCII append it
 				 	  tokval += GetChar();
 				 }
-				 else {
+				 else {													/// else it's tUndefined
 				 	tokval += GetChar();
 				 	token = tUndefined;
 				 }
 			 }
-			 if (_in->peek() == '\"') {
+			 if (_in->peek() == '\"') {									/// if ending quoates appeared '\"'
 				 tokval += GetChar();
 			 }
 			 break;
 
-		 default:
-			 /* 
-			  * case for number
-			  */
+		 default: 
+			 /// case for digit
+			 /// consumes all succeding digits 
 			 if (IsDigit(c)) {
 				 token = tNumber;
 				 while (IsDigit(_in->peek())) {
 					 tokval += GetChar();
 				 }
 			 }
-			 /*
-			  * case for ident
-			  */
+
+			 /// case for ident
+			 /// check whether ident is valid string
 			 else if (IsLetter(c)) {
 				 while (IsLetter(_in->peek()) || IsDigit(_in->peek())) { 
 					 tokval += GetChar();
@@ -585,7 +565,7 @@ string CScanner::GetChar(int n)
 
 bool CScanner::IsWhite(char c) const
 {
-	return ((c == ' ') || (c == '\n'));
+	return ((c == ' ') || (c == '\n') || (c == '\t'));
 }
 
 bool CScanner::IsLetter(char c) const
