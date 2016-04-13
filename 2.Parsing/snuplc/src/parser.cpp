@@ -124,6 +124,12 @@ CAstModule* CParser::module(void)
   //
   // module ::= statSequence  ".".
   //
+  
+  /*
+   * TODO: module = "module" ident ";" varDeclaration { subroutineDecl }
+   *                "begin" statSequence "end" ident ".".
+   */
+
   CToken dummy;
   CAstModule *m = new CAstModule(dummy, "placeholder");
   CAstStatement *statseq = NULL;
@@ -186,6 +192,11 @@ CAstStatAssign* CParser::assignment(CAstScope *s)
   //
   // assignment ::= number ":=" expression.
   //
+ 	
+  /*
+   * TODO: assignment = qualident ":=" expression.
+   */
+
   CToken t;
 
   CAstConstant *lhs = number();
@@ -214,12 +225,12 @@ CAstExpression* CParser::expression(CAstScope* s)
     if (t.GetValue() == "=")       relop = opEqual;
     else if (t.GetValue() == "#")  relop = opNotEqual;
     /*
-     * added 4 case
+     * add 4 case
      */
-	else if (t.GetValue() == "<")  relop = opLessThan;
-	else if (t.GetValue() == "<=") relop = opLessEqual;
-	else if (t.GetValue() == ">")  relop = opBiggerThan;
-	else if (t.GetValue() == ">=") relop = opBiggerEqual;
+    else if (t.GetValue() == "<")  relop = opLessThan;
+    else if (t.GetValue() == "<=") relop = opLessEqual;
+    else if (t.GetValue() == ">")  relop = opBiggerThan;
+    else if (t.GetValue() == ">=") relop = opBiggerEqual;
     else SetError(t, "invalid relation.");
 
     return new CAstBinaryOp(t, relop, left, right);
@@ -231,30 +242,44 @@ CAstExpression* CParser::expression(CAstScope* s)
 CAstExpression* CParser::simpleexpr(CAstScope *s)
 {
   //
-  // simpleexpr ::= term { termOp term }.
+  // simpleexpr ::= ["+"|"-"] term { termOp term }.
   //
+  
+  CToken topt;
+  EOperation factop;
+  CAstExpression *ret = NULL;
   CAstExpression *n = NULL;
-
+  
+  if (_scanner->Peek().GetType() == tTermOp) {
+	
+	Consume(tTermOp, &topt);
+  }
+   
   n = term(s);
 
   while (_scanner->Peek().GetType() == tTermOp) {
     CToken t;
     CAstExpression *l = n, *r;
-
+      
     Consume(tTermOp, &t);
-
+      
     r = term(s);
+	  
+  /*
+   *  n = new CAstBinaryOp(t, t.GetValue() == "+" ? opAdd : opSub, l, r);
+   */
+    if (t.GetValue() == "+")       n = new CAstBinaryOp(t, opAdd, l, r);
+    else if (t.GetValue() == "-")  n = new CAstBinaryOp(t, opSub, l, r);
+    else if (t.GetValue() == "||") n = new CAstBinaryOp(t, opOr,  l, r);
+    }
+    
+  if (topt.GetValue() == "+") ret = new CAstUnaryOp(topt, opPos, n);
+  else if (topt.GetValue() == "-") ret = new CAstUnaryOp(topt, opNeg, n);
+  else if (topt.GetValue() == "&&") SetError(topt, "invalid unary operation.");
+  else return n;
+ 
 
-	/*
-	 *  n = new CAstBinaryOp(t, t.GetValue() == "+" ? opAdd : opSub, l, r);
-	 */
-	if (t.GetValue() == "+")       n = new CAstBinaryOp(t, opAdd, l, r);
-	else if (t.GetValue() == "-")  n = new CAstBinaryOp(t, opSub, l, r);
-	else if (t.GetValue() == "||") n = new CAstBinaryOp(t, opOr,  l, r);
-  }
-
-
-  return n;
+  return ret;
 }
 
 CAstExpression* CParser::term(CAstScope *s)
@@ -262,6 +287,10 @@ CAstExpression* CParser::term(CAstScope *s)
   //
   // term ::= factor { ("*"|"/") factor }.
   //
+
+  /* 
+   * term = factor { factOp facter }.
+   */
   CAstExpression *n = NULL;
 
   n = factor(s);
@@ -297,6 +326,11 @@ CAstExpression* CParser::factor(CAstScope *s)
   // FIRST(factor) = { tNumber, tLBrak }
   //
 
+  /* 
+   * TODO: factor = qualident | number | boolean | char | string |
+   *                "(" expression ")" | subroutineCall | "!" factor.
+   */
+
   CToken t;
   EToken tt = _scanner->Peek().GetType();
   CAstExpression *unary = NULL, *n = NULL;
@@ -307,6 +341,20 @@ CAstExpression* CParser::factor(CAstScope *s)
       n = number();
       break;
 
+	// factor ::= boolean
+	// boolean = "True" | "False".
+    case tTrue:
+    case tFalse:
+      break;
+
+    // factor ::= char
+    // char = "'" character "'".
+
+
+    // factor ::= string
+    // string = '"' { character } '"'.
+
+     
     // factor ::= "(" expression ")"
     case tLBrak:
       Consume(tLBrak);
@@ -314,6 +362,12 @@ CAstExpression* CParser::factor(CAstScope *s)
       Consume(tRBrak);
       break;
 
+    // factor ::= subroutineCall
+
+    // factor ::= "!" factor
+    case tNot:
+      break;
+      
     default:
       cout << "got " << _scanner->Peek() << endl;
       SetError(_scanner->Peek(), "factor expected.");
@@ -342,3 +396,23 @@ CAstConstant* CParser::number(void)
   return new CAstConstant(t, CTypeManager::Get()->GetInt(), v);
 }
 
+CAstConstant* CParser::ident(void)
+{
+  //
+  // ident ::= letter { letter | digit }.
+  //
+  // "letter { letter | digit }" is scanned as one token (tIdent)
+  //
+
+  /*
+   * TODO: change long long v = ~.
+   */
+
+  CToken t;
+
+  Consume(tIdent, &t);
+
+  long long v = strtoll(t.GetValue().c_str(), NULL, 10);
+
+  return new CAstConstant(t, CTypeManager::Get()->GetVoidPtr(), v);
+}

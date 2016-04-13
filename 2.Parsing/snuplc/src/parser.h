@@ -108,6 +108,25 @@ class CParser {
 
     CAstConstant*     number(void);
 
+    /*
+     * TODO: Implement following functions
+     */
+    CAstConstant*     ident(void);
+	// type
+	// qualident
+	// subroutineCall
+	// ifStatement
+	// whileStatement
+	// returnStatement
+	// statement
+	// varDeclSequence
+	// varDecl
+	// subroutineDecl
+	// procedureDecl
+	// functionDecl
+	// formalParam
+	// subroutineBody
+
     /// @}
 
 
