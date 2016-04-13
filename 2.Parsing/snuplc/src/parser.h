@@ -109,23 +109,24 @@ class CParser {
     CAstConstant*     number(void);
 
     /*
-     * TODO: Implement following functions
+     * Added following functions
      */
-    CAstConstant*     ident(void);
-	// type
-	// qualident
-	// subroutineCall
-	// ifStatement
-	// whileStatement
-	// returnStatement
-	// statement
-	// varDeclSequence
-	// varDecl
-	// subroutineDecl
-	// procedureDecl
-	// functionDecl
-	// formalParam
-	// subroutineBody
+    CAstExpression*   ident(CAstScope *s);
+    CAstExpression*   qualident(CAstScope *s);
+    CAstType*   type(CAstScope *s);
+    CAstStatement*   subroutinecall(CAstScope *s);
+    CAstStatement*   ifstatement(CAstScope *s);
+    CAstStatement*   whilestatement(CAstScope *s);
+    CAstStatement*   returnstatement(CAstScope *s);
+    CAstExpression*   vardeclsequence(CAstScope *s);
+    CAstExpression*   subroutinedecl(CAstScope *s);
+    CAstExpression*   proceduredecl(CAstScope *s);
+    CAstExpression*   functiondecl(CAstScope *s);
+    CAstExpression*   formalparam(CAstScope *s);
+    CAstExpression*   subroutinebody(CAstScope *s);
+    
+    // statement: maybe in statSequence
+    // varDecl: maybe in vardeclsequence
 
     /// @}
 

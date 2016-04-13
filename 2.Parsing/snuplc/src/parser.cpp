@@ -163,9 +163,37 @@ CAstStatement* CParser::statSequence(CAstScope *s)
 
       switch (tt) {
         // statement ::= assignment
+        // TODO: assignment change. 
+        // assignment = qualident ":=" expression.
+        // maybe have to merge with subroutinecall
         case tNumber:
           st = assignment(s);
           break;
+
+        /*
+         * statement = assignment | subroutineCall | ifStatement | whileStatement
+         *                   returnStatement
+         */
+
+        // statement ::= subroutineCall
+        case tIdent:
+          st = subroutinecall(s);
+          break;
+
+        // statement ::= ifStatement
+        case tIf:
+          st = ifstatement(s);
+          break;
+
+		// statement ::= whileStatement
+        case tWhile:
+          st = whilestatement(s);
+          break;
+
+        // statement ::= returnStatement
+		case tReturn:
+		  st = returnstatement(s);
+		  break;
 
         default:
           SetError(_scanner->Peek(), "statement expected.");
@@ -336,6 +364,11 @@ CAstExpression* CParser::factor(CAstScope *s)
   CAstExpression *unary = NULL, *n = NULL;
 
   switch (tt) {
+    // factor ::= qualident
+    case tIdent:
+      n = qualident(s);
+      break;
+
     // factor ::= number
     case tNumber:
       n = number();
@@ -349,10 +382,20 @@ CAstExpression* CParser::factor(CAstScope *s)
 
     // factor ::= char
     // char = "'" character "'".
-
+    // "'" character "'" is scanned as one token {tCharacter}
+    case tCharacter:
+      Consume(tCharacter, &t);
+      n = new CAstStringConstant(t, t.GetValue(), s);
+      break;
 
     // factor ::= string
     // string = '"' { character } '"'.
+    // '"' { character } '"' is scanned as one token {tString}
+
+    case tString:
+      Consume(tString, &t);
+      n = new CAstStringConstant(t, t.GetValue(), s);
+      break;
 
      
     // factor ::= "(" expression ")"
@@ -366,6 +409,9 @@ CAstExpression* CParser::factor(CAstScope *s)
 
     // factor ::= "!" factor
     case tNot:
+      Consume(tNot, &t);
+      unary = factor(s);
+      n = new CAstUnaryOp(t, opNot, unary);
       break;
       
     default:
@@ -396,7 +442,7 @@ CAstConstant* CParser::number(void)
   return new CAstConstant(t, CTypeManager::Get()->GetInt(), v);
 }
 
-CAstConstant* CParser::ident(void)
+CAstExpression* CParser::ident(CAstScope *s)
 {
   //
   // ident ::= letter { letter | digit }.
@@ -404,15 +450,383 @@ CAstConstant* CParser::ident(void)
   // "letter { letter | digit }" is scanned as one token (tIdent)
   //
 
-  /*
-   * TODO: change long long v = ~.
-   */
 
   CToken t;
+  if (_scanner->Peek().GetType() != tIdent) {
+  	  SetError(_scanner->Peek(), "invalid ident.");
+  }
 
   Consume(tIdent, &t);
 
-  long long v = strtoll(t.GetValue().c_str(), NULL, 10);
 
-  return new CAstConstant(t, CTypeManager::Get()->GetVoidPtr(), v);
+  return new CAstStringConstant(t, t.GetValue(), s);
 }
+
+CAstExpression* CParser::qualident(CAstScope *s)
+{
+	//
+	// qualident ::= ident { "[" expression "]" }.
+	//
+	// TODO
+
+    return ident(s);
+/*	
+	CAstExpression *n = NULL;
+
+	n = ident(s);
+
+	while (_scanner->Peek().GetType() == tLLBrak) {
+		CToken t;
+		CAstExpression *l = n, *r;
+		
+		Consume(tLLBrak);
+		r = expression(s);
+		Consume(tRRBrak);
+
+		//n = new CAstArrayDesignator();
+	}
+	return n;
+*/
+}
+
+CAstType* CParser::type(CAstScope *s)
+{
+  //
+  // type = basetype | type "[" [ number ] "]".
+  //
+  // basetype = "boolean" | "char" | "integer"
+  // token: tBoolean, tChar, tInteger
+  //
+
+  CAstType *n = NULL;
+  CToken t;
+
+  EToken tt = _scanner->Peek().GetType();
+
+  switch (tt) {
+    
+    // type ::= basetype
+	
+	case tBoolean:
+	  Consume(tBoolean, &t);
+	  n = new CAstType(t, CTypeManager::Get()->GetBool());
+	  break;
+
+	case tChar:
+	  Consume(tChar, &t);
+	  n = new CAstType(t, CTypeManager::Get()->GetChar());
+	  break;
+
+	case tInteger:
+	  Consume(tInteger, &t);
+	  n = new CAstType(t, CTypeManager::Get()->GetInt());
+	  break;
+  }
+
+  // type ::= type "[" [ number ] "]" -> array
+  // TODO process [][][][][][][][] .... []
+  while (_scanner->Peek().GetType() == tLLBrak) {
+    Consume(tLLBrak);
+    
+    CAstConstant *k;
+    k = number(s);
+
+    if (_scanner->Peek().GetType() != tRRBrak) {
+    	SetError(_scanner->Peek(), "] expected");
+	}
+
+  }
+
+  return n;
+}
+
+CAstStatement* CParser::subroutinecall(CAstScope *s)
+{
+    //
+    // subroutinecall = ident "(" [ expression { "," expression } ] ")".
+    //
+    //TODO
+  CAstStatement *n = NULL;
+  CToken t;
+  CAstExpression *l, *r = NULL;
+
+  if (_scanner->Peek().GetType() != tIdent) {
+  	SetError(_scanner->Peek(), "Ident expected");
+  }
+  Consume(tIdent, &t);
+
+  if (_scanner->Peek().GetType() != tLBrak) {
+  	SetError(_scanner->Peek(), "( expected");
+  }
+  Consume(tLBrak);
+
+  l = expression(s);
+
+  while (_scanner->Peek().GetType() == tComma) {
+  	  CToken t1;
+  	  CAstExpression *l1 = l, *r1;
+
+  	  Consume(tComma);
+
+  	  r1 = expression(s);
+
+  }
+
+  return n;
+}
+
+CAstStatement* CParser::ifstatement(CAstScope *s)
+{
+    //
+    // ifstatement = "if" "(" expression ")" "then" statsquence [ "else" statsequence ] "end".
+    //
+  CAstStatement *n = NULL;
+  CAstExpression *l;
+  CAstStatement *m, *r = NULL;
+  CToken t;
+
+  if (_scanner->Peek().GetType() == tIf) {
+  	Consume(tIf, &t);
+
+  	if (_scanner->Peek().GetType() != tLBrak) {
+  		SetError(_scanner->Peek(), "( expected");
+	}
+	Consume(tLBrak);
+
+	l = expression(s);
+
+	if (_scanner->Peek().GetType() != tRBrak) {
+		SetError(_scanner->Peek(), ") expected");
+	}
+	Consume(tRBrak);
+
+	if (_scanner->Peek().GetType() != tThen) {
+		SetError(_scanner->Peek(), ") expected");
+	}
+	Consume(tThen);
+
+	m = statSequence(s);
+
+	if (_scanner->Peek().GetType() == tElse) {
+		Consume(tElse);
+		r = statSequence(s);
+	}
+
+	if (_scanner->Peek().GetType() != tEnd) {
+		SetError(_scanner->Peek(), "end expected");
+	}
+	Consume(tEnd);
+
+	n = new CAstStatIf(t, l, m, r);
+  }
+  else {
+  	  SetError(_scanner->Peek(), "if expected");
+  }
+
+  return n;
+}
+
+CAstStatement* CParser::whilestatement(CAstScope *s)
+{
+    //
+    // whilestatement = "while" "(" expression ")" "do" statsequence "end".
+    //
+    
+  CAstStatement *n = NULL;
+  CAstExpression *l;
+  CAstStatement *r;
+  CToken t;
+
+  if (_scanner->Peek().GetType() == tWhile) {
+  	Consume(tWhile, &t);
+  	
+  	if (_scanner->Peek().GetType() != tLBrak) {
+      SetError(_scanner->Peek(), "( expected");
+	}
+	Consume(tLBrak);
+	l = expression(s);
+	
+	if (_scanner->Peek().GetType() != tRBrak) {
+	  SetError(_scanner->Peek(), ") expected");
+	}
+	Consume(tRBrak);
+
+	if (_scanner->Peek().GetType() != tDo) {
+	  SetError(_scanner->Peek(), "do expected");
+	}
+	Consume(tDo);
+	
+	r = statSequence(s);
+
+	if (_scanner->Peek().GetType() != tEnd) {
+		SetError(_scanner->Peek(), "end expected");
+	}
+	Consume(tEnd);
+
+	n = new CAstStatWhile(t, l, r);
+  }
+  else {
+  	SetError(_scanner->Peek(), "while expected");
+  }
+
+  return n;
+}
+
+CAstStatement* CParser::returnstatement(CAstScope *s)
+{
+    //
+    // returnstatement = "return" [ expression ].
+    //
+    
+    CAstStatement *n = NULL;
+    CToken t;
+    CAstExpression *child = NULL;
+
+    if (_scanner->Peek().GetType() == tReturn) {
+    	Consume(tReturn, &t);
+
+        switch (_scanner->Peek().GetType) {
+			// TODO: Check FOLLOW
+			// FOLLOW(returnstatement) = "end" | ";" | "else"
+			// returnstatement ::= "return"
+			case tEnd:
+			case tSemicolon:
+			case tElse:
+			  n = new CAstStatReturn(t, s, child);
+			  break;
+
+            // returnstatement ::= "return" expression 
+			default:
+			  child = expression(s);
+			  n = new CAstStatReturn(t, s, child);
+			  break;
+		}
+	}
+	else {
+		SetError(_scanner->Peek(), "\"return\" expected.");
+	}
+
+	return n;
+}
+
+CAstExpression* CParser::vardeclsequence(CAstScope *s)
+{
+    //
+    // vardeclsequence = vardecl { ";" vardecl }.
+    //
+    // vardecl = ident { "," ident } ":" type.
+    //
+    //TODO
+}
+
+CAstExpression* CParser::subroutinedecl(CAstScope *s)
+{
+    //
+    // subroutinedecl = (proceduredecl | functiondecl)
+    //                  subroutinebody ident ";".
+    //
+    //TODO
+    
+    CAstExpression *n = NULL;
+
+    if (_scanner->Peek().GetType() == tProcedure) {
+	}
+	else if (_scanner->Peek().GetType() == tFunction) {
+	}
+	else {
+		SetError(_scanner->Peek(), "\"procedure\" or \"function\" expected.");
+	}
+
+	return n;
+}
+
+CAstExpression* CParser::proceduredecl(CAstScope *s)
+{
+    //
+    // proceduredecl = "procedure" ident [ formalparam ] ";".
+    //
+    //TODO
+    
+    CAstExpression *n = NULL;
+    CToken t;
+    CAstExpression *l, *r;
+	
+    if (_scanner->Peek().GetType() == tProcedure) {
+        Consume(tProcedure, &t);
+        l = ident(s);
+        // TODO: CAstProcedure(CToken t, const string name, CAstScope *parent, CSymProc *symbol);
+
+    }
+    else {
+        SetError(_scanner->Peek(), "\"procedure\" expected.");
+    }
+
+    return n;
+}
+
+CAstExpression* CParser::functiondecl(CAstScope *s)
+{
+    //
+    // functiondecl = "function" ident [ formalparam ] ":" type ";".
+    //
+    //TODO
+
+    CAstExpression *n = NULL;
+
+    if (_scanner->Peek().GetType() == tFunction) {
+    	Consume(tFunction);
+	}
+	else {
+		SetError(_scanner->Peek(), "\"function\" expected.");
+	}
+
+	return n;
+}
+
+CAstExpression* CParser::formalparam(CAstScope *s)
+{
+    //
+    // "(" [ vardeclsequence ] ")".
+    //
+    
+    CAstExpression *n = NULL;
+    CAstExpression *child = NULL;
+
+    if (_scanner->Peek().GetType() == tLBrak) {
+        Consume(tLBrak);
+        if (_scanner->Peek().GetType() == tIdent) {
+            child = vardeclsequence(s);
+		}
+		else {
+		  SetError(_scanner->Peek(), "ident expected");
+		}
+		Consume(tRBrak);
+	}
+	else {
+	    SetError(_scanner->Peek(), "\'(\' expected.");
+	}
+
+	return n;
+}
+
+CAstExpression* CParser::subroutinebody(CAstScope *s)
+{
+    //
+    // vardeclaration = "begin" statsequence "end".
+    //
+
+    CAstExpression *n = NULL;
+
+    if (_scanner->Peek().GetType() == tBegin) {
+    	Consume(tBegin);
+    	// TODO:
+    	Consume(tEnd);
+    	// TODO
+	}
+	else {
+		SetError(_scanner->Peek(), "\"begin\" expected.");
+	}
+
+	return n;
+}
+
