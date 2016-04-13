@@ -213,6 +213,13 @@ CAstExpression* CParser::expression(CAstScope* s)
 
     if (t.GetValue() == "=")       relop = opEqual;
     else if (t.GetValue() == "#")  relop = opNotEqual;
+    /*
+     * added 4 case
+     */
+	else if (t.GetValue() == "<")  relop = opLessThan;
+	else if (t.GetValue() == "<=") relop = opLessEqual;
+	else if (t.GetValue() == ">")  relop = opBiggerThan;
+	else if (t.GetValue() == ">=") relop = opBiggerEqual;
     else SetError(t, "invalid relation.");
 
     return new CAstBinaryOp(t, relop, left, right);
@@ -230,15 +237,20 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
 
   n = term(s);
 
-  while (_scanner->Peek().GetType() == tPlusMinus) {
+  while (_scanner->Peek().GetType() == tTermOp) {
     CToken t;
     CAstExpression *l = n, *r;
 
-    Consume(tPlusMinus, &t);
+    Consume(tTermOp, &t);
 
     r = term(s);
 
-    n = new CAstBinaryOp(t, t.GetValue() == "+" ? opAdd : opSub, l, r);
+	/*
+	 *  n = new CAstBinaryOp(t, t.GetValue() == "+" ? opAdd : opSub, l, r);
+	 */
+	if (t.GetValue() == "+")       n = new CAstBinaryOp(t, opAdd, l, r);
+	else if (t.GetValue() == "-")  n = new CAstBinaryOp(t, opSub, l, r);
+	else if (t.GetValue() == "||") n = new CAstBinaryOp(t, opOr,  l, r);
   }
 
 
@@ -256,15 +268,20 @@ CAstExpression* CParser::term(CAstScope *s)
 
   EToken tt = _scanner->Peek().GetType();
 
-  while ((tt == tMulDiv)) {
+  while ((tt == tFactOp)) {
     CToken t;
     CAstExpression *l = n, *r;
 
-    Consume(tMulDiv, &t);
+    Consume(tFactOp, &t);
 
     r = factor(s);
 
-    n = new CAstBinaryOp(t, t.GetValue() == "*" ? opMul : opDiv, l, r);
+    /*
+     * n = new CAstBinaryOp(t, t.GetValue() == "*" ? opMul : opDiv, l, r);
+     */
+    if (t.GetValue() == "*")        n = new CAstBinaryOp(t, opMul, l, r);
+	else if (t.GetValue() == "/")   n = new CAstBinaryOp(t, opDiv, l, r);
+	else if (t.GetValue() == "&&")  n = new CAstBinaryOp(t, opAnd, l, r);
 
     tt = _scanner->Peek().GetType();
   }
@@ -291,10 +308,10 @@ CAstExpression* CParser::factor(CAstScope *s)
       break;
 
     // factor ::= "(" expression ")"
-    case tLParens:
-      Consume(tLParens);
+    case tLBrak:
+      Consume(tLBrak);
       n = expression(s);
-      Consume(tRParens);
+      Consume(tRBrak);
       break;
 
     default:
