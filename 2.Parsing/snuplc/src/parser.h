@@ -111,18 +111,18 @@ class CParser {
     /*
      * Added following functions
      */
+    CAstConstant*     boolean(void);
     CAstExpression*   ident(CAstScope *s);
     CAstExpression*   qualident(CAstScope *s);
-    CAstType*   type(CAstScope *s);
-    CAstStatement*   subroutinecall(CAstScope *s);
-    CAstStatement*   ifstatement(CAstScope *s);
-    CAstStatement*   whilestatement(CAstScope *s);
-    CAstStatement*   returnstatement(CAstScope *s);
-    CAstExpression*   vardeclsequence(CAstScope *s);
-    CAstExpression*   subroutinedecl(CAstScope *s);
-    CAstExpression*   proceduredecl(CAstScope *s);
-    CAstExpression*   functiondecl(CAstScope *s);
-    CAstExpression*   formalparam(CAstScope *s);
+    CAstType*         type(CAstScope *s);
+    CAstStatCall*     subroutinecall(CAstScope *s);
+    CAstStatement*    ifstatement(CAstScope *s);
+    CAstStatement*    whilestatement(CAstScope *s);
+    CAstStatement*    returnstatement(CAstScope *s);
+    void              vardeclaration(CAstScope *s);
+    void              vardecl(CAstScope *s);
+    void              vardeclsequence(CAstScope *s);
+    CAstProcedure*    subroutinedecl(CAstScope *s);
     CAstExpression*   subroutinebody(CAstScope *s);
     
     // statement: maybe in statSequence
