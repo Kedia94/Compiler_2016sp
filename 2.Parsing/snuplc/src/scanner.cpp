@@ -484,22 +484,43 @@ CToken* CScanner::Scan()
       /// else if it is an ASCIIchar check next char is closing quoate('\')
       /// else check if it is accepting escape characters
     case '\'':
-      if (IsASCII(_in->peek())) {								/// if it's printable ASCII except '\\' 
+      tokval = "";
+      if (IsASCII(_in->peek())) {					/// if it's printable ASCII except '\\' 
         tokval += GetChar();
-        if (_in->peek() == '\'') {								/// if it ends with '\''
-          tokval += GetChar();								/// it's valid character
+        if (_in->peek() == '\'') {					/// if it ends with '\''
+          GetChar();								/// it's valid character
           token = tCharacter;
         }
       }
-      else if (_in->peek() == '\\') {							/// if starts with '\\'	
-        tokval += GetChar();									/// if '\n' | '\t' | '\'' | '\'' | '\\' | '\0' 
-        if (_in->peek() == 'n' || _in->peek() == 't' || _in->peek() == '\"' || 
-            _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0' ) {
-          tokval += GetChar();
-          if (_in->peek() == '\'') {							/// if it ends with '\''
-            tokval += GetChar();							/// it's valid character
-            token = tCharacter;
-          }
+      else if (_in->peek() == '\\') {					/// if starts with '\\'	
+        GetChar();					/// if '\n' | '\t' | '\'' | '\'' | '\\' | '\0' 
+        if (_in->peek() == 'n'){
+          tokval = '\n';
+          GetChar();
+        }
+        else if (_in->peek() == 't') {
+          tokval = '\t';
+          GetChar();
+        }
+        else if (_in->peek() == '\"') {
+          tokval = '\"';
+          GetChar();
+        }
+        else if (_in->peek() == '\'') {
+          tokval = '\'';
+          GetChar();
+        }
+        else if (_in->peek() == '\\') {
+          tokval = '\\';
+          GetChar();
+        }
+        else if (_in->peek() == '0' ) {
+          tokval ='\0';
+          GetChar();
+        }
+        if (_in->peek() == '\'') {							/// if it ends with '\''
+          GetChar();							/// it's valid character
+          token = tCharacter;
         }
         else {
           tokval += GetChar();
@@ -518,14 +539,36 @@ CToken* CScanner::Scan()
       /// else consumes input stream unitl closing quoates appeared('\"')
     case '\"':
       token = tString;
+      tokval = "";
       while (_in->good() && _in->peek() != '\"') {				/// if it starts with '\"'
-        if (_in->peek() == '\\') {								/// if it can be escape character
-          tokval += GetChar();
-          if (_in->peek() == 'n' || _in->peek() == 't' || _in->peek() == '\"' ||
-              _in->peek() == '\'' || _in->peek() == '\\' || _in->peek() == '0') { 
-            tokval += GetChar();							/// if it is valid escape character
+        if (_in->peek() == '\\') {						/// if it can be escape character
+          GetChar();
+          if (_in->peek() == 'n'){
+            tokval += '\n';
+            GetChar();
           }
-          else {												/// if not, tUndefined
+          else if (_in->peek() == 't'){
+            tokval += '\t';
+            GetChar();
+          }
+          else if (_in->peek() == '\"'){
+            tokval += '\"';
+            GetChar();
+          }
+          else if (_in->peek() == '\''){
+            tokval += '\'';
+            GetChar();
+          }
+          else if (_in->peek() == '\\'){
+            tokval += '\\';
+            GetChar();
+          }
+          else if (_in->peek() == '0'){
+            tokval += '\0';	      			/// if it is valid escape character
+            GetChar();
+          }          
+
+          else {	      						/// if not, tUndefined
             tokval += GetChar();
             token = tUndefined;
           }
@@ -533,13 +576,13 @@ CToken* CScanner::Scan()
         else if (IsASCII(_in->peek())) {						/// if ASCII append it
           tokval += GetChar();
         }
-        else {													/// else it's tUndefined
+        else {									/// else it's tUndefined
           tokval += GetChar();
           token = tUndefined;
         }
       }
-      if (_in->peek() == '\"') {									/// if ending quoates appeared '\"'
-        tokval += GetChar();
+      if (_in->peek() == '\"') {					/// if ending quoates appeared '\"'
+        GetChar();
       }
       break;
 

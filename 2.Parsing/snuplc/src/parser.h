@@ -114,7 +114,7 @@ class CParser {
     CAstConstant*     boolean(void);
     CAstDesignator*   ident(CAstScope *s);
     CAstArrayDesignator*   qualident(CAstScope *s);
-    CAstType*         type(CAstScope *s);
+    CAstType*         type(CAstScope *s, bool pointer=false);
     CAstStatCall*     subroutinecall(CAstScope *s);
     CAstStatement*    ifstatement(CAstScope *s);
     CAstStatement*    whilestatement(CAstScope *s);

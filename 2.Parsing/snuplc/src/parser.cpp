@@ -169,23 +169,16 @@ CAstModule* CParser::module(void)
   m = new CAstModule(t1, t1.GetValue());
   InitSymbolTable(m->GetSymbolTable());
 
-  cout << "(debug) module *; finished" << endl;
-
   vardeclaration(m);
-
-  cout << "(debug) varDeclaration finished" << endl;
 
   while (_scanner->Peek().GetType() != tBegin) {
     routine = subroutinedecl(m);
   }
 
-  cout << "(debug) {subroutinedecl} finished" <<endl;
-
   Consume(tBegin);
   stat = statSequence(m);
   m->SetStatementSequence(stat);
 
-  cout << "(debug) statSequence finished" <<endl;
   Consume(tEnd);
   Consume(tIdent, &t2);
   Consume(tDot);
@@ -206,7 +199,6 @@ CAstStatement* CParser::statSequence(CAstScope *s)
   //
   CAstStatement *head = NULL;
   CSymtab *table = s->GetSymbolTable();
-
 
   EToken tt = _scanner->Peek().GetType();
   if (!(tt == tEnd || tt == tElse)) {
@@ -283,13 +275,12 @@ CAstStatAssign* CParser::assignment(CAstScope *s)
 
   CToken t;
 
-  CAstConstant *lhs = number();
-  // qualident(s);
+  CAstDesignator *lhs = qualident(s);
   Consume(tAssign, &t);
 
   CAstExpression *rhs = expression(s);
 
-  return new CAstStatAssign(t, (CAstConstant *)lhs, rhs);
+  return new CAstStatAssign(t, lhs, rhs);
 }
 
 CAstExpression* CParser::expression(CAstScope* s)
@@ -302,7 +293,6 @@ CAstExpression* CParser::expression(CAstScope* s)
   CAstExpression *left = NULL, *right = NULL;
 
   left = simpleexpr(s);
-
   if (_scanner->Peek().GetType() == tRelOp) {
     Consume(tRelOp, &t);
     right = simpleexpr(s);
@@ -332,7 +322,6 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
 
   CToken topt;
   EOperation factop;
-  CAstExpression *ret = NULL;
   CAstExpression *n = NULL;
 
   if (_scanner->Peek().GetType() == tTermOp) {
@@ -341,6 +330,10 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
   }
 
   n = term(s);
+
+  if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
+  else if (topt.GetValue() == "-") n = new CAstUnaryOp(topt, opNeg, n);
+  else if (topt.GetValue() == "&&") SetError(topt, "invalid unary operation.");
 
   while (_scanner->Peek().GetType() == tTermOp) {
     CToken t;
@@ -358,13 +351,8 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
     else if (t.GetValue() == "||") n = new CAstBinaryOp(t, opOr,  l, r);
   }
 
-  if (topt.GetValue() == "+") ret = new CAstUnaryOp(topt, opPos, n);
-  else if (topt.GetValue() == "-") ret = new CAstUnaryOp(topt, opNeg, n);
-  else if (topt.GetValue() == "&&") SetError(topt, "invalid unary operation.");
-  else return n;
 
-
-  return ret;
+  return n;
 }
 
 CAstExpression* CParser::term(CAstScope *s)
@@ -486,7 +474,6 @@ CAstExpression* CParser::factor(CAstScope *s)
       break;
 
     default:
-      cout << "got " << _scanner->Peek() << endl;
       SetError(_scanner->Peek(), "factor expected.");
       break;
   }
@@ -563,7 +550,9 @@ CAstArrayDesignator* CParser::qualident(CAstScope *s)
   Consume(tIdent, &t);
 
   symbol = s->GetSymbolTable()->FindSymbol(t.GetValue());
-
+  if (_scanner->Peek().GetType() != tLLBrak) {
+    return (CAstArrayDesignator *) new CAstDesignator(t, symbol);
+  }
   n = new CAstArrayDesignator(t, symbol);
 
   while (_scanner->Peek().GetType() == tLLBrak) {
@@ -578,7 +567,7 @@ CAstArrayDesignator* CParser::qualident(CAstScope *s)
 
 }
 
-CAstType* CParser::type(CAstScope *s)
+CAstType* CParser::type(CAstScope *s, bool pointer)
 {
   //
   // type = basetype | type "[" [ number ] "]".
@@ -613,7 +602,9 @@ CAstType* CParser::type(CAstScope *s)
       type = tm->GetInt();
       break;
   }
-
+  if (_scanner->Peek().GetType() != tLLBrak) {
+    return new CAstType(t, type);
+  }
   // type ::= type "[" [ number ] "]" -> array
   while (_scanner->Peek().GetType() == tLLBrak) {
     Consume(tLLBrak);
@@ -629,6 +620,9 @@ CAstType* CParser::type(CAstScope *s)
 
     Consume(tRRBrak);
 
+  }
+  if (pointer) {
+    type = tm->GetPointer(type);
   }
 
   n = new CAstType(t, type);
@@ -647,12 +641,13 @@ CAstStatCall* CParser::subroutinecall(CAstScope *s)
   CAstFunctionCall *funccall = NULL;
   CAstDesignator *identifier = NULL;
 
-  Consume(tIdent, &t);
+  identifier = ident(s);
+
   funccall = new CAstFunctionCall(identifier->GetToken(), (CSymProc *)identifier->GetSymbol());
 
   Consume(tLBrak);
 
-  if (_scanner->Peek().GetType() != tLBrak) {
+  if (_scanner->Peek().GetType() != tRBrak) {
     l = expression(s);
     funccall->AddArg(l);
     while (_scanner->Peek().GetType() == tComma) {
@@ -849,7 +844,7 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
   }
 
   Consume(tIdent, &tname);
-
+  
   // formalparam
   if (_scanner->Peek().GetType() == tLBrak) {
     Consume(tLBrak);
@@ -862,7 +857,7 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
         vec.push_back(tval);
       }
       Consume(tColon);
-      typ = type(s);
+      typ = type(s,true);
       size = vec.size();
 
       for (int i=0; i<size; i++) {
@@ -872,6 +867,7 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 
       while (_scanner->Peek().GetType() == tSemicolon) {
         vec.clear();
+        Consume(tSemicolon);
         Consume(tIdent, &tval);
         vec.push_back(tval);
         while (_scanner->Peek().GetType() == tComma) {
