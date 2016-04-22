@@ -148,10 +148,6 @@ void CParser::InitSymbolTable(CSymtab *s)
 
 CAstModule* CParser::module(void)
 {
-  //
-  // module ::= statSequence  ".".
-  //
-
   /*
    * module = "module" ident ";" varDeclaration { subroutineDecl }
    *          "begin" statSequence "end" ident ".".
@@ -171,6 +167,7 @@ CAstModule* CParser::module(void)
 
   vardeclaration(m);
 
+  // TODO overwrite ?
   while (_scanner->Peek().GetType() != tBegin) {
     routine = subroutinedecl(m);
   }
@@ -193,7 +190,7 @@ CAstStatement* CParser::statSequence(CAstScope *s)
 {
   //
   // statSequence ::= [ statement { ";" statement } ].
-  // statement ::= assignment.
+  // statement ::= assignment | subroutineCall | ifStatement | whileStatement | returnStatement
   // FIRST(statSequence) = { tNumber }
   // FOLLOW(statSequence) = { tEnd, tElse }
   //
@@ -201,7 +198,7 @@ CAstStatement* CParser::statSequence(CAstScope *s)
   CSymtab *table = s->GetSymbolTable();
 
   EToken tt = _scanner->Peek().GetType();
-  if (!(tt == tEnd || tt == tElse)) {
+  if (!(tt == tEnd || tt == tElse)) {	// TODO why test this ? 
     CAstStatement *tail = NULL;
 
     do {
