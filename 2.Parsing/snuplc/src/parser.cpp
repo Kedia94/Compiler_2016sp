@@ -191,14 +191,17 @@ CAstStatement* CParser::statSequence(CAstScope *s)
   //
   // statSequence ::= [ statement { ";" statement } ].
   // statement ::= assignment | subroutineCall | ifStatement | whileStatement | returnStatement
-  // FIRST(statSequence) = { tNumber }
-  // FOLLOW(statSequence) = { tEnd, tElse }
+  // FIRST = FIRST(<statement>) U {e}
+  // FOLLOW = {tEnd, tElse}
   //
-  CAstStatement *head = NULL;
-  CSymtab *table = s->GetSymbolTable();
+  // TODO : modify this with non-do-while version, just check tEnd & tElse first time and do statement()
+  // 	   and loop conusme(;), statment()
 
-  EToken tt = _scanner->Peek().GetType();
-  if (!(tt == tEnd || tt == tElse)) {	// TODO why test this ? 
+  CAstStatement *head = NULL;
+  CSymtab *table = s->GetSymbolTable();		// get symbol table
+
+  EToken tt = _scanner->Peek().GetType();	// peek next token
+  if (!(tt == tEnd || tt == tElse)) {		// while current token isn't included in FOLLOW	
     CAstStatement *tail = NULL;
 
     do {
@@ -207,22 +210,21 @@ CAstStatement* CParser::statSequence(CAstScope *s)
       CAstStatement *st = NULL;
 
       switch (tt) {
-        // statement ::= assignment
-        // assignment = qualident ":=" expression.
-        // maybe have to merge with subroutinecall
         /*
-         * statement = assignment | subroutineCall | ifStatement | whileStatement
-         *                   returnStatement
+         * statement = assignment | subroutineCall | ifStatement | whileStatement | returnStatement
+		 * FIRST(<statement>) = {tIdent, tIdent, tIf, tWhile, tReturn}
          */
 
-        // statement ::= subroutineCall
-        case tIdent:
+        case tIdent:	// TODO becareful with assignment & subroutinecall
+		  // if tIdent's value type is procedure it is subroutinecall
           if (table->FindSymbol(_scanner->Peek().GetValue())->GetSymbolType() == stProcedure) {
             st = subroutinecall(s);
           }
+		  // else it is assignment
           else {
             st = assignment(s);
           }
+		  // TODO else not declared symbol used => should be checked like factor
           break;
 
           // statement ::= ifStatement
@@ -245,139 +247,127 @@ CAstStatement* CParser::statSequence(CAstScope *s)
           break;
       }
 
-      assert(st != NULL);
-      if (head == NULL) head = st;
-      else tail->SetNext(st);
-      tail = st;
+      assert(st != NULL);			// for error handling
+      
+	  if (head == NULL)				// if it is first time
+		  head = st;				// make new statment
+      else 
+		  tail->SetNext(st);		// else append to next
+
+      tail = st;					// TODO : what's this?
 
       tt = _scanner->Peek().GetType();
       if (tt == tEnd || tt == tElse) break;
 
-      Consume(tSemicolon);
+      Consume(tSemicolon);		
     } while (!_abort);
   }
 
-  return head;
+  return head;						// where tail goes?
 }
 
 CAstStatAssign* CParser::assignment(CAstScope *s)
 {
-  //
-  // assignment ::= number ":=" expression.
-  //
-
-  /* TODO
+  /* TODO ?? 
    *  assignment = qualident ":=" expression.
+   *  FIRST = {tIdnet}
    */
-
   CToken t;
 
-  CAstDesignator *lhs = qualident(s);
-  Consume(tAssign, &t);
-
-  CAstExpression *rhs = expression(s);
+  CAstDesignator *lhs = qualident(s);	// qualident
+  Consume(tAssign, &t);					// ":="
+  CAstExpression *rhs = expression(s);	// expression
 
   return new CAstStatAssign(t, lhs, rhs);
 }
 
 CAstExpression* CParser::expression(CAstScope* s)
 {
-  //
-  // expression ::= simpleexpr [ relOp simpleexpression ].
-  //
+  /*
+   * expression ::= simpleexpr [ relOp simpleexpression ].
+   */
+
   CToken t;
   EOperation relop;
   CAstExpression *left = NULL, *right = NULL;
 
   left = simpleexpr(s);
-  if (_scanner->Peek().GetType() == tRelOp) {
-    Consume(tRelOp, &t);
-    right = simpleexpr(s);
+  if (_scanner->Peek().GetType() == tRelOp) {			// if it has [ relOp simpleexpression ]
+    Consume(tRelOp, &t);								// Consume relOp
+    right = simpleexpr(s);								// get right simpleexpression
 
+	// find out what operator t is
     if (t.GetValue() == "=")       relop = opEqual;
     else if (t.GetValue() == "#")  relop = opNotEqual;
-    /*
-     * add 4 case
-     */
     else if (t.GetValue() == "<")  relop = opLessThan;
     else if (t.GetValue() == "<=") relop = opLessEqual;
     else if (t.GetValue() == ">")  relop = opBiggerThan;
     else if (t.GetValue() == ">=") relop = opBiggerEqual;
-    else SetError(t, "invalid relation.");
+    else SetError(t, "invalid relation.");				// if no operator matches
 
     return new CAstBinaryOp(t, relop, left, right);
-  } else {
+  } 
+  else {												// it has no [ relOp simpleexpression ] part
     return left;
   }
 }
 
 CAstExpression* CParser::simpleexpr(CAstScope *s)
 {
-  //
-  // simpleexpr ::= ["+"|"-"] term { termOp term }.
-  //
+  /*
+   * simpleexpr ::= ["+"|"-"] term { termOp term }.
+   */
 
   CToken topt;
   EOperation factop;
   CAstExpression *n = NULL;
 
-  if (_scanner->Peek().GetType() == tTermOp) {
-
-    Consume(tTermOp, &topt);
+  if (_scanner->Peek().GetType() == tTermOp) {			// if it has ["+"|"-"] parts
+    Consume(tTermOp, &topt);							// consume operator
   }
 
-  n = term(s);
+  n = term(s);											// term parts
 
+  // designate appropriate operations
   if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
   else if (topt.GetValue() == "-") n = new CAstUnaryOp(topt, opNeg, n);
-  else if (topt.GetValue() == "&&") SetError(topt, "invalid unary operation.");
+  else SetError(topt, "invalid unary operation.");		// set error 
+  // FIXME : it should be "||" ?
 
-  while (_scanner->Peek().GetType() == tTermOp) {
+  while (_scanner->Peek().GetType() == tTermOp) {		// { termOp term } parts
     CToken t;
     CAstExpression *l = n, *r;
 
-    Consume(tTermOp, &t);
+    Consume(tTermOp, &t);								// consume termOp
+    r = term(s);										// consume term
 
-    r = term(s);
-
-    /*
-     *  n = new CAstBinaryOp(t, t.GetValue() == "+" ? opAdd : opSub, l, r);
-     */
+	// designate appropriate operations
     if (t.GetValue() == "+")       n = new CAstBinaryOp(t, opAdd, l, r);
     else if (t.GetValue() == "-")  n = new CAstBinaryOp(t, opSub, l, r);
     else if (t.GetValue() == "||") n = new CAstBinaryOp(t, opOr,  l, r);
   }
-
 
   return n;
 }
 
 CAstExpression* CParser::term(CAstScope *s)
 {
-  //
-  // term ::= factor { ("*"|"/") factor }.
-  //
-
   /* 
-   * term = factor { factOp facter }.
+   * term = factor { factOp factor }.
    */
   CAstExpression *n = NULL;
 
-  n = factor(s);
+  n = factor(s); // factor part							
 
   EToken tt = _scanner->Peek().GetType();
-
-  while ((tt == tFactOp)) {
+  while ((tt == tFactOp)) {	// check for { factOp factor } part
     CToken t;
     CAstExpression *l = n, *r;
 
     Consume(tFactOp, &t);
-
     r = factor(s);
 
-    /*
-     * n = new CAstBinaryOp(t, t.GetValue() == "*" ? opMul : opDiv, l, r);
-     */
+	// designate appropriate operations
     if (t.GetValue() == "*")        n = new CAstBinaryOp(t, opMul, l, r);
     else if (t.GetValue() == "/")   n = new CAstBinaryOp(t, opDiv, l, r);
     else if (t.GetValue() == "&&")  n = new CAstBinaryOp(t, opAnd, l, r);
@@ -390,16 +380,10 @@ CAstExpression* CParser::term(CAstScope *s)
 
 CAstExpression* CParser::factor(CAstScope *s)
 {
-  //
-  // factor ::= number | "(" expression ")"
-  //
-  // FIRST(factor) = { tNumber, tLBrak }
-  //
-
   /* 
-   * factor = qualident | number | boolean | char | string |
-   *          "(" expression ")" | subroutineCall | "!" factor.
+   * factor = qualident | number | boolean | char | string | "(" expression ")" | subroutineCall | "!" factor.
    */
+  // XXX ident should be distinguished
 
   CToken t;
   EToken tt = _scanner->Peek().GetType();
@@ -412,12 +396,13 @@ CAstExpression* CParser::factor(CAstScope *s)
     // factor ::= subroutinecall
     case tIdent:
       symbol = s->GetSymbolTable()->FindSymbol(_scanner->Peek().GetValue());
-      if (symbol == NULL) {
+	  // if peeked value is not found in symboltable
+      if (symbol == NULL) {	// Error handling
         SetError(t, "No symbol \'" + _scanner->Peek().GetValue() + "\'");
       }
       else {
-        if (symbol->GetSymbolType() == stProcedure) {
-          call = subroutinecall(s);
+        if (symbol->GetSymbolType() == stProcedure) {	// if it's subroutinecall
+          call = subroutinecall(s);						// XXX what's this statement means?
           n = call->GetCall();
         }
         else {
@@ -482,7 +467,6 @@ CAstConstant* CParser::number(void)
 {
   //
   // number ::= digit { digit }.
-  //
   // "digit { digit }" is scanned as one token (tNumber)
   //
 
@@ -523,11 +507,10 @@ CAstDesignator* CParser::ident(CAstScope *s)
   // "letter { letter | digit }" is scanned as one token (tIdent)
   //
 
+  // XXX don't we hae to check wheter ident is insdie a scope s?
 
   CToken t;
-
   Consume(tIdent, &t);
-
   return new CAstDesignator(t, s->GetSymbolTable()->FindSymbol(t.GetValue()));
 }
 
