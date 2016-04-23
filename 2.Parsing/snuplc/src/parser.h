@@ -112,6 +112,7 @@ class CParser {
      * Added following functions
      */
     CAstConstant*     boolean(void);
+	CAstConstant*	  character(void);
     CAstDesignator*   ident(CAstScope *s);
     CAstArrayDesignator*   qualident(CAstScope *s);
     CAstType*         type(CAstScope *s, bool pointer=false);

@@ -332,7 +332,6 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
   if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
   else if (topt.GetValue() == "-") n = new CAstUnaryOp(topt, opNeg, n);
   else if (topt.GetValue() == "||") SetError(topt, "invalid unary operation.");		// set error 
-  // FIXME : it should be "||" ?
 
   while (_scanner->Peek().GetType() == tTermOp) {		// { termOp term } parts
     CToken t;
@@ -376,6 +375,47 @@ CAstExpression* CParser::term(CAstScope *s)
   }
 
   return n;
+}
+
+CAstConstant* CParser::character()
+{
+	CToken t;
+	long long v;
+
+	Consume (tCharacter, &t);
+	if (t.GetValue().size() == 0)
+		return new CAstConstant (t, CTypeManager::Get()->GetChar(), '\0');
+
+	if (t.GetValue().at(0) == '\\') {
+		switch (t.GetValue().at(1)) {
+			case 'n':
+				v = '\n';
+				break;
+				
+			case 't':
+				v = '\t';
+				break;
+
+			case '\"':
+				v = '\"';
+				break;
+
+			case '\'':
+				v = '\'';
+				break;
+
+			case '\\':
+				v = '\\';
+				break;
+				
+			default:
+				SetError(t, "Undefined character token");
+		}
+	}
+	else
+		v = t.GetValue().at(0);
+
+	return new CAstConstant (t, CTypeManager::Get()->GetChar(), v);
 }
 
 CAstExpression* CParser::factor(CAstScope *s)
@@ -427,8 +467,7 @@ CAstExpression* CParser::factor(CAstScope *s)
       // char = "'" character "'".
       // "'" character "'" is scanned as one token {tCharacter}
     case tCharacter:
-      Consume(tCharacter, &t);
-      n = new CAstStringConstant(t, t.GetValue(), s);
+      n = character(); 
       break;
 
       // factor ::= string

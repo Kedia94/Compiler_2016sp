@@ -10,7 +10,7 @@ var c: char;
 
 begin
   c := '1';
-  c := '\t';
+  c := '\0';
   WriteChar(c);
   WriteChar('!');
   WriteLn()

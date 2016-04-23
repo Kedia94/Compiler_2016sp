@@ -145,7 +145,7 @@ GetChar	snuplc/src/type.cpp	/^const CCharType* CTypeManager::GetChar(void) const
 GetCharPosition	scanner/scanner.h	/^    int GetCharPosition() const { return _char; };$/;"	f	class:CScanner
 GetCharPosition	scanner/scanner.h	/^    int GetCharPosition(void) const { return _char; };$/;"	f	class:CToken
 GetCharPosition	snuplc/src/scanner.h	/^    int GetCharPosition() const { return _char; };$/;"	f	class:CScanner
-GetCharPosition	snuplc/src/scanner.h	/^    int GetCharPosition(void) const { return _char; };$/;"	f	class:CToken
+GetCharPosition	snuplc/src/scanner.h	/^  int GetCharPosition(void) const { return _char; };$/;"	f	class:CToken
 GetChild	snuplc/src/ast.cpp	/^CAstScope* CAstScope::GetChild(size_t i) const$/;"	f	class:CAstScope
 GetCodeBlock	snuplc/src/ast.cpp	/^CCodeBlock* CAstScope::GetCodeBlock(void) const$/;"	f	class:CAstScope
 GetCondition	snuplc/src/ast.cpp	/^CAstExpression* CAstStatIf::GetCondition(void) const$/;"	f	class:CAstStatIf
@@ -165,12 +165,12 @@ GetIndex	snuplc/src/ast.cpp	/^CAstExpression* CAstArrayDesignator::GetIndex(int 
 GetIndex	snuplc/src/symtab.cpp	/^int CSymParam::GetIndex(void) const$/;"	f	class:CSymParam
 GetInnerType	snuplc/src/type.h	/^    const CType* GetInnerType(void) const { return _innertype; };$/;"	f	class:CArrayType
 GetInt	snuplc/src/type.cpp	/^const CIntType* CTypeManager::GetInt(void) const$/;"	f	class:CTypeManager
-GetLHS	snuplc/src/ast.cpp	/^CAstConstant* CAstStatAssign::GetLHS(void) const$/;"	f	class:CAstStatAssign
+GetLHS	snuplc/src/ast.cpp	/^CAstDesignator* CAstStatAssign::GetLHS(void) const$/;"	f	class:CAstStatAssign
 GetLeft	snuplc/src/ast.cpp	/^CAstExpression* CAstBinaryOp::GetLeft(void) const$/;"	f	class:CAstBinaryOp
 GetLineNumber	scanner/scanner.h	/^    int GetLineNumber(void) const { return _line; };$/;"	f	class:CScanner
 GetLineNumber	scanner/scanner.h	/^    int GetLineNumber(void) const { return _line; };$/;"	f	class:CToken
 GetLineNumber	snuplc/src/scanner.h	/^    int GetLineNumber(void) const { return _line; };$/;"	f	class:CScanner
-GetLineNumber	snuplc/src/scanner.h	/^    int GetLineNumber(void) const { return _line; };$/;"	f	class:CToken
+GetLineNumber	snuplc/src/scanner.h	/^  int GetLineNumber(void) const { return _line; };$/;"	f	class:CToken
 GetNArgs	snuplc/src/ast.cpp	/^int CAstFunctionCall::GetNArgs(void) const$/;"	f	class:CAstFunctionCall
 GetNDim	snuplc/src/type.cpp	/^int CArrayType::GetNDim(void) const$/;"	f	class:CArrayType
 GetNElem	snuplc/src/type.h	/^    int GetNElem(void) const { return _nelem; };$/;"	f	class:CArrayType
@@ -223,11 +223,11 @@ GetType	snuplc/src/ast.cpp	/^const CType* CAstStatReturn::GetType(void) const$/;
 GetType	snuplc/src/ast.cpp	/^const CType* CAstStringConstant::GetType(void) const$/;"	f	class:CAstStringConstant
 GetType	snuplc/src/ast.cpp	/^const CType* CAstType::GetType(void) const$/;"	f	class:CAstType
 GetType	snuplc/src/ast.cpp	/^const CType* CAstUnaryOp::GetType(void) const$/;"	f	class:CAstUnaryOp
-GetType	snuplc/src/scanner.h	/^    EToken GetType(void) const { return _type; };$/;"	f	class:CToken
+GetType	snuplc/src/scanner.h	/^  EToken GetType(void) const { return _type; };$/;"	f	class:CToken
 GetValue	scanner/scanner.h	/^    string GetValue(void) const { return _value; };$/;"	f	class:CToken
 GetValue	snuplc/src/ast.cpp	/^const string CAstStringConstant::GetValue(void) const$/;"	f	class:CAstStringConstant
 GetValue	snuplc/src/ast.cpp	/^long long CAstConstant::GetValue(void) const$/;"	f	class:CAstConstant
-GetValue	snuplc/src/scanner.h	/^    string GetValue(void) const { return _value; };$/;"	f	class:CToken
+GetValue	snuplc/src/scanner.h	/^  string GetValue(void) const { return _value; };$/;"	f	class:CToken
 GetValueStr	snuplc/src/ast.cpp	/^const string CAstStringConstant::GetValueStr(void) const$/;"	f	class:CAstStringConstant
 GetValueStr	snuplc/src/ast.cpp	/^string CAstConstant::GetValueStr(void) const$/;"	f	class:CAstConstant
 GetVoidPtr	snuplc/src/type.cpp	/^const CPointerType* CTypeManager::GetVoidPtr(void) const$/;"	f	class:CTypeManager
@@ -237,19 +237,19 @@ HasError	snuplc/src/parser.h	/^    bool HasError(void) const { return _abort; };
 IndicesComplete	snuplc/src/ast.cpp	/^void CAstArrayDesignator::IndicesComplete(void)$/;"	f	class:CAstArrayDesignator
 InitKeywords	snuplc/src/scanner.cpp	/^void CScanner::InitKeywords(void)$/;"	f	class:CScanner
 InitSymbolTable	snuplc/src/parser.cpp	/^void CParser::InitSymbolTable(CSymtab *s)$/;"	f	class:CParser
-IsAlpha	snuplc/src/scanner.cpp	/^bool CScanner::IsAlpha(char c) const$/;"	f	class:CScanner
+IsASCII	snuplc/src/scanner.cpp	/^bool CScanner::IsASCII(char c) const$/;"	f	class:CScanner
 IsArray	snuplc/src/type.h	/^    virtual bool IsArray(void) const { return false; };$/;"	f	class:CType
 IsArray	snuplc/src/type.h	/^    virtual bool IsArray(void) const { return true; };$/;"	f	class:CArrayType
 IsBoolean	snuplc/src/type.h	/^    virtual bool IsBoolean(void) const { return false; };$/;"	f	class:CType
 IsBoolean	snuplc/src/type.h	/^    virtual bool IsBoolean(void) const { return true; };$/;"	f	class:CBoolType
 IsChar	snuplc/src/type.h	/^    virtual bool IsChar(void) const { return false; };$/;"	f	class:CType
 IsChar	snuplc/src/type.h	/^    virtual bool IsChar(void) const { return true; };$/;"	f	class:CCharType
-IsIDChar	snuplc/src/scanner.cpp	/^bool CScanner::IsIDChar(char c) const$/;"	f	class:CScanner
+IsDigit	snuplc/src/scanner.cpp	/^bool CScanner::IsDigit(char c) const$/;"	f	class:CScanner
 IsInt	snuplc/src/type.h	/^    virtual bool IsInt(void) const { return false; };$/;"	f	class:CType
 IsInt	snuplc/src/type.h	/^    virtual bool IsInt(void) const { return true; };$/;"	f	class:CIntType
+IsLetter	snuplc/src/scanner.cpp	/^bool CScanner::IsLetter(char c) const$/;"	f	class:CScanner
 IsNull	snuplc/src/type.h	/^    virtual bool IsNull(void) const { return false; };$/;"	f	class:CType
 IsNull	snuplc/src/type.h	/^    virtual bool IsNull(void) const { return true; };$/;"	f	class:CNullType
-IsNum	snuplc/src/scanner.cpp	/^bool CScanner::IsNum(char c) const$/;"	f	class:CScanner
 IsPointer	snuplc/src/type.h	/^    virtual bool IsPointer(void) const { return false; };$/;"	f	class:CType
 IsPointer	snuplc/src/type.h	/^    virtual bool IsPointer(void) const { return true; };$/;"	f	class:CPointerType
 IsScalar	snuplc/src/type.h	/^    virtual bool IsScalar(void) const { return false; };$/;"	f	class:CType
@@ -278,7 +278,7 @@ PARSER	scanner/Makefile	/^PARSER=parser.cpp \\$/;"	m
 PARSER	snuplc/Makefile	/^PARSER=parser.cpp \\$/;"	m
 Parse	snuplc/src/parser.cpp	/^CAstNode* CParser::Parse(void)$/;"	f	class:CParser
 Peek	snuplc/src/scanner.cpp	/^CToken CScanner::Peek() const$/;"	f	class:CScanner
-RecordStreamPosition	snuplc/src/scanner.cpp	/^void CScanner::RecordStreamPosition(void)$/;"	f	class:CScanner
+RecordStreamPosition	snuplc/src/scanner.cpp	/^void CScanner::RecordStreamPosition()$/;"	f	class:CScanner
 SCANNER	scanner/Makefile	/^SCANNER=scanner.cpp$/;"	m
 SCANNER	snuplc/Makefile	/^SCANNER=scanner.cpp$/;"	m
 SRC_DIR	scanner/Makefile	/^SRC_DIR=src$/;"	m
@@ -333,12 +333,12 @@ TypeCheck	snuplc/src/ast.cpp	/^bool CAstStatReturn::TypeCheck(CToken *t, string 
 TypeCheck	snuplc/src/ast.cpp	/^bool CAstStatWhile::TypeCheck(CToken *t, string *msg) const$/;"	f	class:CAstStatWhile
 TypeCheck	snuplc/src/ast.cpp	/^bool CAstStringConstant::TypeCheck(CToken *t, string *msg) const$/;"	f	class:CAstStringConstant
 TypeCheck	snuplc/src/ast.cpp	/^bool CAstUnaryOp::TypeCheck(CToken *t, string *msg) const$/;"	f	class:CAstUnaryOp
+__SnuPL1_SCANNER_H__	snuplc/src/scanner.h	37;"	d
 __SnuPL_AST_H__	snuplc/src/ast.h	37;"	d
 __SnuPL_DATA_H__	snuplc/src/data.h	34;"	d
 __SnuPL_IR_H__	snuplc/src/ir.h	39;"	d
 __SnuPL_PARSER_H__	snuplc/src/parser.h	37;"	d
 __SnuPL_SCANNER_H__	scanner/scanner.h	36;"	d
-__SnuPL_SCANNER_H__	snuplc/src/scanner.h	38;"	d
 __SnuPL_SYMTAB_H__	snuplc/src/symtab.h	34;"	d
 __SnuPL_TYPE_H__	snuplc/src/type.h	35;"	d
 _abort	snuplc/src/parser.h	/^    bool          _abort;         \/\/\/< error flag$/;"	m	class:CParser
@@ -353,7 +353,7 @@ _cb	snuplc/src/ast.h	/^    CCodeBlock *_cb;                \/\/\/< (entry) code 
 _char	scanner/scanner.h	/^    int     _char;                  \/\/\/< current stream position (character pos)$/;"	m	class:CScanner
 _char	scanner/scanner.h	/^    int    _char;                   \/\/\/< input stream position (character pos)$/;"	m	class:CToken
 _char	snuplc/src/scanner.h	/^    int     _char;                  \/\/\/< current stream position (character pos)$/;"	m	class:CScanner
-_char	snuplc/src/scanner.h	/^    int    _char;                   \/\/\/< input stream position (character pos)$/;"	m	class:CToken
+_char	snuplc/src/scanner.h	/^  int    _char;                   \/\/\/< input stream position (character pos)$/;"	m	class:CToken
 _char	snuplc/src/type.h	/^    CCharType     *_char;         \/\/\/< char base type$/;"	m	class:CTypeManager
 _children	snuplc/src/ast.h	/^    vector<CAstScope*> _children;   \/\/\/< subordinate scopes$/;"	m	class:CAstScope
 _cond	snuplc/src/ast.h	/^    CAstExpression *_cond;          \/\/\/< condition$/;"	m	class:CAstStatIf
@@ -384,11 +384,11 @@ _index	snuplc/src/symtab.h	/^    int            _index;        \/\/\/< index$/;"
 _innertype	snuplc/src/type.h	/^    const CType   *_innertype;    \/\/\/< inner type$/;"	m	class:CArrayType
 _integer	snuplc/src/type.h	/^    CIntType      *_integer;      \/\/\/< integer base type$/;"	m	class:CTypeManager
 _left	snuplc/src/ast.h	/^    CAstExpression *_left;          \/\/\/< left operand$/;"	m	class:CAstBinaryOp
-_lhs	snuplc/src/ast.h	/^    CAstConstant   *_lhs;           \/\/\/< LHS (designator)$/;"	m	class:CAstStatAssign
+_lhs	snuplc/src/ast.h	/^    CAstDesignator *_lhs;           \/\/\/< LHS (designator)$/;"	m	class:CAstStatAssign
 _line	scanner/scanner.h	/^    int     _line;                  \/\/\/< current stream position (line)$/;"	m	class:CScanner
 _line	scanner/scanner.h	/^    int    _line;                   \/\/\/< input stream position (line)$/;"	m	class:CToken
 _line	snuplc/src/scanner.h	/^    int     _line;                  \/\/\/< current stream position (line)$/;"	m	class:CScanner
-_line	snuplc/src/scanner.h	/^    int    _line;                   \/\/\/< input stream position (line)$/;"	m	class:CToken
+_line	snuplc/src/scanner.h	/^  int    _line;                   \/\/\/< input stream position (line)$/;"	m	class:CToken
 _message	snuplc/src/parser.h	/^    string        _message;       \/\/\/< error message$/;"	m	class:CParser
 _module	snuplc/src/parser.h	/^    CAstModule   *_module;        \/\/\/< root node of the program$/;"	m	class:CParser
 _name	snuplc/src/ast.h	/^    string    _name;                \/\/\/< name$/;"	m	class:CAstScope
@@ -432,13 +432,14 @@ _type	snuplc/src/ast.h	/^    const CType     *_type;         \/\/\/< constant ty
 _type	snuplc/src/ast.h	/^    const CType *_type;             \/\/\/< constant type$/;"	m	class:CAstConstant
 _type	snuplc/src/ast.h	/^    const CType *_type;             \/\/\/< forced type of this op$/;"	m	class:CAstSpecialOp
 _type	snuplc/src/ast.h	/^    const CType *_type;             \/\/\/< type$/;"	m	class:CAstType
-_type	snuplc/src/scanner.h	/^    EToken _type;                   \/\/\/< token type$/;"	m	class:CToken
+_type	snuplc/src/scanner.h	/^  EToken _type;                   \/\/\/< token type$/;"	m	class:CToken
 _value	scanner/scanner.h	/^    string _value;                  \/\/\/< token value$/;"	m	class:CToken
 _value	snuplc/src/ast.h	/^    CDataInitString *_value;        \/\/\/< data initializer (holds string data)$/;"	m	class:CAstStringConstant
 _value	snuplc/src/ast.h	/^    long long _value;               \/\/\/< constant value$/;"	m	class:CAstConstant
-_value	snuplc/src/scanner.h	/^    string _value;                  \/\/\/< token value$/;"	m	class:CToken
+_value	snuplc/src/scanner.h	/^  string _value;                  \/\/\/< token value$/;"	m	class:CToken
 _voidptr	snuplc/src/type.h	/^    CPointerType  *_voidptr;      \/\/\/< void pointer type$/;"	m	class:CTypeManager
 assignment	snuplc/src/parser.cpp	/^CAstStatAssign* CParser::assignment(CAstScope *s)$/;"	f	class:CParser
+boolean	snuplc/src/parser.cpp	/^CAstConstant* CParser::boolean(void)$/;"	f	class:CParser
 dotAttr	snuplc/src/ast.cpp	/^string CAstArrayDesignator::dotAttr(void) const$/;"	f	class:CAstArrayDesignator
 dotAttr	snuplc/src/ast.cpp	/^string CAstBinaryOp::dotAttr(void) const$/;"	f	class:CAstBinaryOp
 dotAttr	snuplc/src/ast.cpp	/^string CAstConstant::dotAttr(void) const$/;"	f	class:CAstConstant
@@ -460,11 +461,17 @@ dotID	snuplc/src/ast.cpp	/^string CAstStatCall::dotID(void) const$/;"	f	class:CA
 escape	snuplc/src/scanner.cpp	/^string CToken::escape(const string text)$/;"	f	class:CToken
 expression	snuplc/src/parser.cpp	/^CAstExpression* CParser::expression(CAstScope* s)$/;"	f	class:CParser
 factor	snuplc/src/parser.cpp	/^CAstExpression* CParser::factor(CAstScope *s)$/;"	f	class:CParser
+ident	snuplc/src/parser.cpp	/^CAstDesignator* CParser::ident(CAstScope *s)$/;"	f	class:CParser
+ifstatement	snuplc/src/parser.cpp	/^CAstStatement* CParser::ifstatement(CAstScope *s)$/;"	f	class:CParser
 keywords	scanner/scanner.h	/^    static map<string, EToken> keywords;\/\/\/< reserved keywords with corr. tokens$/;"	m	class:CScanner
 keywords	snuplc/src/scanner.cpp	/^map<string, EToken> CScanner::keywords;$/;"	m	class:CScanner	file:
 keywords	snuplc/src/scanner.h	/^    static map<string, EToken> keywords;\/\/\/< reserved keywords with corr. tokens$/;"	m	class:CScanner
+l_test05_exit	test/parser/test05.mod.s	/^l_test05_exit:$/;"	l
 main	snuplc/src/test_parser.cpp	/^int main(int argc, char *argv[])$/;"	f
 main	snuplc/src/test_scanner.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	test/parser/test05.mod.s	/^main:$/;"	l
+max	test/parser/test05.mod.s	/^max:    .skip    4                  # <int>$/;"	l
+min	test/parser/test05.mod.s	/^min:    .skip    4                  # <int>$/;"	l
 module	snuplc/src/parser.cpp	/^CAstModule* CParser::module(void)$/;"	f	class:CParser
 number	snuplc/src/parser.cpp	/^CAstConstant* CParser::number(void)$/;"	f	class:CParser
 opAdd	snuplc/src/ir.h	/^  opAdd=0,                          \/\/\/< +  addition$/;"	e	enum:EOperation
@@ -533,6 +540,8 @@ print	snuplc/src/type.cpp	/^ostream& CIntType::print(ostream &out, int indent) c
 print	snuplc/src/type.cpp	/^ostream& CNullType::print(ostream &out, int indent) const$/;"	f	class:CNullType
 print	snuplc/src/type.cpp	/^ostream& CPointerType::print(ostream &out, int indent) const$/;"	f	class:CPointerType
 print	snuplc/src/type.cpp	/^ostream& CTypeManager::print(ostream &out, int indent) const$/;"	f	class:CTypeManager
+qualident	snuplc/src/parser.cpp	/^CAstArrayDesignator* CParser::qualident(CAstScope *s)$/;"	f	class:CParser
+returnstatement	snuplc/src/parser.cpp	/^CAstStatement* CParser::returnstatement(CAstScope *s)$/;"	f	class:CParser
 sGlobal	snuplc/src/symtab.h	/^  sGlobal,                        \/\/\/< global$/;"	e	enum:EScope
 sLocal	snuplc/src/symtab.h	/^  sLocal,                         \/\/\/< local$/;"	e	enum:EScope
 simpleexpr	snuplc/src/parser.cpp	/^CAstExpression* CParser::simpleexpr(CAstScope *s)$/;"	f	class:CParser
@@ -541,57 +550,85 @@ stLocal	snuplc/src/symtab.h	/^  stLocal,          \/\/\/< local symbol$/;"	e	enu
 stParam	snuplc/src/symtab.h	/^  stParam,          \/\/\/< parameter symbol$/;"	e	enum:ESymbolType
 stProcedure	snuplc/src/symtab.h	/^  stProcedure,      \/\/\/< procedure symbol$/;"	e	enum:ESymbolType
 statSequence	snuplc/src/parser.cpp	/^CAstStatement* CParser::statSequence(CAstScope *s)$/;"	f	class:CParser
+subroutinebody	snuplc/src/parser.cpp	/^CAstExpression* CParser::subroutinebody(CAstScope *s)$/;"	f	class:CParser
+subroutinecall	snuplc/src/parser.cpp	/^CAstStatCall* CParser::subroutinecall(CAstScope *s)$/;"	f	class:CParser
+subroutinedecl	snuplc/src/parser.cpp	/^CAstProcedure* CParser::subroutinedecl(CAstScope *s)$/;"	f	class:CParser
 tAnd	scanner/scanner.h	/^  tAnd,                             \/\/\/< '&&'$/;"	e	enum:EToken
 tAssign	scanner/scanner.h	/^  tAssign,                          \/\/\/< assignment operator$/;"	e	enum:EToken
-tAssign	snuplc/src/scanner.h	/^  tAssign,                          \/\/\/< assignment operator$/;"	e	enum:EToken
+tAssign	snuplc/src/scanner.h	/^  tAssign,						\/\/\/< assignment operator$/;"	e	enum:EToken
 tBegin	scanner/scanner.h	/^  tBegin,                           \/\/\/< 'begin'$/;"	e	enum:EToken
+tBegin	snuplc/src/scanner.h	/^  tBegin,							\/\/\/< keyword "begin"$/;"	e	enum:EToken
 tBoolConst	scanner/scanner.h	/^  tBoolConst,                       \/\/\/< boolean constant$/;"	e	enum:EToken
 tBoolean	scanner/scanner.h	/^  tBoolean,                         \/\/\/< 'boolean'$/;"	e	enum:EToken
+tBoolean	snuplc/src/scanner.h	/^  tBoolean,						\/\/\/< keyword "boolean"$/;"	e	enum:EToken
 tChar	scanner/scanner.h	/^  tChar,                            \/\/\/< 'char'$/;"	e	enum:EToken
+tChar	snuplc/src/scanner.h	/^  tChar,							\/\/\/< keyword "char"$/;"	e	enum:EToken
 tCharConst	scanner/scanner.h	/^  tCharConst,                       \/\/\/< character constant$/;"	e	enum:EToken
+tCharacter	snuplc/src/scanner.h	/^  tCharacter,						\/\/\/< a char such as 'a'$/;"	e	enum:EToken
 tColon	scanner/scanner.h	/^  tColon,                           \/\/\/< a colon$/;"	e	enum:EToken
+tColon	snuplc/src/scanner.h	/^  tColon,							\/\/\/< a colon$/;"	e	enum:EToken
 tComma	scanner/scanner.h	/^  tComma,                           \/\/\/< a comma$/;"	e	enum:EToken
+tComma	snuplc/src/scanner.h	/^  tComma, 						\/\/\/< a comma$/;"	e	enum:EToken
 tComment	scanner/scanner.h	/^  tComment,                         \/\/\/< comment ('\/\/ .... \\n')$/;"	e	enum:EToken
 tDo	scanner/scanner.h	/^  tDo,                              \/\/\/< 'do'$/;"	e	enum:EToken
+tDo	snuplc/src/scanner.h	/^  tDo,							\/\/\/< keyword "do"$/;"	e	enum:EToken
 tDot	scanner/scanner.h	/^  tDot,                             \/\/\/< a dot$/;"	e	enum:EToken
-tDot	snuplc/src/scanner.h	/^  tDot,                             \/\/\/< a dot$/;"	e	enum:EToken
+tDot	snuplc/src/scanner.h	/^  tDot,                           \/\/\/< a dot$/;"	e	enum:EToken
 tEOF	scanner/scanner.h	/^  tEOF,                             \/\/\/< end of file$/;"	e	enum:EToken
-tEOF	snuplc/src/scanner.h	/^  tEOF,                             \/\/\/< end of file$/;"	e	enum:EToken
+tEOF	snuplc/src/scanner.h	/^  tEOF,                           \/\/\/< end of file$/;"	e	enum:EToken
 tElse	scanner/scanner.h	/^  tElse,                            \/\/\/< 'else'$/;"	e	enum:EToken
+tElse	snuplc/src/scanner.h	/^  tElse,							\/\/\/< keyword "else"$/;"	e	enum:EToken
 tEnd	scanner/scanner.h	/^  tEnd,                             \/\/\/< 'end'$/;"	e	enum:EToken
+tEnd	snuplc/src/scanner.h	/^  tEnd,							\/\/\/< keyword "end"$/;"	e	enum:EToken
+tFactOp	snuplc/src/scanner.h	/^  tFactOp,						\/\/\/< '*' or '\/' or '&&'$/;"	e	enum:EToken
+tFalse	snuplc/src/scanner.h	/^  tFalse,							\/\/\/< keyword "false"$/;"	e	enum:EToken
 tFunction	scanner/scanner.h	/^  tFunction,                        \/\/\/< 'function'$/;"	e	enum:EToken
+tFunction	snuplc/src/scanner.h	/^  tFunction,						\/\/\/< keyword "function"$/;"	e	enum:EToken
 tIOError	scanner/scanner.h	/^  tIOError,                         \/\/\/< I\/O error$/;"	e	enum:EToken
-tIOError	snuplc/src/scanner.h	/^  tIOError,                         \/\/\/< I\/O error$/;"	e	enum:EToken
+tIOError	snuplc/src/scanner.h	/^  tIOError,                       \/\/\/< I\/O error$/;"	e	enum:EToken
 tIdent	scanner/scanner.h	/^  tIdent=0,                         \/\/\/< ident$/;"	e	enum:EToken
+tIdent	snuplc/src/scanner.h	/^  tIdent,                         \/\/\/< a ident$/;"	e	enum:EToken
 tIf	scanner/scanner.h	/^  tIf,                              \/\/\/< 'if'$/;"	e	enum:EToken
+tIf	snuplc/src/scanner.h	/^  tIf,							\/\/\/< keyword "if"$/;"	e	enum:EToken
 tInteger	scanner/scanner.h	/^  tInteger,                         \/\/\/< 'integer'$/;"	e	enum:EToken
+tInteger	snuplc/src/scanner.h	/^  tInteger,						\/\/\/< keyword "integer"	$/;"	e	enum:EToken
 tLBrak	scanner/scanner.h	/^  tLBrak,                           \/\/\/< a left bracket$/;"	e	enum:EToken
+tLBrak	snuplc/src/scanner.h	/^  tLBrak,                         \/\/\/< a left bracket '('$/;"	e	enum:EToken
+tLLBrak	snuplc/src/scanner.h	/^  tLLBrak,						\/\/\/< a left square bracket '['$/;"	e	enum:EToken
 tLParens	scanner/scanner.h	/^  tLParens,                         \/\/\/< a left parenthesis$/;"	e	enum:EToken
-tLParens	snuplc/src/scanner.h	/^  tLParens,                         \/\/\/< a left parenthesis$/;"	e	enum:EToken
 tModule	scanner/scanner.h	/^  tModule,                          \/\/\/< 'module'$/;"	e	enum:EToken
+tModule	snuplc/src/scanner.h	/^  tModule,						\/\/\/< keyword "module"$/;"	e	enum:EToken
 tMulDiv	scanner/scanner.h	/^  tMulDiv,                          \/\/\/< '*' or '\/'$/;"	e	enum:EToken
-tMulDiv	snuplc/src/scanner.h	/^  tMulDiv,                          \/\/\/< '*' or '\/'$/;"	e	enum:EToken
 tNot	scanner/scanner.h	/^  tNot,                             \/\/\/< '!'$/;"	e	enum:EToken
+tNot	snuplc/src/scanner.h	/^  tNot, 							\/\/\/< '!'$/;"	e	enum:EToken
 tNumber	scanner/scanner.h	/^  tNumber,                          \/\/\/< number$/;"	e	enum:EToken
-tNumber	snuplc/src/scanner.h	/^  tNumber,                          \/\/\/< number$/;"	e	enum:EToken
+tNumber	snuplc/src/scanner.h	/^  tNumber=0,                      \/\/\/< a number$/;"	e	enum:EToken
 tOr	scanner/scanner.h	/^  tOr,                              \/\/\/< '||'$/;"	e	enum:EToken
 tPlusMinus	scanner/scanner.h	/^  tPlusMinus,                       \/\/\/< '+' or '-'$/;"	e	enum:EToken
-tPlusMinus	snuplc/src/scanner.h	/^  tPlusMinus,                       \/\/\/< '+' or '-'$/;"	e	enum:EToken
 tProcedure	scanner/scanner.h	/^  tProcedure,                       \/\/\/< 'procedure'$/;"	e	enum:EToken
+tProcedure	snuplc/src/scanner.h	/^  tProcedure,						\/\/\/< keyword "module"$/;"	e	enum:EToken
 tRBrak	scanner/scanner.h	/^  tRBrak,                           \/\/\/< a right bracket$/;"	e	enum:EToken
+tRBrak	snuplc/src/scanner.h	/^  tRBrak,                         \/\/\/< a right bracket ')'$/;"	e	enum:EToken
 tRParens	scanner/scanner.h	/^  tRParens,                         \/\/\/< a right parenthesis$/;"	e	enum:EToken
-tRParens	snuplc/src/scanner.h	/^  tRParens,                         \/\/\/< a right parenthesis$/;"	e	enum:EToken
+tRRBrak	snuplc/src/scanner.h	/^  tRRBrak,						\/\/\/< a right square bracket ']' $/;"	e	enum:EToken
 tRelOp	scanner/scanner.h	/^  tRelOp,                           \/\/\/< relational operator$/;"	e	enum:EToken
-tRelOp	snuplc/src/scanner.h	/^  tRelOp,                           \/\/\/< relational operator$/;"	e	enum:EToken
+tRelOp	snuplc/src/scanner.h	/^  tRelOp,                         \/\/\/< relational operator$/;"	e	enum:EToken
 tReturn	scanner/scanner.h	/^  tReturn,                          \/\/\/< 'return'$/;"	e	enum:EToken
+tReturn	snuplc/src/scanner.h	/^  tReturn,						\/\/\/< keyword "return"$/;"	e	enum:EToken
 tSemicolon	scanner/scanner.h	/^  tSemicolon,                       \/\/\/< a semicolon$/;"	e	enum:EToken
-tSemicolon	snuplc/src/scanner.h	/^  tSemicolon,                       \/\/\/< a semicolon$/;"	e	enum:EToken
+tSemicolon	snuplc/src/scanner.h	/^  tSemicolon,                     \/\/\/< a semicolon$/;"	e	enum:EToken
 tString	scanner/scanner.h	/^  tString,                          \/\/\/< string constant$/;"	e	enum:EToken
+tString	snuplc/src/scanner.h	/^  tString,						\/\/\/< a string such as "Hello"$/;"	e	enum:EToken
+tTermOp	snuplc/src/scanner.h	/^  tTermOp,						\/\/\/< '+' or '-' or '||'$/;"	e	enum:EToken
 tThen	scanner/scanner.h	/^  tThen,                            \/\/\/< 'then'$/;"	e	enum:EToken
+tThen	snuplc/src/scanner.h	/^  tThen,							\/\/\/< keyword "then"$/;"	e	enum:EToken
+tTrue	snuplc/src/scanner.h	/^  tTrue,							\/\/\/< keyword "true"$/;"	e	enum:EToken
 tUndefined	scanner/scanner.h	/^  tUndefined,                       \/\/\/< undefined$/;"	e	enum:EToken
-tUndefined	snuplc/src/scanner.h	/^  tUndefined,                       \/\/\/< undefined$/;"	e	enum:EToken
+tUndefined	snuplc/src/scanner.h	/^  tUndefined,                     \/\/\/< undefined$/;"	e	enum:EToken
+tVar	snuplc/src/scanner.h	/^  tVar,							\/\/\/< keyword "var"$/;"	e	enum:EToken
 tVarDecl	scanner/scanner.h	/^  tVarDecl,                         \/\/\/< 'var'$/;"	e	enum:EToken
 tWhile	scanner/scanner.h	/^  tWhile,                           \/\/\/< 'while'$/;"	e	enum:EToken
+tWhile	snuplc/src/scanner.h	/^  tWhile,							\/\/\/< keyword "while"$/;"	e	enum:EToken
 term	snuplc/src/parser.cpp	/^CAstExpression* CParser::term(CAstScope *s)$/;"	f	class:CParser
 toDot	snuplc/src/ast.cpp	/^void CAstArrayDesignator::toDot(ostream &out, int indent) const$/;"	f	class:CAstArrayDesignator
 toDot	snuplc/src/ast.cpp	/^void CAstBinaryOp::toDot(ostream &out, int indent) const$/;"	f	class:CAstBinaryOp
@@ -606,7 +643,12 @@ toDot	snuplc/src/ast.cpp	/^void CAstStatIf::toDot(ostream &out, int indent) cons
 toDot	snuplc/src/ast.cpp	/^void CAstStatReturn::toDot(ostream &out, int indent) const$/;"	f	class:CAstStatReturn
 toDot	snuplc/src/ast.cpp	/^void CAstStatWhile::toDot(ostream &out, int indent) const$/;"	f	class:CAstStatWhile
 toDot	snuplc/src/ast.cpp	/^void CAstUnaryOp::toDot(ostream &out, int indent) const$/;"	f	class:CAstUnaryOp
+type	snuplc/src/parser.cpp	/^CAstType* CParser::type(CAstScope *s, bool pointer)$/;"	f	class:CParser
 unescape	snuplc/src/scanner.cpp	/^string CToken::unescape(const string text)$/;"	f	class:CToken
+vardecl	snuplc/src/parser.cpp	/^void CParser::vardecl(CAstScope *s)$/;"	f	class:CParser
+vardeclaration	snuplc/src/parser.cpp	/^void CParser::vardeclaration(CAstScope *s)$/;"	f	class:CParser
+vardeclsequence	snuplc/src/parser.cpp	/^void CParser::vardeclsequence(CAstScope *s)$/;"	f	class:CParser
+whilestatement	snuplc/src/parser.cpp	/^CAstStatement* CParser::whilestatement(CAstScope *s)$/;"	f	class:CParser
 ~CArrayType	snuplc/src/type.cpp	/^CArrayType::~CArrayType(void)$/;"	f	class:CArrayType
 ~CAstNode	snuplc/src/ast.cpp	/^CAstNode::~CAstNode(void)$/;"	f	class:CAstNode
 ~CAstScope	snuplc/src/ast.cpp	/^CAstScope::~CAstScope(void)$/;"	f	class:CAstScope
