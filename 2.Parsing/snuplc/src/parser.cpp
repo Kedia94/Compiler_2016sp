@@ -331,7 +331,7 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
   // designate appropriate operations
   if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
   else if (topt.GetValue() == "-") n = new CAstUnaryOp(topt, opNeg, n);
-  else SetError(topt, "invalid unary operation.");		// set error 
+  else if (topt.GetValue() == "||") SetError(topt, "invalid unary operation.");		// set error 
   // FIXME : it should be "||" ?
 
   while (_scanner->Peek().GetType() == tTermOp) {		// { termOp term } parts
