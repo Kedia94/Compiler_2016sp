@@ -68,18 +68,18 @@ successfully parsed.
           statement list:
             return <int>
               not <int>
-                or <int>
-                  > <int>
+                or <bool>
+                  > <bool>
                     add <int>
                       neg <int>
                         [ %p0       <int> ] <int>
                       [ %p1       <int> ] <int>
                     0 <int>
-                  and <int>
-                    > <int>
+                  and <bool>
+                    > <bool>
                       [ %p0       <int> ] <int>
                       0 <int>
-                    < <int>
+                    < <bool>
                       [ %p1       <int> ] <int>
                       0 <int>
           nested scopes:
@@ -109,17 +109,17 @@ successfully parsed.
             ]]
           statement list:
             if cond
-              and <int>
-                and <int>
+              and <bool>
+                and <bool>
                   call [ *binop(<int>,<int>) --> <bool> ] <bool>
                     [ %a        <int> ] <int>
                     [ %b        <int> ] <int>
-                  < <int>
+                  < <bool>
                     call [ *intop(<int>,<int>) --> <int> ] <int>
                       [ %b        <int> ] <int>
                       [ %a        <int> ] <int>
                     [ %a        <int> ] <int>
-                # <int>
+                # <bool>
                   [ %a        <int> ] <int>
                   [ %b        <int> ] <int>
             if-body

@@ -19,7 +19,7 @@ successfully parsed.
           [ @i        <int> ] <int>
           1 <int>
         while cond
-          # <int>
+          # <bool>
             [ @i        <int> ] <int>
             0 <int>
         while-body
@@ -52,7 +52,7 @@ successfully parsed.
                 [ %v        <int> ] <int>
                 10 <int>
             if cond
-              > <int>
+              > <bool>
                 [ %v        <int> ] <int>
                 0 <int>
             if-body
@@ -61,7 +61,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 0 <int>
             if-body
@@ -70,7 +70,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 1 <int>
             if-body
@@ -79,7 +79,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 2 <int>
             if-body
@@ -88,7 +88,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 3 <int>
             if-body
@@ -97,7 +97,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 4 <int>
             if-body
@@ -106,7 +106,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 5 <int>
             if-body
@@ -115,7 +115,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 6 <int>
             if-body
@@ -124,7 +124,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 7 <int>
             if-body
@@ -133,7 +133,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 8 <int>
             if-body
@@ -142,7 +142,7 @@ successfully parsed.
             else-body
               empty.
             if cond
-              = <int>
+              = <bool>
                 [ $r        <int> ] <int>
                 9 <int>
             if-body

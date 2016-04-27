@@ -47,99 +47,99 @@
 /// parses a module
 ///
 class CParser {
-  public:
-    /// @brief constructor
-    ///
-    /// @param scanner  CScanner from which the input stream is read
-    CParser(CScanner *scanner);
+	public:
+		/// @brief constructor
+		///
+		/// @param scanner  CScanner from which the input stream is read
+		CParser(CScanner *scanner);
 
-    /// @brief parse a module
-    /// @retval CAstNode program node
-    CAstNode* Parse(void);
+		/// @brief parse a module
+		/// @retval CAstNode program node
+		CAstNode* Parse(void);
 
-    /// @name error handling
-    ///@{
+		/// @name error handling
+		///@{
 
-    /// @brief indicates whether there was an error while parsing the source
-    /// @retval true if the parser detected an error
-    /// @retval false otherwise
-    bool HasError(void) const { return _abort; };
+		/// @brief indicates whether there was an error while parsing the source
+		/// @retval true if the parser detected an error
+		/// @retval false otherwise
+		bool HasError(void) const { return _abort; };
 
-    /// @brief returns the token that caused the error
-    /// @retval CToken containing the error token
-    const CToken* GetErrorToken(void) const;
+		/// @brief returns the token that caused the error
+		/// @retval CToken containing the error token
+		const CToken* GetErrorToken(void) const;
 
-    /// @brief returns a human-readable error message
-    /// @retval error message
-    string GetErrorMessage(void) const;
-    ///@}
+		/// @brief returns a human-readable error message
+		/// @retval error message
+		string GetErrorMessage(void) const;
+		///@}
 
-  private:
-    /// @brief sets the token causing a parse error along with a message
-    /// @param t token causing the error
-    /// @param message human-readable error message
-    void SetError(CToken t, const string message);
+	private:
+		/// @brief sets the token causing a parse error along with a message
+		/// @param t token causing the error
+		/// @param message human-readable error message
+		void SetError(CToken t, const string message);
 
-    /// @brief consume a token given type and optionally store the token
-    /// @param type expected token type
-    /// @param token If not null, the consumed token is stored in 'token'
-    /// @retval true if a token has been consumed
-    /// @retval false otherwise
-    bool Consume(EToken type, CToken *token=NULL);
-
-
-    /// @brief initialize symbol table @a s with predefined procedures and
-    ///        global variables
-    void InitSymbolTable(CSymtab *s);
-
-    /// @name methods for recursive-descent parsing
-    /// @{
-
-    CAstModule*       module(void);
-
-    CAstStatement*    statSequence(CAstScope *s);
-
-    CAstStatAssign*   assignment(CAstScope *s);
-
-    CAstExpression*   expression(CAstScope *s);
-    CAstExpression*   simpleexpr(CAstScope *s);
-    CAstExpression*   term(CAstScope *s);
-    CAstExpression*   factor(CAstScope *s);
-
-    CAstConstant*     number(void);
-
-    /*
-     * Added following functions
-     */
-    CAstConstant*     boolean(void);
-	CAstConstant*	  character(void);
-    CAstDesignator*   ident(CAstScope *s);
-    CAstArrayDesignator*   qualident(CAstScope *s);
-    CAstType*         type(CAstScope *s, bool pointer=false);
-    CAstStatCall*     subroutinecall(CAstScope *s);
-    CAstStatement*    ifstatement(CAstScope *s);
-    CAstStatement*    whilestatement(CAstScope *s);
-    CAstStatement*    returnstatement(CAstScope *s);
-    void              vardeclaration(CAstScope *s);
-    void              vardecl(CAstScope *s);
-    void              vardeclsequence(CAstScope *s);
-    CAstProcedure*    subroutinedecl(CAstScope *s);
-    CAstExpression*   subroutinebody(CAstScope *s);
-    
-    // statement: maybe in statSequence
-    // varDecl: maybe in vardeclsequence
-
-    /// @}
+		/// @brief consume a token given type and optionally store the token
+		/// @param type expected token type
+		/// @param token If not null, the consumed token is stored in 'token'
+		/// @retval true if a token has been consumed
+		/// @retval false otherwise
+		bool Consume(EToken type, CToken *token=NULL);
 
 
-    CScanner     *_scanner;       ///< CScanner instance
-    CAstModule   *_module;        ///< root node of the program
-    CToken        _token;         ///< current token
+		/// @brief initialize symbol table @a s with predefined procedures and
+		///        global variables
+		void InitSymbolTable(CSymtab *s);
 
-    /// @name error handling
-    CToken        _error_token;   ///< error token
-    string        _message;       ///< error message
-    bool          _abort;         ///< error flag
+		/// @name methods for recursive-descent parsing
+		/// @{
+
+		CAstModule*       module(void);
+
+		CAstStatement*    statSequence(CAstScope *s);
+
+		CAstStatAssign*   assignment(CAstScope *s);
+
+		CAstExpression*   expression(CAstScope *s);
+		CAstExpression*   simpleexpr(CAstScope *s);
+		CAstExpression*   term(CAstScope *s);
+		CAstExpression*   factor(CAstScope *s);
+
+		CAstConstant*     number(void);
+
+		/*
+		 * Added following functions
+		 */
+		CAstConstant*     boolean(void);
+		CAstConstant*	  character(void);
+		CAstDesignator*   ident(CAstScope *s);
+		CAstArrayDesignator*   qualident(CAstScope *s);
+		CAstType*         type(CAstScope *s, bool pointer=false);
+		CAstStatCall*     subroutinecall(CAstScope *s);
+		CAstStatement*    ifstatement(CAstScope *s);
+		CAstStatement*    whilestatement(CAstScope *s);
+		CAstStatement*    returnstatement(CAstScope *s);
+		void              vardeclaration(CAstScope *s);
+		void              vardecl(CAstScope *s);
+		void              vardeclsequence(CAstScope *s);
+		CAstProcedure*    subroutinedecl(CAstScope *s);
+		CAstExpression*   subroutinebody(CAstScope *s);
+
+		// statement: maybe in statSequence
+		// varDecl: maybe in vardeclsequence
+
+		/// @}
+
+
+		CScanner     *_scanner;       ///< CScanner instance
+		CAstModule   *_module;        ///< root node of the program
+		CToken        _token;         ///< current token
+
+		/// @name error handling
+		CToken        _error_token;   ///< error token
+		string        _message;       ///< error message
+		bool          _abort;         ///< error flag
 
 };
 

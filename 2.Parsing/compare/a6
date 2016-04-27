@@ -42,7 +42,7 @@ successfully parsed.
               [ $i        <int> ] <int>
               0 <int>
             while cond
-              < <int>
+              < <bool>
                 [ $i        <int> ] <int>
                 [ $N        <int> ] <int>
             while-body
@@ -50,7 +50,7 @@ successfully parsed.
                 [ $j        <int> ] <int>
                 0 <int>
               while cond
-                < <int>
+                < <bool>
                   [ $j        <int> ] <int>
                   [ $M        <int> ] <int>
               while-body
@@ -100,7 +100,7 @@ successfully parsed.
               [ $i        <int> ] <int>
               0 <int>
             while cond
-              < <int>
+              < <bool>
                 [ $i        <int> ] <int>
                 [ $N        <int> ] <int>
             while-body
@@ -108,7 +108,7 @@ successfully parsed.
                 [ $j        <int> ] <int>
                 0 <int>
               while cond
-                < <int>
+                < <bool>
                   [ $j        <int> ] <int>
                   [ $M        <int> ] <int>
               while-body

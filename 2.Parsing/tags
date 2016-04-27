@@ -252,6 +252,7 @@ IsNull	snuplc/src/type.h	/^    virtual bool IsNull(void) const { return false; }
 IsNull	snuplc/src/type.h	/^    virtual bool IsNull(void) const { return true; };$/;"	f	class:CNullType
 IsPointer	snuplc/src/type.h	/^    virtual bool IsPointer(void) const { return false; };$/;"	f	class:CType
 IsPointer	snuplc/src/type.h	/^    virtual bool IsPointer(void) const { return true; };$/;"	f	class:CPointerType
+IsRelOp	snuplc/src/ast.cpp	/^bool IsRelOp(EOperation t) {$/;"	f
 IsScalar	snuplc/src/type.h	/^    virtual bool IsScalar(void) const { return false; };$/;"	f	class:CType
 IsScalar	snuplc/src/type.h	/^    virtual bool IsScalar(void) const { return true; };$/;"	f	class:CBoolType
 IsScalar	snuplc/src/type.h	/^    virtual bool IsScalar(void) const { return true; };$/;"	f	class:CCharType
@@ -440,6 +441,7 @@ _value	snuplc/src/scanner.h	/^  string _value;                  \/\/\/< token va
 _voidptr	snuplc/src/type.h	/^    CPointerType  *_voidptr;      \/\/\/< void pointer type$/;"	m	class:CTypeManager
 assignment	snuplc/src/parser.cpp	/^CAstStatAssign* CParser::assignment(CAstScope *s)$/;"	f	class:CParser
 boolean	snuplc/src/parser.cpp	/^CAstConstant* CParser::boolean(void)$/;"	f	class:CParser
+character	snuplc/src/parser.cpp	/^CAstConstant* CParser::character()$/;"	f	class:CParser
 dotAttr	snuplc/src/ast.cpp	/^string CAstArrayDesignator::dotAttr(void) const$/;"	f	class:CAstArrayDesignator
 dotAttr	snuplc/src/ast.cpp	/^string CAstBinaryOp::dotAttr(void) const$/;"	f	class:CAstBinaryOp
 dotAttr	snuplc/src/ast.cpp	/^string CAstConstant::dotAttr(void) const$/;"	f	class:CAstConstant

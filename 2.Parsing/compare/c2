@@ -34,7 +34,7 @@ successfully parsed.
             ]]
           statement list:
             if cond
-              >= <int>
+              >= <bool>
                 [ %c        <char> ] <char>
                 49 <char>
             if-body

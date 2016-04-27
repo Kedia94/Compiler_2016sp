@@ -1,23 +1,7 @@
-45c45
-<               < <int>
----
->               < <bool>
-53c53
-<                 < <int>
----
->                 < <bool>
 58c58
 <                   [ %A        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>
 ---
 >                   [ %A        <ptr(4) to <array  of <array  of <int>>>> ] <int>
-103c103
-<               < <int>
----
->               < <bool>
-111c111
-<                 < <int>
----
->                 < <bool>
 115,116c115,116
 <                 := <INVALID>
 <                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>

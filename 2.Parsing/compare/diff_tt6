@@ -2,37 +2,21 @@
 <               not <int>
 ---
 >               not <bool>
-69,72c69,72
+69,71c69,71
 <             return <int>
 <               not <int>
-<                 or <int>
-<                   > <int>
+<                 or <bool>
 ---
 >             return <INVALID>
 >               not <INVALID>
 >                 or <INVALID>
->                   > <bool>
-78,79c78,79
-<                   and <int>
-<                     > <int>
+78c78
+<                   and <bool>
 ---
 >                   and <INVALID>
->                     > <bool>
-82c82
-<                     < <int>
----
->                     < <bool>
 112,113c112,113
-<               and <int>
-<                 and <int>
+<               and <bool>
+<                 and <bool>
 ---
 >               and <INVALID>
 >                 and <INVALID>
-117c117
-<                   < <int>
----
->                   < <bool>
-122c122
-<                 # <int>
----
->                 # <bool>

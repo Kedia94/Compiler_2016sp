@@ -13,14 +13,6 @@
 >             [ @b        <array 5  of <array 5  of <int>>> ] <array 5  of <array 5  of <int>>>
 >           &() <ptr(4) to <array 5  of <array 5  of <int>>>>
 >             [ @c        <array 5  of <array 5  of <int>>> ] <array 5  of <array 5  of <int>>>
-40c43
-<               < <int>
----
->               < <bool>
-48c51
-<                 < <int>
----
->                 < <bool>
 52,53c55,56
 <                 := <INVALID>
 <                   [ %C        <ptr(4) to <array 5  of <array 5  of <int>>>> ] <INVALID>
@@ -43,14 +35,6 @@
 >               [ %A        <ptr(4) to <array 5  of <array 5  of <int>>>>               ]
 >               [ %B        <ptr(4) to <array 5  of <array 5  of <int>>>>               ]
 >               [ %C        <ptr(4) to <array 5  of <array 5  of <int>>>>               ]
-80c83
-<               < <int>
----
->               < <bool>
-88c91
-<                 < <int>
----
->                 < <bool>
 92,93c95,96
 <                 := <INVALID>
 <                   [ %C        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>

@@ -1,20 +1,20 @@
 27c27,28
-<           "Enter your age: " <INVALID>
+<           "Enter your age: " <array 17  of <char>>
 ---
 >           &() <ptr(4) to <array 17  of <char>>>
 >             "Enter your age: " <array 17  of <char>>
 32c33,34
-<           "Enter the year: " <INVALID>
+<           "Enter the year: " <array 17  of <char>>
 ---
 >           &() <ptr(4) to <array 17  of <char>>>
 >             "Enter the year: " <array 17  of <char>>
 37c39,40
-<           "You will be 100 years old in the year " <INVALID>
+<           "You will be 100 years old in the year " <array 39  of <char>>
 ---
 >           &() <ptr(4) to <array 39  of <char>>>
 >             "You will be 100 years old in the year " <array 39  of <char>>
 45c48,49
-<           ".\n" <INVALID>
+<           ".\n" <array 3  of <char>>
 ---
 >           &() <ptr(4) to <array 3  of <char>>>
 >             ".\n" <array 3  of <char>>

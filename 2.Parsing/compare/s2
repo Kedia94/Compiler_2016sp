@@ -24,17 +24,17 @@ successfully parsed.
         ]]
       statement list:
         call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
-          "Enter your age: " <INVALID>
+          "Enter your age: " <array 17  of <char>>
         := <int>
           [ @age      <int> ] <int>
           call [ *ReadInt() --> <int> ] <int>
         call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
-          "Enter the year: " <INVALID>
+          "Enter the year: " <array 17  of <char>>
         := <int>
           [ @year     <int> ] <int>
           call [ *ReadInt() --> <int> ] <int>
         call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
-          "You will be 100 years old in the year " <INVALID>
+          "You will be 100 years old in the year " <array 39  of <char>>
         call [ *WriteInt(<int>) --> <NULL> ] <NULL>
           sub <int>
             add <int>
@@ -42,7 +42,7 @@ successfully parsed.
               100 <int>
             [ @age      <int> ] <int>
         call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
-          ".\n" <INVALID>
+          ".\n" <array 3  of <char>>
       nested scopes:
         empty.
     

@@ -18,9 +18,9 @@ successfully parsed.
         ]]
       statement list:
         call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
-          "Hello, world\n" <INVALID>
+          "Hello, world\n" <array 14  of <char>>
         call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
-          "This is pretty nice!\n\n" <INVALID>
+          "This is pretty nice!\n\n" <array 23  of <char>>
       nested scopes:
         empty.
     

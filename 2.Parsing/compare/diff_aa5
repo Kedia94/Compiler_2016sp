@@ -14,26 +14,10 @@
 ---
 >             := <int>
 >               [ %P        <ptr(4) to <array  of <array  of <int>>>> ] <int>
-71c73
-<               < <int>
----
->               < <bool>
-79c81
-<                 < <int>
----
->                 < <bool>
 84c86
 <                   [ %A        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>
 ---
 >                   [ %A        <ptr(4) to <array  of <array  of <int>>>> ] <int>
-129c131
-<               < <int>
----
->               < <bool>
-137c139
-<                 < <int>
----
->                 < <bool>
 141,142c143,144
 <                 := <INVALID>
 <                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>

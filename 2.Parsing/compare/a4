@@ -65,7 +65,7 @@ successfully parsed.
               [ $i        <int> ] <int>
               0 <int>
             while cond
-              < <int>
+              < <bool>
                 [ $i        <int> ] <int>
                 3 <int>
             while-body
@@ -73,7 +73,7 @@ successfully parsed.
                 [ $j        <int> ] <int>
                 0 <int>
               while cond
-                < <int>
+                < <bool>
                   [ $j        <int> ] <int>
                   3 <int>
               while-body

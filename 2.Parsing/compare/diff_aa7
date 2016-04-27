@@ -3,40 +3,16 @@
 ---
 >           &() <ptr(4) to <array 5  of <array 5  of <int>>>>
 >             [ @sum      <array 5  of <array 5  of <int>>> ] <array 5  of <array 5  of <int>>>
-49c50
-<               < <int>
----
->               < <bool>
-57c58
-<                 < <int>
----
->                 < <bool>
 62c63
 <                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>
 ---
 >                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <int>
-106c107
-<               < <int>
----
->               < <bool>
-114c115
-<                 < <int>
----
->                 < <bool>
 118,119c119,120
 <                 := <INVALID>
 <                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>
 ---
 >                 := <int>
 >                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <int>
-171c172
-<               < <int>
----
->               < <bool>
-179c180
-<                 < <int>
----
->                 < <bool>
 183,184c184,185
 <                 := <INVALID>
 <                   [ %d        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>

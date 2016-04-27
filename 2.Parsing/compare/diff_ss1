@@ -1,10 +1,10 @@
 21c21,22
-<           "Hello, world\n" <INVALID>
+<           "Hello, world\n" <array 14  of <char>>
 ---
 >           &() <ptr(4) to <array 14  of <char>>>
 >             "Hello, world\n" <array 14  of <char>>
 23c24,25
-<           "This is pretty nice!\n\n" <INVALID>
+<           "This is pretty nice!\n\n" <array 23  of <char>>
 ---
 >           &() <ptr(4) to <array 23  of <char>>>
 >             "This is pretty nice!\n\n" <array 23  of <char>>

@@ -19,10 +19,6 @@
 ---
 >             := <int>
 >               [ %P        <ptr(4) to <array  of <int>>> ] <int>
-64c65
-<               < <int>
----
->               < <bool>
 69c70
 <                 [ @A        <array 5  of <int>> ] <INVALID>
 ---
