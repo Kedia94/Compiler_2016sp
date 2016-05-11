@@ -68,7 +68,7 @@ CAstNode* CParser::Parse(void)
 			CToken t;
 			string msg;
 			printf("(Debug) Start check\n");
-//			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
+			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
 			printf("(Debug) End check\n");
 		}
 	} catch (...) {
