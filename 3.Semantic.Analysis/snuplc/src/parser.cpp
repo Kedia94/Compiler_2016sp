@@ -68,7 +68,7 @@ CAstNode* CParser::Parse(void)
 			CToken t;
 			string msg;
 			printf("(Debug) Start check\n");
-			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
+//			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
 			printf("(Debug) End check\n");
 		}
 	} catch (...) {
@@ -696,7 +696,7 @@ CAstStatCall* CParser::subroutinecall(CAstScope *s)
 	CAstStatement *n = NULL;
 	CToken t;
 
-	identifier = qualident(s);							// consumes ident 
+	identifier = qualident(s);							// consumes ident
 
 	// make new functionCall ast by ident
 	funccall = new CAstFunctionCall(identifier->GetToken(), (CSymProc *)identifier->GetSymbol());
@@ -704,6 +704,9 @@ CAstStatCall* CParser::subroutinecall(CAstScope *s)
 	Consume(tLBrak);									// consumes "("
 	if (_scanner->Peek().GetType() != tRBrak) {			// while it is not a void type
 		l = expression(s);								// expression part
+		if (l->GetType()->IsArray()){
+		l = new CAstSpecialOp(l->GetToken(), opAddress, l);
+                }
 		funccall->AddArg(l);							// add expression as argument
 		while (_scanner->Peek().GetType() == tComma) {	// repeatedly scans for arguments
 			Consume(tComma);
