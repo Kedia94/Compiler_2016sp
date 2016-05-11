@@ -67,7 +67,9 @@ CAstNode* CParser::Parse(void)
 		if (_module != NULL) {
 			CToken t;
 			string msg;
-			//if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
+			printf("(Debug) Start check\n");
+			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
+			printf("(Debug) End check\n");
 		}
 	} catch (...) {
 		_module = NULL;
@@ -332,15 +334,27 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
 	CAstExpression *n = NULL;
 
 	if (_scanner->Peek().GetType() == tTermOp) {			// if it has ["+"|"-"] parts
+	  bool pos = true;
 		Consume(tTermOp, &topt);							// consume operator
-	}
+		if (topt.GetValue() == "-") pos = false;
+                else if (topt.GetValue() == "||") SetError(topt, "Invalid unary operator");
+                
+                if (_scanner->Peek().GetType() == tNumber)
+                  n = number(pos);
+                else {
+                  n = term(s);
+                  if (pos) n = new CAstUnaryOp(topt, opPos, n);
+                  else n = new CAstUnaryOp(topt, opNeg, n);
+                }
 
-	n = term(s);											// term parts
+        }
 
-	// designate appropriate operations
-	if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
-	else if (topt.GetValue() == "-") n = new CAstUnaryOp(topt, opNeg, n);
-	else if (topt.GetValue() == "||") SetError(topt, "invalid unary operation.");		// set error 
+
+        else {
+          n = term(s);
+        }
+
+
 
 	while (_scanner->Peek().GetType() == tTermOp) {			// { termOp term } parts
 		CToken t;
@@ -517,7 +531,7 @@ CAstExpression* CParser::factor(CAstScope *s)
 	return n;
 }
 
-CAstConstant* CParser::number(void)
+CAstConstant* CParser::number(bool pos)
 {
 	//
 	// number ::= digit { digit }.
@@ -532,6 +546,9 @@ CAstConstant* CParser::number(void)
 	// Convert string number to long long type
 	errno = 0;
 	long long v = strtoll(t.GetValue().c_str(), NULL, 10);
+	if (!pos) v = -v;
+	if (v < INT_MIN) SetError(t, "smaller than min int");
+        else if (v > INT_MAX) SetError(t, "bigger than max int");
 	if (errno != 0) SetError(t, "invalid number.");
 
 	return new CAstConstant(t, CTypeManager::Get()->GetInt(), v);
@@ -591,7 +608,7 @@ CAstArrayDesignator* CParser::qualident(CAstScope *s)
 
 }
 
-CAstType* CParser::type(CAstScope *s, bool pointer)
+CAstType* CParser::type(CAstScope *s, bool declare, bool pointer)
 {
 	//
 	// type = basetype | type "[" [ number ] "]".
@@ -641,6 +658,10 @@ CAstType* CParser::type(CAstScope *s, bool pointer)
 			vec.push_back(number());					// get number
 		}
 		else {
+		  if (declare){
+		    Consume(tRRBrak, &t);
+		    SetError(t, "expected \'tNumber\', got \'tRRBrak\'");
+                  }
 			vec.push_back(NULL);						// mark
 		}
 
@@ -816,7 +837,7 @@ void CParser::vardecl(CAstScope *s)
 	}
 
 	Consume(tColon);			// consuems colon
-	typ = type(s);				// type part
+	typ = type(s, true);				// type part
 
 	int size = vec.size();
 	for (int i=0;i<size; i++) {
@@ -891,7 +912,7 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 				vec.push_back(tval);
 			}
 			Consume(tColon);								// Consuems colon 
-			typ = type(s,true);
+			typ = type(s, false, true);
 			size = vec.size();
 
 			for (int i=0; i<size; i++) {					// Iterate vector and append its elements to another vector
@@ -910,7 +931,7 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 					vec.push_back(tval);
 				}
 				Consume(tColon);							// Consumes keywords
-				typ = type(s);
+				typ = type(s, false);
 				size = vec.size();
 
 				for (int i=0; i<size; i++) {				// Iterate vector and append its elements to another vector
@@ -924,7 +945,7 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 
 	if (t.GetType() == tFunction) {		// if it is functiondecl
 		Consume(tColon);				// consuems colon
-		typ = type(s);
+		typ = type(s, false);
 		sym = new CSymProc(tname.GetValue(), typ->GetType());
 	}
 	else {								// if it is proceduredecl

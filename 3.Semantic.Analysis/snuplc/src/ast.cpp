@@ -165,8 +165,16 @@ CAstStatement* CAstScope::GetStatementSequence(void) const
 
 bool CAstScope::TypeCheck(CToken *t, string *msg) const
 {
+  printf("(Scope) Start: %s \n", _name.c_str());
 	bool result = true;
+	int i;
+	for (i=0; i<_children.size(); i++){
+	  printf("(Scope) %d over %d\n", i ,_children.size());
+	  if (_children[i] != NULL && !_children[i]->TypeCheck(t, msg)) return false;
+        }
 
+        if (_statseq != NULL && !_statseq->TypeCheck(t, msg)) return false;
+  printf("(Scope) End: %s\n", _name.c_str());
 	return result;
 }
 
@@ -378,7 +386,21 @@ CAstExpression* CAstStatAssign::GetRHS(void) const
 
 bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 {
-	return true;
+  printf("(Assign) Start\n");
+  const CType *lt = _lhs->GetType();
+  const CType *rt = _rhs->GetType();
+  if (!_rhs->TypeCheck(t, msg)) return false;
+  if (lt != rt){
+    *msg = "(Assign) left and right have different type";
+    *t = GetToken();
+    return false;
+  }
+//TODO
+  
+  printf("(Assign) End\n");
+  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
+  
+  return true;
 }
 
 const CType* CAstStatAssign::GetType(void) const
@@ -442,7 +464,16 @@ CAstFunctionCall* CAstStatCall::GetCall(void) const
 
 bool CAstStatCall::TypeCheck(CToken *t, string *msg) const
 {
-	return GetCall()->TypeCheck(t, msg);
+  printf("(Call) Start\n");
+  if (!GetCall()->TypeCheck(t, msg)) return false;
+  
+
+  printf("(Call) End\n");
+
+  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
+
+
+  return true;
 }
 
 ostream& CAstStatCall::print(ostream &out, int indent) const
@@ -494,7 +525,11 @@ CAstExpression* CAstStatReturn::GetExpression(void) const
 
 bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 {
-	return true;
+  printf("(Return) Start\n");
+  if (!_expr->TypeCheck(t, msg)) return false;
+
+  printf("(Return End\n");
+  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
 }
 
 const CType* CAstStatReturn::GetType(void) const
@@ -576,7 +611,17 @@ CAstStatement* CAstStatIf::GetElseBody(void) const
 
 bool CAstStatIf::TypeCheck(CToken *t, string *msg) const
 {
-	return true;
+  printf("(If) Start\n");
+  if (!_cond->TypeCheck(t, msg)) return false;
+
+  if (!_ifBody->TypeCheck(t, msg)) return false;;
+
+  if (_elseBody != NULL && !_elseBody->TypeCheck(t, msg)) return false;
+  
+  printf("(If) End\n");
+  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
+
+  return true;
 }
 
 ostream& CAstStatIf::print(ostream &out, int indent) const
@@ -676,7 +721,13 @@ CAstStatement* CAstStatWhile::GetBody(void) const
 
 bool CAstStatWhile::TypeCheck(CToken *t, string *msg) const
 {
-	return true;
+  printf("(While) Start\n");
+  if (!_cond->TypeCheck(t, msg)) return false;
+  if (!_body->TypeCheck(t, msg)) return false;
+  printf("(While) End\n");
+  if (GetNext() != NULL && GetNext()->TypeCheck(t, msg)) return false;
+  
+  return true;
 }
 
 ostream& CAstStatWhile::print(ostream &out, int indent) const
@@ -798,6 +849,28 @@ CAstExpression* CAstBinaryOp::GetRight(void) const
 
 bool CAstBinaryOp::TypeCheck(CToken *t, string *msg) const
 {
+  printf("(Binary) Start\n");
+  EOperation op = GetOperation();
+
+  const CType *lt = _left->GetType();
+  const CType *rt = _right->GetType();
+
+  if (lt != rt){
+    *t = GetToken();
+    *msg = "(BinaryOp) different type to operate";
+    return false;
+  }
+
+  if (op == opAdd || op == opSub || op == opMul || op == opDiv || op == opLessThan || op == opLessEqual
+      || op == opBiggerThan || op == opBiggerEqual){
+    if (lt != CTypeManager::Get()->GetInt()){
+      *t = GetToken();
+      *msg = "(BinaryOp) int operation: type mismatch";
+      return false;
+    }
+  }
+
+  printf("(Binary) End\n");
 	return true;
 }
 
@@ -889,12 +962,35 @@ CAstExpression* CAstUnaryOp::GetOperand(void) const
 
 bool CAstUnaryOp::TypeCheck(CToken *t, string *msg) const
 {
+printf("(Unary) Start\n");
+  if (!_operand->TypeCheck(t, msg)) return false;
+  const CType* type = _operand->GetType();
+  EOperation op = GetOperation();
+
+  if (op == opNeg || op == opPos){
+    if (type != CTypeManager::Get()->GetInt()){
+      *msg = "(UnaryOp) pos/neg: type mismatch";
+      *t = GetToken();
+      return false;
+    }
+  }
+  else {
+    if (type != CTypeManager::Get()->GetBool()){
+      *msg = "(UnaryOp) not: type mismatch";
+      *t = GetToken();
+      return false;
+    }
+  }
+printf("(Unary) End\n");
+
 	return true;
 }
 
 const CType* CAstUnaryOp::GetType(void) const
 {
-	return CTypeManager::Get()->GetInt();
+  EOperation op = GetOperation();
+  if (op == opNot) return CTypeManager::Get()->GetBool();
+  else return CTypeManager::Get()->GetInt();
 }
 
 ostream& CAstUnaryOp::print(ostream &out, int indent) const
@@ -1039,6 +1135,7 @@ CAstExpression* CAstFunctionCall::GetArg(int index) const
 
 bool CAstFunctionCall::TypeCheck(CToken *t, string *msg) const
 {
+
 	return true;
 }
 
@@ -1120,6 +1217,8 @@ const CSymbol* CAstDesignator::GetSymbol(void) const
 
 bool CAstDesignator::TypeCheck(CToken *t, string *msg) const
 {
+
+
 	return true;
 }
 
@@ -1296,6 +1395,7 @@ string CAstConstant::GetValueStr(void) const
 
 bool CAstConstant::TypeCheck(CToken *t, string *msg) const
 {
+
 	return true;
 }
 
@@ -1372,6 +1472,7 @@ const string CAstStringConstant::GetValueStr(void) const
 
 bool CAstStringConstant::TypeCheck(CToken *t, string *msg) const
 {
+
 	return true;
 }
 

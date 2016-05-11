@@ -106,7 +106,7 @@ class CParser {
 		CAstExpression*   term(CAstScope *s);
 		CAstExpression*   factor(CAstScope *s);
 
-		CAstConstant*     number(void);
+		CAstConstant*     number(bool pos = true);
 
 		/*
 		 * Added following functions
@@ -115,7 +115,7 @@ class CParser {
 		CAstConstant*	  character(void);
 		CAstDesignator*   ident(CAstScope *s);
 		CAstArrayDesignator*   qualident(CAstScope *s);
-		CAstType*         type(CAstScope *s, bool pointer=false);
+		CAstType*         type(CAstScope *s, bool, bool pointer=false);
 		CAstStatCall*     subroutinecall(CAstScope *s);
 		CAstStatement*    ifstatement(CAstScope *s);
 		CAstStatement*    whilestatement(CAstScope *s);

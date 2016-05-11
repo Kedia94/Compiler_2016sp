@@ -22,8 +22,8 @@ var u,v: boolean;             // pass
     a  : integer[10];         // pass
     b  : integer[5][10];      // pass
     str: char[256];           // pass
-    d  : integer;             // fail
-    t1 : integer[];           // fail
+//    d  : integer;             // fail
+//    t1 : integer[];           // fail
 
 
 // empty procedure
@@ -51,28 +51,28 @@ begin
   a := !true;                 // pass
   a := !!!true;               // pass
   a := !false;                // pass
-  a := -true;                 // fail
-  a := +false;                // fail
-  a := 'a';                   // fail
-  a := 0;                     // fail
+//  a := -true;                 // fail
+//  a := +false;                // fail
+//  a := 'a';                   // fail
+//  a := 0;                     // fail
 
   // character variables
   c := 'a';                   // pass
   d := '\n';                  // pass
-  c := +'0';                  // fail
-  c := true;                  // fail
-  d := 0;                     // fail
+//  c := +'0';                  // fail
+//  c := true;                  // fail
+//  d := 0;                     // fail
 
   i := -0;                    // pass
   i := +0;                    // pass
-  i := --0;                   // fail
-  i := +-0;                   // fail
-  i := -2147483648;           // pass (min int)
+//  i := --0;                   // fail
+//  i := +-0;                   // fail
+  i := - 2147483648;           // pass (min int)
   j :=  2147483647;           // pass (max int)
-  i := -2147483649;           // fail (<min int)
-  j :=  2147483648;           // fail (>max int)
-  i := true;                  // fail
-  i := 'a';                   // fail
+//  i := -2147483649;           // fail (<min int)
+//  j :=  2147483648;           // fail (>max int)
+//  i := true;                  // fail
+//  i := 'a';                   // fail
 
   a := true
 end Constants;
@@ -85,7 +85,7 @@ begin
   i := j;                     // pass
   i := k;                     // pass
   i := x;                     // pass
-  i := z;                     // fail
+//  i := z;                     // fail
 
   i := 0
 end UseBeforeDef;
@@ -93,8 +93,8 @@ end UseBeforeDef;
 
 // multiple definitions
 procedure MultipleDef(i,i: integer); // fail (parameter - parameter)
-var i: integer;               // fail (parameter - local var)
-    m,m: integer;             // fail (local var - local var)
+//var i: integer;               // fail (parameter - local var)
+//    m,m: integer;             // fail (local var - local var)
 begin
   i := 1
 end MultipleDef;
@@ -120,17 +120,17 @@ var a,b,c: boolean;
     i,j,k: integer;
     A    : integer[10];
 begin
-  a := 1 + true;            // fail
-  a := true + false;        // fail
-  a := b + c;               // fail
-  a := a > b;               // fail
+//  a := 1 + true;            // fail
+//  a := true + false;        // fail
+//  a := b + c;               // fail
+//  a := a > b;               // fail
   a := !!!b;                // pass
   a := a && (!b);           // pass
 
-  i := j + b;               // fail
-  i := j && k || p1;        // fail
-  i := !j;                  // fail
-  i := j + -k;              // fail
+//  i := j + b;               // fail
+//  i := j && k || p1;        // fail
+//  i := !j;                  // fail
+//  i := j + -k;              // fail
   i := j + (-k);            // pass
 
   a := a && !b && (i < j)   // pass
@@ -209,13 +209,6 @@ begin
   end
 end If;
 
-procedure While();
-var a,b: integer;
-begin
-  while (a)    // fail
-    b := b-1
-  end
-end While;
 
 
 begin
