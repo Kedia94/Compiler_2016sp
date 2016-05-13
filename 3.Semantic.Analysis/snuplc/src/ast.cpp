@@ -43,6 +43,12 @@
 #include "ast.h"
 using namespace std;
 
+#define DEBUG 
+#ifdef DEBUG
+#define Dprintf(a) printf a
+#else
+#define Dprintf(a) ;
+#endif
 
 //------------------------------------------------------------------------------
 // CAstNode
@@ -165,16 +171,16 @@ CAstStatement* CAstScope::GetStatementSequence(void) const
 
 bool CAstScope::TypeCheck(CToken *t, string *msg) const
 {
-  printf("(Scope) Start: %s \n", _name.c_str());
+	Dprintf(("[Scope::TypeCheck] Start: %s \n", _name.c_str()));
 	bool result = true;
 	int i;
-	for (i=0; i<_children.size(); i++){
-	  printf("(Scope) %d over %d\n", i ,_children.size());
-	  if (_children[i] != NULL && !_children[i]->TypeCheck(t, msg)) return false;
-        }
+	for (i=0; i<_children.size(); i++){												// Iterate through all children scope
+		Dprintf(("\n[Scope::TypeCheck] %d over %d\n", i ,(int)_children.size()));
+		if (_children[i] != NULL && !_children[i]->TypeCheck(t, msg)) return false;	// If one of them is invalid, return false
+	}
 
-        if (_statseq != NULL && !_statseq->TypeCheck(t, msg)) return false;
-  printf("(Scope) End: %s\n", _name.c_str());
+	if (_statseq != NULL && !_statseq->TypeCheck(t, msg)) return false;				// Move on to the next sequence
+	Dprintf(("[Scope::TypeCheck] End: %s\n", _name.c_str()));
 	return result;
 }
 
@@ -386,21 +392,24 @@ CAstExpression* CAstStatAssign::GetRHS(void) const
 
 bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 {
-  printf("(Assign) Start\n");
-  const CType *lt = _lhs->GetType();
-  const CType *rt = _rhs->GetType();
-  if (!_rhs->TypeCheck(t, msg)) return false;
-  if (lt != rt){
-    *msg = "(Assign) left and right have different type";
-    *t = GetToken();
-    return false;
-  }
-//TODO
-  
-  printf("(Assign) End\n");
-  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
-  
-  return true;
+	Dprintf(("[Assign::TypeCheck] Start\n"));
+	if (!_lhs->TypeCheck(t, msg)) return false;							// Type check lhs statement
+	if (!_rhs->TypeCheck(t, msg)) return false;							// Type check rhs statement
+
+	const CType *lt = _lhs->GetType();									// Get type of lhs
+	const CType *rt = _rhs->GetType();									// Get type of rhs
+	if (!_rhs->TypeCheck(t, msg)) return false;							// If rhs has invalid type, error
+	if (lt != rt){														// If two types are different, error
+		if (msg != NULL) *msg = "(Assign) left and right have different type";
+		if (t != NULL) *t = GetToken();
+		return false;
+	}
+	//TODO
+
+	Dprintf(("[Assign::TypeCheck] End\n"));
+	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
+
+	return true;
 }
 
 const CType* CAstStatAssign::GetType(void) const
@@ -464,16 +473,14 @@ CAstFunctionCall* CAstStatCall::GetCall(void) const
 
 bool CAstStatCall::TypeCheck(CToken *t, string *msg) const
 {
-  printf("(Call) Start\n");
-  if (!GetCall()->TypeCheck(t, msg)) return false;
-  
-
-  printf("(Call) End\n");
-
-  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
+	Dprintf(("[Call::TypeCheck] Start\n"));
+	if (!GetCall()->TypeCheck(t, msg)) return false;	// If Calling sequence has invalid type, error
 
 
-  return true;
+	Dprintf(("[Call::TypeCheck] End\n"));
+
+	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
+	return true;
 }
 
 ostream& CAstStatCall::print(ostream &out, int indent) const
@@ -525,11 +532,37 @@ CAstExpression* CAstStatReturn::GetExpression(void) const
 
 bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 {
-  printf("(Return) Start\n");
-  if (!_expr->TypeCheck(t, msg)) return false;
+	Dprintf(("[Return::TypeCheck] Start\n"));
+	const CType *st = GetScope() -> GetType();			// Get type of enclosing procedure
+	CAstExpression *e = GetExpression();					// Get return expression
 
-  printf("(Return End\n");
-  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
+	if (st->Match(CTypeManager::Get()->GetNull())) {		// If return value should be void
+		if (e != NULL) { 									// If return value is not void, error
+			if (t != NULL) *t = e->GetToken();
+			if (msg != NULL) *msg = "superflous expression after return.";
+			return false;
+		}
+	}
+	else {												// If return value should be something else
+		if (e == NULL) {									// If return value is null, error
+			if (t != NULL) *t = e->GetToken();
+			if (msg != NULL) *msg = "expression expected after return.";
+			return false;
+		}
+
+		if (!e->TypeCheck(t, msg)) return false;			// If type of return expression fails
+
+		if (!st->Match(e->GetType())) {					// If return type has wrong type
+			if (t != NULL) *t = e->GetToken();
+			if (msg != NULL) *msg = "return type mismatch.";
+			return false;
+		}
+	}
+
+	Dprintf(("[Return::TypeCheck] End\n"));
+	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
+
+	return true;
 }
 
 const CType* CAstStatReturn::GetType(void) const
@@ -611,17 +644,22 @@ CAstStatement* CAstStatIf::GetElseBody(void) const
 
 bool CAstStatIf::TypeCheck(CToken *t, string *msg) const
 {
-  printf("(If) Start\n");
-  if (!_cond->TypeCheck(t, msg)) return false;
+	Dprintf(("[If::TypeCheck] Start\n"));
+	if (!_cond->TypeCheck(t, msg)) return false;							// Type check condition statement
+	if (!_ifBody->TypeCheck(t, msg)) return false;							// Type check body statement
+	if (_elseBody != NULL && !_elseBody->TypeCheck(t, msg)) return false;	// Type check else body statement, if has any
 
-  if (!_ifBody->TypeCheck(t, msg)) return false;;
+	// XXX
+	if (!_cond->GetType()->Match(CTypeManager::Get()->GetBool())) {			// If condition statement is not a bool type, error
+		if (t != NULL) *t = _cond->GetToken();
+		if (msg != NULL) *msg = "boolean type expected";
+		return false;
+	}
 
-  if (_elseBody != NULL && !_elseBody->TypeCheck(t, msg)) return false;
-  
-  printf("(If) End\n");
-  if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;
+	Dprintf(("[If::TypeCheck] End\n"));
+	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
 
-  return true;
+	return true;
 }
 
 ostream& CAstStatIf::print(ostream &out, int indent) const
@@ -721,13 +759,17 @@ CAstStatement* CAstStatWhile::GetBody(void) const
 
 bool CAstStatWhile::TypeCheck(CToken *t, string *msg) const
 {
-  printf("(While) Start\n");
-  if (!_cond->TypeCheck(t, msg)) return false;
-  if (!_body->TypeCheck(t, msg)) return false;
-  printf("(While) End\n");
-  if (GetNext() != NULL && GetNext()->TypeCheck(t, msg)) return false;
-  
-  return true;
+	Dprintf(("[While::TypeCheck] Start\n"));
+	if (!_cond->TypeCheck(t, msg)) return false;							// Type check condition statement
+	if (!_body->TypeCheck(t, msg)) return false;							// Type check body statement
+
+	if (!_cond->GetType()->Match(CTypeManager::Get()->GetBool())) 			// If condition statement is not a bool type, error
+		return false;		
+
+	Dprintf(("[While::TypeCheck] End\n"));
+	if (GetNext() != NULL && GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
+
+	return true;
 }
 
 ostream& CAstStatWhile::print(ostream &out, int indent) const
@@ -847,54 +889,72 @@ CAstExpression* CAstBinaryOp::GetRight(void) const
 	return _right;
 }
 
-bool CAstBinaryOp::TypeCheck(CToken *t, string *msg) const
-{
-  printf("(Binary) Start\n");
-  EOperation op = GetOperation();
-
-  const CType *lt = _left->GetType();
-  const CType *rt = _right->GetType();
-
-  if (lt != rt){
-    *t = GetToken();
-    *msg = "(BinaryOp) different type to operate";
-    return false;
-  }
-
-  if (op == opAdd || op == opSub || op == opMul || op == opDiv || op == opLessThan || op == opLessEqual
-      || op == opBiggerThan || op == opBiggerEqual){
-    if (lt != CTypeManager::Get()->GetInt()){
-      *t = GetToken();
-      *msg = "(BinaryOp) int operation: type mismatch";
-      return false;
-    }
-  }
-
-  printf("(Binary) End\n");
-	return true;
-}
-
-bool IsRelOp(EOperation t) {
+bool IsRelOp(EOperation t) {	// return true for RelOp
 	return (t == opEqual) || (t == opNotEqual) || (t == opLessThan)
 		|| (t == opLessEqual) || (t == opBiggerThan) || (t == opBiggerEqual);
 }
 
-bool IsArith(EOperation t) {
+bool IsArith(EOperation t) {	// return true for ArithOp
 	return (t == opAdd) || (t == opSub) || (t == opMul) || (t == opDiv);
 }
 
-bool IsLogic(EOperation t) {
-	return (t == opAnd) || (t == opOr);
+bool IsLogic(EOperation t) {	// return true for LogicOp
+	return (t == opAnd) || (t == opOr) || (t == opNot);
 }
+
+bool CAstBinaryOp::TypeCheck(CToken *t, string *msg) const
+{
+	Dprintf(("[Binary::TypeCheck] Start\n"));
+	EOperation op = GetOperation();
+
+	if (!_left->TypeCheck(t, msg)) return false;		// Type check left statement
+	if (!_right->TypeCheck(t, msg)) return false;		// Type check right statement
+
+	const CType *lt = _left->GetType();					// Get lhs type
+	const CType *rt = _right->GetType();				// Get rhs type
+
+	if (!lt->Match(rt)) {									// If two types are different, error
+		if (t != NULL) *t = GetToken();
+		if (msg != NULL) *msg = "(BinaryOp) different type to operate";
+		return false;
+	}
+
+	if (IsArith(op)) {										// If it uses arithmatic operator
+		if (!lt->Match(CTypeManager::Get()->GetInt())) {	// If type is not integer, error
+			if (t != NULL) *t = GetToken();
+			if (msg != NULL) *msg = "(BinaryOp) arith operation: type mismatch";
+			return false;
+		}
+	}
+	else if (IsLogic(op) && op != opNot) {					// If it uses logical operator
+		if (!lt->Match(CTypeManager::Get()->GetBool())) {	// If type is not boolean, error
+			if (t != NULL) *t = GetToken();
+			if (msg != NULL) *msg = "(BinaryOp) logical operation: type mismatch";
+			return false;
+		}
+	}
+	else if (IsRelOp(op) && op != opEqual && op != opNotEqual) {	// If it uses relational operator
+		if (!(lt->Match(CTypeManager::Get()->GetChar()) ||
+			  lt->Match(CTypeManager::Get()->GetInt()))) {			// If type is not char or integer, error
+			if (t != NULL) *t = GetToken();
+			if (msg != NULL) *msg = "(BinaryOp) relational operation: type mismatch";
+			return false;
+		}
+	}
+
+	Dprintf(("[Binary::TypeCheck] End\n"));
+	return true;
+}
+
 
 
 const CType* CAstBinaryOp::GetType(void) const
 {
-	EOperation op = GetOperation(); 
-	if (IsRelOp(op) || IsLogic(op)) 
-		return CTypeManager::Get()->GetBool();
+	EOperation op = GetOperation(); 					// Get operation
+	if (IsRelOp(op) || IsLogic(op)) 					// If it's RelOp or LogicalOp
+		return CTypeManager::Get()->GetBool();			// It's boolean type
 	else  
-		return CTypeManager::Get()->GetInt();
+		return CTypeManager::Get()->GetInt();			// Else it's Integer type
 }
 
 ostream& CAstBinaryOp::print(ostream &out, int indent) const
@@ -962,35 +1022,37 @@ CAstExpression* CAstUnaryOp::GetOperand(void) const
 
 bool CAstUnaryOp::TypeCheck(CToken *t, string *msg) const
 {
-printf("(Unary) Start\n");
-  if (!_operand->TypeCheck(t, msg)) return false;
-  const CType* type = _operand->GetType();
-  EOperation op = GetOperation();
+	Dprintf(("[Unary::TypeCheck] Start\n"));
 
-  if (op == opNeg || op == opPos){
-    if (type != CTypeManager::Get()->GetInt()){
-      *msg = "(UnaryOp) pos/neg: type mismatch";
-      *t = GetToken();
-      return false;
-    }
-  }
-  else {
-    if (type != CTypeManager::Get()->GetBool()){
-      *msg = "(UnaryOp) not: type mismatch";
-      *t = GetToken();
-      return false;
-    }
-  }
-printf("(Unary) End\n");
+	if (!_operand->TypeCheck(t, msg)) return false;		// Typecheck operand
+	const CType* type = _operand->GetType();			// Get type of operand
+	EOperation op = GetOperation();						// Get operator
+
+	if (op == opNeg || op == opPos){						// If operator is unary + or -
+		if (type->Match(CTypeManager::Get()->GetInt())) {	// If type is not an integer, error
+			if (msg != NULL) *msg = "(UnaryOp) pos/neg: type mismatch";
+			if (t != NULL) *t = GetToken(); 
+			return false;
+		}
+	}
+	else {												// else if operator is unary !
+		if (type != CTypeManager::Get()->GetBool()){	// If type is not a bool, error
+			*msg = "(UnaryOp) not: type mismatch";
+			*t = GetToken();
+			return false;
+		}
+	}
+
+	Dprintf(("[Unary::TypeCheck] End\n"));
 
 	return true;
 }
 
 const CType* CAstUnaryOp::GetType(void) const
 {
-  EOperation op = GetOperation();
-  if (op == opNot) return CTypeManager::Get()->GetBool();
-  else return CTypeManager::Get()->GetInt();
+	EOperation op = GetOperation();							// Get operator
+	if (op == opNot) return CTypeManager::Get()->GetBool();	// If it's unary ! operator, it's boolean
+	else return CTypeManager::Get()->GetInt();				// else it's unary + or -, so integer
 }
 
 ostream& CAstUnaryOp::print(ostream &out, int indent) const
@@ -1062,10 +1124,10 @@ bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 
 const CType* CAstSpecialOp::GetType(void) const
 {
-  EOperation op = GetOperation();
-  if (op == opAddress){
-    return CTypeManager::Get()->GetPointer(_operand->GetType());
-  }
+	EOperation op = GetOperation();
+	if (op == opAddress){
+		return CTypeManager::Get()->GetPointer(_operand->GetType());
+	}
 	return _operand->GetType();
 }
 
@@ -1305,16 +1367,65 @@ CAstExpression* CAstArrayDesignator::GetIndex(int index) const
 
 bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 {
+	const CType* sm = GetSymbol() -> GetDataType();			// Get Datatype of array from symboltable
 	bool result = true;
+	Dprintf(("[Array::TypeCheck] Start\n"));
 
 	assert(_done);
+	// TODO
+	// Check if dimension is overflowed (ex A: intger[2][2], A[1][1][1] := 3 (error))
+	/*
+	if (dynamic_cast<const CArrayType*>(sm)->GetNDim() < _idx.size()) {
+		if (msg != NULL) *msg = "dimension is superfluous";
+		return false;
+	}
+	*/
+
+	for (int i=0; i<_idx.size(); ++i) {						// Iterate through index expressions
+		CAstExpression* e = _idx[i];
+		if (!e->TypeCheck(t, msg)) {						// Typecheck index expression
+			if (t != NULL) *t = e->GetToken();
+			if (msg != NULL) *msg = "invalid expression.";
+			return false;
+		}
+		if (!e->GetType()->Match(CTypeManager::Get()->GetInt())) {	// If index is not integer type, error
+			if (t != NULL) *t = e->GetToken();
+			if (msg != NULL) *msg = "expected integer expression.";
+			return false;
+		}
+	}
+
 
 	return result;
 }
 
 const CType* CAstArrayDesignator::GetType(void) const
 {
-	return NULL;
+	const CType* t = GetSymbol() -> GetDataType();	// Get Datatype of array from symboltable
+
+	Dprintf(("[Array::GetType] started\n"));
+
+	// TODO A[3][][2] := 1 (error)
+	if (t == NULL) return t;
+
+
+	// TODO NIndices right ?? 
+	for (int i=0; i<GetNIndices(); ++i) {
+		if (t->IsPointer()) {									// If it's pointer type
+			Dprintf(("[Array::GetType] is pointer type\n"));
+			const CType* temp = dynamic_cast<const CPointerType*>(t)->GetBaseType();
+			cout << "ASADASD" << temp << endl;
+			temp = dynamic_cast<const CArrayType*>(temp)->GetInnerType();
+			cout << "ASADASD" << temp << endl;
+			t = dynamic_cast<const CArrayType*>(temp)->GetBaseType();
+		}
+		else if (t->IsArray()) {								// If it's array type
+			Dprintf(("[Array::GetType] is array type\n"));
+			t = dynamic_cast<const CArrayType*>(t)->GetBaseType();
+		}
+	}
+
+	return t;
 }
 
 ostream& CAstArrayDesignator::print(ostream &out, int indent) const

@@ -604,6 +604,8 @@ CAstArrayDesignator* CParser::qualident(CAstScope *s)
 		n->AddIndex(ex);								// set index
 	}
 
+	n->IndicesComplete();								// Complete indicies
+
 	return n; 
 
 }
