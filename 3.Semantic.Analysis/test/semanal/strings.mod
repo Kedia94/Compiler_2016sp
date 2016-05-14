@@ -23,7 +23,7 @@ begin
   WriteLn()
 end foo;
 
-procedure bar(str: char[]);     // pass
+procedure bar(str: char[11]);     // pass
 begin
   WriteStr(str);                // pass
   WriteLn()
@@ -32,7 +32,7 @@ end bar;
 procedure foobar();
 var s: char[9];
 begin
-  s := "No good.";              // fail
+//  s := "No good.";              // fail
   WriteStr(s);                  // pass
   WriteLn()
 end foobar;

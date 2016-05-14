@@ -1,0 +1,112 @@
+parsing '../test/semanal/strings.mod'...
+successfully parsed.
+  AST:
+    CAstScope: 'strings'
+      symbol table:
+        [[
+          [ *DIM(<ptr(4) to <NULL>>,<int>) --> <int>           ]
+          [ *DOFS(<ptr(4) to <NULL>>) --> <int>           ]
+          [ *ReadInt() --> <int>           ]
+          [ *WriteChar(<char>) --> <NULL>           ]
+          [ *WriteInt(<int>) --> <NULL>           ]
+          [ *WriteLn() --> <NULL>           ]
+          [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL>           ]
+          [ @_str_1   <array 14  of <char>>           ]
+            [ data: 'Hello, world!' ]
+          [ @_str_2   <array 18  of <char>>           ]
+            [ data: 'This should work.' ]
+          [ *bar(<ptr(4) to <array  of <char>>>) --> <NULL>           ]
+          [ *foo() --> <NULL>           ]
+          [ *foobar() --> <NULL>           ]
+          [ *not_fun() --> <NULL>           ]
+          [ @s        <array 256  of <char>>           ]
+        ]]
+      statement list:
+        call [ *foo() --> <NULL> ] <NULL>
+        call [ *bar(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
+          &() <ptr(4) to <array  of <char>>>
+            "This should work." <array 18  of <char>>
+        call [ *not_fun() --> <NULL> ] <NULL>
+      nested scopes:
+        CAstScope: 'foo'
+          symbol table:
+            [[
+            ]]
+          statement list:
+            call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
+              &() <ptr(4) to <array  of <char>>>
+                "Hello, world!" <array 14  of <char>>
+            call [ *WriteLn() --> <NULL> ] <NULL>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'bar'
+          symbol table:
+            [[
+              [ %str      <ptr(4) to <array  of <char>>>               ]
+            ]]
+          statement list:
+            call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
+              [ %str      <ptr(4) to <array  of <char>>> ] <ptr(4) to <array  of <char>>>
+            call [ *WriteLn() --> <NULL> ] <NULL>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'foobar'
+          symbol table:
+            [[
+              [ $s        <array 9  of <char>>               ]
+            ]]
+          statement list:
+            call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
+              &() <ptr(4) to <array  of <char>>>
+                [ $s        <array 9  of <char>> ] <array 9  of <char>>
+            call [ *WriteLn() --> <NULL> ] <NULL>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'not_fun'
+          symbol table:
+            [[
+              [ $s        <array 6  of <char>>               ]
+            ]]
+          statement list:
+            := <char>
+              [ $s        <array 6  of <char>> ] <char>
+                0 <int>
+              72 <char>
+            := <char>
+              [ $s        <array 6  of <char>> ] <char>
+                1 <int>
+              101 <char>
+            := <char>
+              [ $s        <array 6  of <char>> ] <char>
+                2 <int>
+              108 <char>
+            := <char>
+              [ $s        <array 6  of <char>> ] <char>
+                3 <int>
+              108 <char>
+            := <char>
+              [ $s        <array 6  of <char>> ] <char>
+                4 <int>
+              111 <char>
+            := <char>
+              [ $s        <array 6  of <char>> ] <char>
+                5 <int>
+              0 <char>
+            call [ *WriteStr(<ptr(4) to <array  of <char>>>) --> <NULL> ] <NULL>
+              &() <ptr(4) to <array  of <char>>>
+                [ $s        <array 6  of <char>> ] <array 6  of <char>>
+            call [ *WriteLn() --> <NULL> ] <NULL>
+          nested scopes:
+            empty.
+        
+    
+
+
+run the following command to convert the .dot file into a PDF:
+  dot -Tpdf -o../test/semanal/strings.mod.ast.pdf ../test/semanal/strings.mod.ast.dot
+
+
+Done.

@@ -399,12 +399,18 @@ bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 	const CType *lt = _lhs->GetType();									// Get type of lhs
 	const CType *rt = _rhs->GetType();									// Get type of rhs
 	if (!_rhs->TypeCheck(t, msg)) return false;							// If rhs has invalid type, error
+	if (!rt->IsScalar() || !lt->IsScalar()) {							// If it's compound type
+		if (msg != NULL) *msg = "(Assign) assigning compoun type";
+		if (t != NULL) *t = GetToken();
+		return false;
+	}
+
 	if (lt != rt){														// If two types are different, error
 		if (msg != NULL) *msg = "(Assign) left and right have different type";
 		if (t != NULL) *t = GetToken();
 		return false;
 	}
-	//TODO
+
 
 	Dprintf(("[Assign::TypeCheck] End\n"));
 	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
@@ -1384,9 +1390,7 @@ bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 		at = dynamic_cast<const CArrayType*>(dynamic_cast<const CPointerType*>(sm)->GetBaseType());
 	}
 	else {										// else error
-		// TODO
-		// 에러 난 경우 토큰을 어디서 가져오지 ??
-		//if (t != NULL) *t = e->GetToekn();
+		if (t != NULL) *t = GetToken();
 		if (msg != NULL) *msg = "Not an array type.";
 		return false;
 	}
