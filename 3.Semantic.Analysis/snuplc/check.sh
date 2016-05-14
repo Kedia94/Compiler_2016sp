@@ -7,7 +7,6 @@
 ./test_parser mod.mod > our
 
 #diff them
-diff ref our > diff
+cat our
+diff ref our 
 
-#open diff
-vim diff

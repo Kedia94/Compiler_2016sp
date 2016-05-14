@@ -400,7 +400,7 @@ bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 	const CType *rt = _rhs->GetType();									// Get type of rhs
 	if (!_rhs->TypeCheck(t, msg)) return false;							// If rhs has invalid type, error
 	if (!rt->IsScalar() || !lt->IsScalar()) {							// If it's compound type
-		if (msg != NULL) *msg = "(Assign) assigning compoun type";
+		if (msg != NULL) *msg = "(Assign) assigning compound type";
 		if (t != NULL) *t = GetToken();
 		return false;
 	}
@@ -544,14 +544,14 @@ bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 
 	if (st->Match(CTypeManager::Get()->GetNull())) {		// If return value should be void
 		if (e != NULL) { 									// If return value is not void, error
-			if (t != NULL) *t = e->GetToken();
+			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "superflous expression after return.";
 			return false;
 		}
 	}
 	else {												// If return value should be something else
 		if (e == NULL) {									// If return value is null, error
-			if (t != NULL) *t = e->GetToken();
+			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "expression expected after return.";
 			return false;
 		}
@@ -559,7 +559,7 @@ bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 		if (!e->TypeCheck(t, msg)) return false;			// If type of return expression fails
 
 		if (!st->Match(e->GetType())) {					// If return type has wrong type
-			if (t != NULL) *t = e->GetToken();
+			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "return type mismatch.";
 			return false;
 		}
@@ -1125,6 +1125,8 @@ CAstExpression* CAstSpecialOp::GetOperand(void) const
 
 bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 {
+	//TODO
+	//함수를 포인터로 호출하는 경우 여기서 항상 false리턴하므로 오류뜸 foo(A)이런식으로
 	return false;
 }
 
@@ -1434,6 +1436,7 @@ bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 
 	// Check if dimension is overflowed (ex A: intger[2][2], A[1][1][1] := 3 (error))
 	if (at->GetNDim() < GetNIndices()) {
+		if (t != NULL) *t = GetToken();
 		if (msg != NULL) *msg = "dimension is superfluous";
 		return false;
 	}

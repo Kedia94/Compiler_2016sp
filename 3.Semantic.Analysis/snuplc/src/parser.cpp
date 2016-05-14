@@ -67,9 +67,7 @@ CAstNode* CParser::Parse(void)
 		if (_module != NULL) {
 			CToken t;
 			string msg;
-			printf("(Debug) Start check\n");
-//			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
-			printf("(Debug) End check\n");
+			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
 		}
 	} catch (...) {
 		_module = NULL;
@@ -959,7 +957,9 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 
 	if (t.GetType() == tFunction) {		// if it is functiondecl
 		Consume(tColon);				// consuems colon
-		typ = type(s, false);
+		typ = type(s, true);			// it should check [] is empty
+		if (!typ->GetType()->IsScalar())
+			SetError(typ->GetToken(), "return type should be scalar");
 		sym = new CSymProc(tname.GetValue(), typ->GetType());
 	}
 	else {								// if it is proceduredecl

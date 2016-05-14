@@ -1,4 +1,6 @@
-2c2
-< parse error : at 72:9 : integer constant outside valid range.
+2,4c2
+< parse error : at 63:5 : incompatible types in assignment:
+<   LHS: <char>
+<   RHS: <bool>
 ---
-> parse error : at 70:10 : smaller than min int
+> parse error : at 63:5 : (Assign) left and right have different type
