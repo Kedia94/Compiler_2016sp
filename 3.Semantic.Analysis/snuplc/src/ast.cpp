@@ -43,7 +43,7 @@
 #include "ast.h"
 using namespace std;
 
-#define DEBUG 
+//#define DEBUG 
 #ifdef DEBUG
 #define Dprintf(a) printf a
 #else
@@ -1367,23 +1367,39 @@ CAstExpression* CAstArrayDesignator::GetIndex(int index) const
 
 bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 {
-	const CType* sm = GetSymbol() -> GetDataType();			// Get Datatype of array from symboltable
+	const CType* sm = GetSymbol() -> GetDataType();				// Get Datatype of array from symboltable
+
 	bool result = true;
-	Dprintf(("[Array::TypeCheck] Start\n"));
+	Dprintf(("\n[Array::TypeCheck] Start\n"));
 
 	assert(_done);
+
+	const CArrayType* at = NULL;				// Pointer for ArrayType
+
+	if (sm->IsArray())							// If array type
+		at = dynamic_cast<const CArrayType*>(sm);
 	// TODO
+	// 포인터를 디 레퍼렌싱 한게 어레이가 아닌경우도 예외 처리 해줘야 하나?
+	else if (sm->IsPointer()) {					// If pointer to array type
+		at = dynamic_cast<const CArrayType*>(dynamic_cast<const CPointerType*>(sm)->GetBaseType());
+	}
+	else {										// else error
+		// TODO
+		// 에러 난 경우 토큰을 어디서 가져오지 ??
+		//if (t != NULL) *t = e->GetToekn();
+		if (msg != NULL) *msg = "Not an array type.";
+		return false;
+	}
+
 	// Check if dimension is overflowed (ex A: intger[2][2], A[1][1][1] := 3 (error))
-	/*
-	if (dynamic_cast<const CArrayType*>(sm)->GetNDim() < _idx.size()) {
+	if (at->GetNDim() < GetNIndices()) {
 		if (msg != NULL) *msg = "dimension is superfluous";
 		return false;
 	}
-	*/
 
-	for (int i=0; i<_idx.size(); ++i) {						// Iterate through index expressions
+	for (int i=0; i<_idx.size(); ++i) {								// Iterate through index expressions
 		CAstExpression* e = _idx[i];
-		if (!e->TypeCheck(t, msg)) {						// Typecheck index expression
+		if (!e->TypeCheck(t, msg)) {								// Typecheck index expression
 			if (t != NULL) *t = e->GetToken();
 			if (msg != NULL) *msg = "invalid expression.";
 			return false;
@@ -1395,35 +1411,31 @@ bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 		}
 	}
 
-
 	return result;
 }
 
 const CType* CAstArrayDesignator::GetType(void) const
 {
-	const CType* t = GetSymbol() -> GetDataType();	// Get Datatype of array from symboltable
-
 	Dprintf(("[Array::GetType] started\n"));
 
-	// TODO A[3][][2] := 1 (error)
-	if (t == NULL) return t;
+	const CType* t = GetSymbol() -> GetDataType();	// Get Datatype of array from symboltable
 
-
-	// TODO NIndices right ?? 
-	for (int i=0; i<GetNIndices(); ++i) {
-		if (t->IsPointer()) {									// If it's pointer type
-			Dprintf(("[Array::GetType] is pointer type\n"));
-			const CType* temp = dynamic_cast<const CPointerType*>(t)->GetBaseType();
-			cout << "ASADASD" << temp << endl;
-			temp = dynamic_cast<const CArrayType*>(temp)->GetInnerType();
-			cout << "ASADASD" << temp << endl;
-			t = dynamic_cast<const CArrayType*>(temp)->GetBaseType();
-		}
-		else if (t->IsArray()) {								// If it's array type
-			Dprintf(("[Array::GetType] is array type\n"));
-			t = dynamic_cast<const CArrayType*>(t)->GetBaseType();
-		}
+	const CArrayType* at;
+	if (t->IsArray())							// If array type
+		at = dynamic_cast<const CArrayType*>(t);
+	// TODO
+	// 포인터를 디 레퍼렌싱 한게 어레이가 아닌경우도 예외 처리 해줘야 하나?
+	else if (t->IsPointer()) {					// If pointer to array type
+		at = dynamic_cast<const CArrayType*>(dynamic_cast<const CPointerType*>(t)->GetBaseType());
 	}
+	else 
+		return NULL;
+
+	if (GetNIndices() == at->GetNDim())			// If have exactly same number of indices
+		return at->GetBaseType();				// return base type 
+
+	for (int i=0; i<GetNIndices(); ++i) 		// else dereferencing each time
+		at = dynamic_cast<const CArrayType*>(at->GetInnerType());
 
 	return t;
 }
