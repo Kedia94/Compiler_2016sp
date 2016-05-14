@@ -13,10 +13,10 @@ module int_const_strict;
 procedure strict();
 var i: integer;
 begin
-  i := -2147483648;                 // fail
+//  i := -2147483648;                 // fail
   i := -2147483647;                 // pass
   i :=  2147483647;                 // pass
-  i :=  2147483648;                 // fail
+//  i :=  2147483648;                 // fail
 
   i := 0
 end strict;
