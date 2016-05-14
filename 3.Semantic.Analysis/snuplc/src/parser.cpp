@@ -467,7 +467,7 @@ CAstExpression* CParser::factor(CAstScope *s)
 			symbol = s->GetSymbolTable()->FindSymbol(_scanner->Peek().GetValue());
 			// if peeked value is not found in symboltable
 			if (symbol == NULL) {								// Error handling
-				SetError(t, "No symbol \'" + _scanner->Peek().GetValue() + "\'");
+				SetError(_scanner->Peek(), "No symbol \'" + _scanner->Peek().GetValue() + "\'");
 			}
 			else {
 				if (symbol->GetSymbolType() == stProcedure) {	// if it's subroutinecall
@@ -918,6 +918,11 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 			while (_scanner->Peek().GetType() == tComma) {	// if it has other ident, consumes it
 				Consume(tComma);
 				Consume(tIdent, &tval);
+				for (int i=0;i<vec.size(); i++){
+				  if (vec[i].GetValue().compare(tval.GetValue())==0){
+				    SetError(tval, "duplicated variables");
+                                  }
+                                }
 				vec.push_back(tval);
 			}
 			Consume(tColon);								// Consuems colon 
