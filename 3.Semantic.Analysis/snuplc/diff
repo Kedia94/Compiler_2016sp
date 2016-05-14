@@ -1,0 +1,4 @@
+2c2
+< parse error : at 72:9 : integer constant outside valid range.
+---
+> parse error : at 70:10 : smaller than min int

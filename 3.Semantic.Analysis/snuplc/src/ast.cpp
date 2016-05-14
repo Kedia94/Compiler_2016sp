@@ -1208,6 +1208,26 @@ CAstExpression* CAstFunctionCall::GetArg(int index) const
 bool CAstFunctionCall::TypeCheck(CToken *t, string *msg) const
 {
 
+	// Get original declaration of function
+	const CSymProc* decl = GetSymbol();
+
+	// if number of arguments are different, error
+	if (decl->GetNParams() != GetNArgs()) {
+		if (t != NULL) *t = GetToken();
+		if (msg != NULL) *msg = decl->GetNParams() < GetNArgs() ? "too many arguments." : "not enough arguments.";
+		return false;
+	}
+
+	for (int i=0; i<decl->GetNParams(); ++i) {
+		const CAstExpression* arg = GetArg(i);
+		if (arg != NULL && !arg->TypeCheck(t, msg)) return false;			// Type check argument
+		if (!arg->GetType()->Match(decl->GetParam(i)->GetDataType())) {		// Arguement type mismatch
+			if (t != NULL) *t = arg->GetToken();
+			if (msg != NULL) *msg = "(Function Call) type of arguments mismatched";
+			return false;
+		}
+	}
+	
 	return true;
 }
 
