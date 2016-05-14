@@ -1035,7 +1035,7 @@ bool CAstUnaryOp::TypeCheck(CToken *t, string *msg) const
 	EOperation op = GetOperation();						// Get operator
 
 	if (op == opNeg || op == opPos){						// If operator is unary + or -
-		if (type->Match(CTypeManager::Get()->GetInt())) {	// If type is not an integer, error
+		if (!type->Match(CTypeManager::Get()->GetInt())) {	// If type is not an integer, error
 			if (msg != NULL) *msg = "(UnaryOp) pos/neg: type mismatch";
 			if (t != NULL) *t = GetToken(); 
 			return false;
@@ -1131,8 +1131,25 @@ bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 const CType* CAstSpecialOp::GetType(void) const
 {
 	EOperation op = GetOperation();
+	
 	if (op == opAddress){
-		return CTypeManager::Get()->GetPointer(_operand->GetType());
+	  const CType* type = _operand->GetType();
+          int i= 0;
+          
+          while (true){
+            if (type->IsArray()){
+              i++;
+              type = ((CArrayType *)type)->GetInnerType();
+            }
+            else
+              break;
+          }
+          int j;
+          for (j=0;j<i;j++){
+            type = CTypeManager::Get()->GetArray(-1, type);
+          }
+          
+		return CTypeManager::Get()->GetPointer(type);
 	}
 	return _operand->GetType();
 }

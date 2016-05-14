@@ -68,7 +68,7 @@ CAstNode* CParser::Parse(void)
 			CToken t;
 			string msg;
 			printf("(Debug) Start check\n");
-			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
+//			if (!_module->TypeCheck(&t, &msg)) SetError(t, msg);
 			printf("(Debug) End check\n");
 		}
 	} catch (...) {
@@ -547,7 +547,7 @@ CAstConstant* CParser::number(bool pos)
 	errno = 0;
 	long long v = strtoll(t.GetValue().c_str(), NULL, 10);
 	if (!pos) v = -v;
-	if (v <= INT_MIN) SetError(t, "smaller than min int");
+	if (v < INT_MIN) SetError(t, "smaller than min int");
         else if (v > INT_MAX) SetError(t, "bigger than max int");
 	if (errno != 0) SetError(t, "invalid number.");
 
@@ -672,7 +672,7 @@ CAstType* CParser::type(CAstScope *s, bool declare, bool pointer)
 	}
 
 	for (int i=vec.size()-1; i>=0; --i) {
-		if (vec[i] == NULL)
+		if (vec[i] == NULL || pointer)
 			type = tm->GetArray(-1, type);						
 		else
 			type = tm->GetArray(vec[i]->GetValue(), type);	
@@ -713,6 +713,10 @@ CAstStatCall* CParser::subroutinecall(CAstScope *s)
 		while (_scanner->Peek().GetType() == tComma) {	// repeatedly scans for arguments
 			Consume(tComma);
 			l = expression(s);
+
+			if (l->GetType()->IsArray()){
+			  l = new CAstSpecialOp(l->GetToken(), opAddress, l);
+                        }
 			funccall->AddArg(l);
 		}
 	}
