@@ -1,0 +1,26 @@
+25c25,26
+<           [ @A        <array 3  of <array 3  of <int>>> ] <array 3  of <array 3  of <int>>>
+---
+>           &() <ptr(4) to <array 3  of <array 3  of <int>>>>
+>             [ @A        <array 3  of <array 3  of <int>>> ] <array 3  of <array 3  of <int>>>
+30c31,32
+<           [ @A        <array 3  of <array 3  of <int>>> ] <array 3  of <array 3  of <int>>>
+---
+>           &() <ptr(4) to <array 3  of <array 3  of <int>>>>
+>             [ @A        <array 3  of <array 3  of <int>>> ] <array 3  of <array 3  of <int>>>
+39,40c41,42
+<             := <INVALID>
+<               [ %P        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>
+---
+>             := <int>
+>               [ %P        <ptr(4) to <array  of <array  of <int>>>> ] <int>
+84c86
+<                   [ %A        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>
+---
+>                   [ %A        <ptr(4) to <array  of <array  of <int>>>> ] <int>
+141,142c143,144
+<                 := <INVALID>
+<                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <INVALID>
+---
+>                 := <int>
+>                   [ %a        <ptr(4) to <array  of <array  of <int>>>> ] <int>

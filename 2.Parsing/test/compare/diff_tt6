@@ -1,0 +1,22 @@
+57c57
+<               not <int>
+---
+>               not <bool>
+69,71c69,71
+<             return <int>
+<               not <int>
+<                 or <bool>
+---
+>             return <INVALID>
+>               not <INVALID>
+>                 or <INVALID>
+78c78
+<                   and <bool>
+---
+>                   and <INVALID>
+112,113c112,113
+<               and <bool>
+<                 and <bool>
+---
+>               and <INVALID>
+>                 and <INVALID>
