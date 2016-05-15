@@ -398,14 +398,13 @@ bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 
 	const CType *lt = _lhs->GetType();									// Get type of lhs
 	const CType *rt = _rhs->GetType();									// Get type of rhs
-	if (!_rhs->TypeCheck(t, msg)) return false;							// If rhs has invalid type, error
 	if (!rt->IsScalar() || !lt->IsScalar()) {							// If it's compound type
 		if (msg != NULL) *msg = "(Assign) assigning compound type";
 		if (t != NULL) *t = GetToken();
 		return false;
 	}
 
-	if (lt != rt){														// If two types are different, error
+	if (!lt->Compare(rt)){										// If two types are different, error
 		if (msg != NULL) *msg = "(Assign) left and right have different type";
 		if (t != NULL) *t = GetToken();
 		return false;
@@ -540,25 +539,25 @@ bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Return::TypeCheck] Start\n"));
 	const CType *st = GetScope() -> GetType();			// Get type of enclosing procedure
-	CAstExpression *e = GetExpression();					// Get return expression
+	CAstExpression *e = GetExpression();				// Get return expression
 
 	if (st->Match(CTypeManager::Get()->GetNull())) {		// If return value should be void
-		if (e != NULL) { 									// If return value is not void, error
+		if (e != NULL) { 					// If return value is not void, error
 			if (t != NULL) *t = _expr->GetToken();
 			if (msg != NULL) *msg = "superflous expression after return.";
 			return false;
 		}
 	}
-	else {												// If return value should be something else
-		if (e == NULL) {									// If return value is null, error
+	else {								// If return value should be something else
+		if (e == NULL) {					// If return value is null, error
 			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "expression expected after return.";
 			return false;
 		}
 
-		if (!e->TypeCheck(t, msg)) return false;			// If type of return expression fails
+		if (!e->TypeCheck(t, msg)) return false;		// If type of return expression fails
 
-		if (!st->Match(e->GetType())) {					// If return type has wrong type
+		if (!st->Match(e->GetType())) {				// If return type has wrong type
 			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "return type mismatch.";
 			return false;
@@ -655,8 +654,7 @@ bool CAstStatIf::TypeCheck(CToken *t, string *msg) const
 	if (!_ifBody->TypeCheck(t, msg)) return false;							// Type check body statement
 	if (_elseBody != NULL && !_elseBody->TypeCheck(t, msg)) return false;	// Type check else body statement, if has any
 
-	// XXX
-	if (!_cond->GetType()->Match(CTypeManager::Get()->GetBool())) {			// If condition statement is not a bool type, error
+	if (!_cond->GetType()->Compare(CTypeManager::Get()->GetBool())) {			// If condition statement is not a bool type, error
 		if (t != NULL) *t = _cond->GetToken();
 		if (msg != NULL) *msg = "boolean type expected";
 		return false;
@@ -1125,8 +1123,6 @@ CAstExpression* CAstSpecialOp::GetOperand(void) const
 
 bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 {
-	//TODO
-	//함수를 포인터로 호출하는 경우 여기서 항상 false리턴하므로 오류뜸 foo(A)이런식으로
 
         if (!_operand->TypeCheck(t, msg)) return false;
 
@@ -1147,27 +1143,6 @@ const CType* CAstSpecialOp::GetType(void) const
 	
 	if (op == opAddress){
 	  const CType* type = _operand->GetType();
-/*
-          int i= 0;
-          const CArrayType *arr;
-          
-          while (true){
-            if (type->IsArray()){
-              i++;
-              arr = dynamic_cast<const CArrayType*>type;
-              if (arr == NULL){
-                break;
-              }
-              type = arr->GetInnerType();
-            }
-            else
-              break;
-          }
-          int j;
-          for (j=0;j<i;j++){
-            type = CTypeManager::Get()->GetArray(-1, type);
-          }
-         */ 
 		return CTypeManager::Get()->GetPointer(type);
 	}
 	return _operand->GetType();
@@ -1441,8 +1416,6 @@ bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 
 	if (sm->IsArray())							// If array type
 		at = dynamic_cast<const CArrayType*>(sm);
-	// TODO
-	// 포인터를 디 레퍼렌싱 한게 어레이가 아닌경우도 예외 처리 해줘야 하나?
 	else if (sm->IsPointer()) {					// If pointer to array type
 		at = dynamic_cast<const CArrayType*>(dynamic_cast<const CPointerType*>(sm)->GetBaseType());
 	}
@@ -1485,8 +1458,6 @@ const CType* CAstArrayDesignator::GetType(void) const
 	const CArrayType* at;
 	if (t->IsArray())							// If array type
 		at = dynamic_cast<const CArrayType*>(t);
-	// TODO
-	// 포인터를 디 레퍼렌싱 한게 어레이가 아닌경우도 예외 처리 해줘야 하나?
 	else if (t->IsPointer()) {					// If pointer to array type
 		at = dynamic_cast<const CArrayType*>(dynamic_cast<const CPointerType*>(t)->GetBaseType());
 	}

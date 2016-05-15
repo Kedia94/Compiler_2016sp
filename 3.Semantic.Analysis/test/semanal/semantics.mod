@@ -113,6 +113,22 @@ begin
   Parameters(1,2)           // pass
 end Parameters;
 
+procedure Param(p1: integer[]; p2: integer[][]; p3: integer[][][]; b1: boolean[]);
+var A, A1: integer[5];
+    B, B1: integer[5][7];
+    C, C1: integer[5][7][9];
+    D, D1: boolean[7];
+begin
+//Param();
+//Param(A,C);
+Param(A,B,C,D);
+//Param(A,B,C,D,D1);
+//Param(B,C,D,A);
+Param(B1[2],B,C,D);
+Param(B1[2],C1[1],C,D);
+//Param(A,C[1],C[1],C,D);
+Param(A,B,C,D)
+end Param;
 
 // type checks
 procedure Expressions(p1, p2, p3, p4: integer);

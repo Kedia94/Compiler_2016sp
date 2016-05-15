@@ -52,13 +52,14 @@ end p1;
 procedure p2(a: integer[][5][]);  // pass
 var b: integer[5][5][5];          // pass
     c: integer[5][7][9];          // pass
+    e: integer[6][6][5][3];
     //d: integer[][5][];            // fail
 begin
   p2(a);                          // pass
   //p2(1);                          // fail
   //p2(a[0]);                       // fail
   //p2(a, a);                       // fail
-
+p2(e[1]);
   p2(B);                          // pass
   p2(b);                          // pass
 //  p2(c);                          // fail
