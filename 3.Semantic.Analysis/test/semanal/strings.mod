@@ -23,7 +23,7 @@ begin
   WriteLn()
 end foo;
 
-procedure bar(str: char[11]);     // pass
+procedure bar(str: char[]);     // pass
 begin
   WriteStr(str);                // pass
   WriteLn()

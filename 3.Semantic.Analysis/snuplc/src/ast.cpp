@@ -1127,7 +1127,18 @@ bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 {
 	//TODO
 	//함수를 포인터로 호출하는 경우 여기서 항상 false리턴하므로 오류뜸 foo(A)이런식으로
-	return false;
+
+        if (!_operand->TypeCheck(t, msg)) return false;
+
+        EOperation op = GetOperation();
+
+	if (op == opAddress){
+        }
+        else if (op == opDeref){
+        }
+        else {
+        }
+	return true;
 }
 
 const CType* CAstSpecialOp::GetType(void) const
@@ -1136,12 +1147,18 @@ const CType* CAstSpecialOp::GetType(void) const
 	
 	if (op == opAddress){
 	  const CType* type = _operand->GetType();
+/*
           int i= 0;
+          const CArrayType *arr;
           
           while (true){
             if (type->IsArray()){
               i++;
-              type = ((CArrayType *)type)->GetInnerType();
+              arr = dynamic_cast<const CArrayType*>type;
+              if (arr == NULL){
+                break;
+              }
+              type = arr->GetInnerType();
             }
             else
               break;
@@ -1150,7 +1167,7 @@ const CType* CAstSpecialOp::GetType(void) const
           for (j=0;j<i;j++){
             type = CTypeManager::Get()->GetArray(-1, type);
           }
-          
+         */ 
 		return CTypeManager::Get()->GetPointer(type);
 	}
 	return _operand->GetType();
@@ -1239,8 +1256,9 @@ bool CAstFunctionCall::TypeCheck(CToken *t, string *msg) const
 
 	for (int i=0; i<decl->GetNParams(); ++i) {
 		const CAstExpression* arg = GetArg(i);
+		
 		if (arg != NULL && !arg->TypeCheck(t, msg)) return false;			// Type check argument
-		if (!arg->GetType()->Match(decl->GetParam(i)->GetDataType())) {		// Arguement type mismatch
+		if (!decl->GetParam(i)->GetDataType()->Match(arg->GetType())) {		// Arguement type mismatch
 			if (t != NULL) *t = arg->GetToken();
 			if (msg != NULL) *msg = "(Function Call) type of arguments mismatched";
 			return false;

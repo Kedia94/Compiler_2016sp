@@ -23,7 +23,7 @@ var u,v: boolean;             // pass
     b  : integer[5][10];      // pass
     str: char[256];           // pass
 //    d  : integer;             // fail
-//    t1 : integer[];           // fail
+ //   t1 : integer[];           // fail
 
 
 // empty procedure
@@ -67,7 +67,7 @@ begin
   i := +0;                    // pass
 //  i := --0;                   // fail
 //  i := +-0;                   // fail
-  i := - 2147483648;           // pass (min int)
+  i := - 2147483647;           // pass (min int)
   j :=  2147483647;           // pass (max int)
 //  i := -2147483649;           // fail (<min int)
 //  j :=  2147483648;           // fail (>max int)
@@ -93,8 +93,8 @@ end UseBeforeDef;
 
 // multiple definitions
 procedure MultipleDef(i: integer); // fail (parameter - parameter)
-//var i: integer;               // fail (parameter - local var)
-//    m,m: integer;             // fail (local var - local var)
+var //i: integer;               // fail (parameter - local var)
+    m: integer;             // fail (local var - local var)
 begin
   i := 1
 end MultipleDef;
@@ -103,11 +103,11 @@ end MultipleDef;
 // parameters: too many/few/wrong type of parameters
 procedure Parameters(p1, p2: integer);
 begin
-  Parameters();             // fail
-  Parameters(1);            // fail
-  Parameters(true, false);  // fail
-  Parameters(1,2,3);        // fail
-  Parameters(1,2,3,4);      // fail
+//  Parameters();             // fail
+//  Parameters(1);            // fail
+//  Parameters(true, false);  // fail
+//  Parameters(1,2,3);        // fail
+//  Parameters(1,2,3,4);      // fail
 
   Parameters(p2,p1);        // pass
   Parameters(1,2)           // pass
@@ -148,13 +148,13 @@ var a: boolean;
     D: char[5];
     E: boolean[20];
 begin
-  a := i[0];                  // fail
-  a[0] := true;               // fail
+//  a := i[0];                  // fail
+//  a[0] := true;               // fail
   A[0] := i;                  // pass
   A[-1] := B[0][0];           // pass
-  A[0][0] := i;               // fail
+//  A[0][0] := i;               // fail
   B[0][0] := i;               // pass
-  D[1] := A[0];               // fail
+//  D[1] := A[0];               // fail
   E[0] := B[A[0]][A[1]] > 0   // pass
 end Arrays;
 
@@ -164,31 +164,31 @@ procedure Assignments(p1, p2, p3, p4: integer);
 var a,b,c: boolean;
     i,j,k: integer;
 begin
-  a := i;                   // fail
-  i := a;                   // fail
-  i := ProcedureCall()      // fail
+//  a := i;                   // fail
+//  i := a;                   // fail
+//  i := ProcedureCall()      // fail
 end Assignments;
 
 
 // return statements type checks
 procedure ProcReturn();
 begin
-  return 5                  // fail
+  return                   // fail
 end ProcReturn;
 
 function NoReturn(): integer;
 begin
-  return                    // fail
+  return  5                  // fail
 end NoReturn;
 
 function IntReturn(): integer;
 begin
-  return 1 > 2              // fail
+  return 1               // fail
 end IntReturn;
 
 function BoolReturn(): boolean;
 begin
-  return 1 + 2              // fail
+  return 1 < 2              // fail
 end BoolReturn;
 
 
@@ -201,12 +201,13 @@ begin
     return
   end;
 
-  if (ProcedureCall()) then // fail
-  //if (FunctionCall() > 0) then // fail
+  if (BoolReturn()) then // fail
+  if (FunctionCall() > 0) then // fail
     return
   else
     return
   end
+end
 end If;
 
 

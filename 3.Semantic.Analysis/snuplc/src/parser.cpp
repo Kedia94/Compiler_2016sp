@@ -332,27 +332,14 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
 	CAstExpression *n = NULL;
 
 	if (_scanner->Peek().GetType() == tTermOp) {			// if it has ["+"|"-"] parts
-	  bool pos = true;
 		Consume(tTermOp, &topt);							// consume operator
-		if (topt.GetValue() == "-") pos = false;
-                else if (topt.GetValue() == "||") SetError(topt, "Invalid unary operator");
-                
-                if (_scanner->Peek().GetType() == tNumber)
-                  n = number(pos);
-                else {
-                  n = term(s);
-                  if (pos) n = new CAstUnaryOp(topt, opPos, n);
-                  else n = new CAstUnaryOp(topt, opNeg, n);
-                }
-
         }
 
+        n = term(s);
 
-        else {
-          n = term(s);
-        }
-
-
+        if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
+        else if (topt.GetValue() == "-") n = new CAstUnaryOp(topt, opNeg, n);
+        else if (topt.GetValue() == "||") SetError(topt, "invalid unary operation.");
 
 	while (_scanner->Peek().GetType() == tTermOp) {			// { termOp term } parts
 		CToken t;
@@ -670,7 +657,7 @@ CAstType* CParser::type(CAstScope *s, bool declare, bool pointer)
 	}
 
 	for (int i=vec.size()-1; i>=0; --i) {
-		if (vec[i] == NULL || pointer)
+		if (vec[i] == NULL)
 			type = tm->GetArray(-1, type);						
 		else
 			type = tm->GetArray(vec[i]->GetValue(), type);	
@@ -937,13 +924,25 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 				Consume(tSemicolon);						// Consumes keywords
 				Consume(tIdent, &tval);
 				vec.push_back(tval);
+
+				for (int i=0;i<v.size(); i++){
+				  if (tval.GetValue().compare(v[i]->GetName()) == 0){
+				    SetError(tval, "duplicated variables");
+                                  }
+                                }
 				while (_scanner->Peek().GetType() == tComma) {
 					Consume(tComma);						// Consuems keywords
 					Consume(tIdent, &tval);
 					vec.push_back(tval);
+
+					for (int i=0;i<v.size();i++){
+					  if (tval.GetValue().compare(v[i]->GetName()) == 0){
+					    SetError(tval, "duplicated variables");
+                                          }
+                                        }
 				}
 				Consume(tColon);							// Consumes keywords
-				typ = type(s, false);
+				typ = type(s, false, true);
 				size = vec.size();
 
 				for (int i=0; i<size; i++) {				// Iterate vector and append its elements to another vector

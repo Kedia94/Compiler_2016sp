@@ -1,0 +1,364 @@
+parsing 'test/semanal/semantics.mod'...
+successfully parsed.
+  AST:
+    CAstScope: 'semantics'
+      symbol table:
+        [[
+          [ *Arrays() --> <NULL>           ]
+          [ *Assignments(<int>,<int>,<int>,<int>) --> <NULL>           ]
+          [ *BoolReturn() --> <bool>           ]
+          [ *Constants() --> <NULL>           ]
+          [ *DIM(<ptr(4) to <NULL>>,<int>) --> <int>           ]
+          [ *DOFS(<ptr(4) to <NULL>>) --> <int>           ]
+          [ *Expressions(<int>,<int>,<int>,<int>) --> <NULL>           ]
+          [ *FunctionCall() --> <int>           ]
+          [ *If(<int>,<int>) --> <NULL>           ]
+          [ *IntReturn() --> <int>           ]
+          [ *MultipleDef(<int>) --> <NULL>           ]
+          [ *NoReturn() --> <int>           ]
+          [ *Parameters(<int>,<int>) --> <NULL>           ]
+          [ *ProcReturn() --> <NULL>           ]
+          [ *ProcedureCall() --> <NULL>           ]
+          [ *ReadInt() --> <int>           ]
+          [ *UseBeforeDef(<int>) --> <NULL>           ]
+          [ *WriteChar(<char>) --> <NULL>           ]
+          [ *WriteInt(<int>) --> <NULL>           ]
+          [ *WriteLn() --> <NULL>           ]
+          [ *WriteStr(<ptr(4) to <array of <char>>>) --> <NULL>           ]
+          [ @a        <array 10 of <int>>           ]
+          [ @b        <array 5 of <array 10 of <int>>>           ]
+          [ @d        <char>           ]
+          [ @e        <char>           ]
+          [ @str      <array 256 of <char>>           ]
+          [ @u        <bool>           ]
+          [ @v        <bool>           ]
+          [ @x        <int>           ]
+          [ @y        <int>           ]
+        ]]
+      statement list:
+        := <bool>
+          [ @u        <bool> ] <bool>
+          [ @v        <bool> ] <bool>
+        := <int>
+          [ @x        <int> ] <int>
+          add <int>
+            [ @y        <int> ] <int>
+            1 <int>
+      nested scopes:
+        CAstScope: 'ProcedureCall'
+          symbol table:
+            [[
+            ]]
+          statement list:
+            empty.
+          nested scopes:
+            empty.
+        
+        CAstScope: 'FunctionCall'
+          symbol table:
+            [[
+            ]]
+          statement list:
+            empty.
+          nested scopes:
+            empty.
+        
+        CAstScope: 'Constants'
+          symbol table:
+            [[
+              [ $a        <bool>               ]
+              [ $b        <bool>               ]
+              [ $c        <char>               ]
+              [ $d        <char>               ]
+              [ $i        <int>               ]
+              [ $j        <int>               ]
+              [ $s        <array 14 of <char>>               ]
+            ]]
+          statement list:
+            := <bool>
+              [ $a        <bool> ] <bool>
+              true <bool>
+            := <bool>
+              [ $a        <bool> ] <bool>
+              false <bool>
+            := <bool>
+              [ $a        <bool> ] <bool>
+              not <bool>
+                true <bool>
+            := <bool>
+              [ $a        <bool> ] <bool>
+              not <bool>
+                not <bool>
+                  not <bool>
+                    true <bool>
+            := <bool>
+              [ $a        <bool> ] <bool>
+              not <bool>
+                false <bool>
+            := <char>
+              [ $c        <char> ] <char>
+              97 <char>
+            := <char>
+              [ $d        <char> ] <char>
+              10 <char>
+            := <int>
+              [ $i        <int> ] <int>
+              neg <int>
+                0 <int>
+            := <int>
+              [ $i        <int> ] <int>
+              pos <int>
+                0 <int>
+            := <int>
+              [ $i        <int> ] <int>
+              neg <int>
+                2147483647 <int>
+            := <int>
+              [ $j        <int> ] <int>
+              2147483647 <int>
+            := <bool>
+              [ $a        <bool> ] <bool>
+              true <bool>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'UseBeforeDef'
+          symbol table:
+            [[
+              [ $i        <int>               ]
+              [ $j        <int>               ]
+              [ %k        <int>               ]
+            ]]
+          statement list:
+            := <int>
+              [ $i        <int> ] <int>
+              [ $j        <int> ] <int>
+            := <int>
+              [ $i        <int> ] <int>
+              [ %k        <int> ] <int>
+            := <int>
+              [ $i        <int> ] <int>
+              [ @x        <int> ] <int>
+            := <int>
+              [ $i        <int> ] <int>
+              0 <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'MultipleDef'
+          symbol table:
+            [[
+              [ %i        <int>               ]
+            ]]
+          statement list:
+            := <int>
+              [ %i        <int> ] <int>
+              1 <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'Parameters'
+          symbol table:
+            [[
+              [ %p1       <int>               ]
+              [ %p2       <int>               ]
+            ]]
+          statement list:
+            call [ *Parameters(<int>,<int>) --> <NULL> ] <NULL>
+              [ %p2       <int> ] <int>
+              [ %p1       <int> ] <int>
+            call [ *Parameters(<int>,<int>) --> <NULL> ] <NULL>
+              1 <int>
+              2 <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'Expressions'
+          symbol table:
+            [[
+              [ $A        <array 10 of <int>>               ]
+              [ $a        <bool>               ]
+              [ $b        <bool>               ]
+              [ $c        <bool>               ]
+              [ $i        <int>               ]
+              [ $j        <int>               ]
+              [ $k        <int>               ]
+              [ %p1       <int>               ]
+              [ %p2       <int>               ]
+              [ %p3       <int>               ]
+              [ %p4       <int>               ]
+            ]]
+          statement list:
+            := <bool>
+              [ $a        <bool> ] <bool>
+              not <bool>
+                not <bool>
+                  not <bool>
+                    [ $b        <bool> ] <bool>
+            := <bool>
+              [ $a        <bool> ] <bool>
+              and <bool>
+                [ $a        <bool> ] <bool>
+                not <bool>
+                  [ $b        <bool> ] <bool>
+            := <int>
+              [ $i        <int> ] <int>
+              add <int>
+                [ $j        <int> ] <int>
+                neg <int>
+                  [ $k        <int> ] <int>
+            := <bool>
+              [ $a        <bool> ] <bool>
+              or <bool>
+                and <bool>
+                  and <bool>
+                    and <bool>
+                      [ $a        <bool> ] <bool>
+                      not <bool>
+                        [ $b        <bool> ] <bool>
+                    < <bool>
+                      [ $i        <int> ] <int>
+                      [ $j        <int> ] <int>
+                  < <bool>
+                    [ $j        <int> ] <int>
+                    [ $k        <int> ] <int>
+                = <bool>
+                  [ $i        <int> ] <int>
+                  [ $k        <int> ] <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'Arrays'
+          symbol table:
+            [[
+              [ $A        <array 10 of <int>>               ]
+              [ $B        <array 10 of <array 20 of <int>>>               ]
+              [ $D        <array 5 of <char>>               ]
+              [ $E        <array 20 of <bool>>               ]
+              [ $a        <bool>               ]
+              [ $i        <int>               ]
+            ]]
+          statement list:
+            := <int>
+              [ $A        <array 10 of <int>> ] <int>
+                0 <int>
+              [ $i        <int> ] <int>
+            := <int>
+              [ $A        <array 10 of <int>> ] <int>
+                neg <int>
+                  1 <int>
+              [ $B        <array 10 of <array 20 of <int>>> ] <int>
+                0 <int>
+                0 <int>
+            := <int>
+              [ $B        <array 10 of <array 20 of <int>>> ] <int>
+                0 <int>
+                0 <int>
+              [ $i        <int> ] <int>
+            := <bool>
+              [ $E        <array 20 of <bool>> ] <bool>
+                0 <int>
+              > <bool>
+                [ $B        <array 10 of <array 20 of <int>>> ] <int>
+                  [ $A        <array 10 of <int>> ] <int>
+                    0 <int>
+                  [ $A        <array 10 of <int>> ] <int>
+                    1 <int>
+                0 <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'Assignments'
+          symbol table:
+            [[
+              [ $a        <bool>               ]
+              [ $b        <bool>               ]
+              [ $c        <bool>               ]
+              [ $i        <int>               ]
+              [ $j        <int>               ]
+              [ $k        <int>               ]
+              [ %p1       <int>               ]
+              [ %p2       <int>               ]
+              [ %p3       <int>               ]
+              [ %p4       <int>               ]
+            ]]
+          statement list:
+            empty.
+          nested scopes:
+            empty.
+        
+        CAstScope: 'ProcReturn'
+          symbol table:
+            [[
+            ]]
+          statement list:
+            return <NULL>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'NoReturn'
+          symbol table:
+            [[
+            ]]
+          statement list:
+            return <int>
+              5 <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'IntReturn'
+          symbol table:
+            [[
+            ]]
+          statement list:
+            return <int>
+              1 <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'BoolReturn'
+          symbol table:
+            [[
+            ]]
+          statement list:
+            return <bool>
+              < <bool>
+                1 <int>
+                2 <int>
+          nested scopes:
+            empty.
+        
+        CAstScope: 'If'
+          symbol table:
+            [[
+              [ %p1       <int>               ]
+              [ %p2       <int>               ]
+            ]]
+          statement list:
+            if cond
+              > <bool>
+                add <int>
+                  [ %p1       <int> ] <int>
+                  [ %p2       <int> ] <int>
+                0 <int>
+            if-body
+              return <NULL>
+            else-body
+              return <NULL>
+            if cond
+              call [ *BoolReturn() --> <bool> ] <bool>
+            if-body
+              return <NULL>
+            else-body
+              return <NULL>
+          nested scopes:
+            empty.
+        
+    
+
+
+run the following command to convert the .dot file into a PDF:
+  dot -Tpdf -otest/semanal/semantics.mod.ast.pdf test/semanal/semantics.mod.ast.dot
+
+
+Done.
