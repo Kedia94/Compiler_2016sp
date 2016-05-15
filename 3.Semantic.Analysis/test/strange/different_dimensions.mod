@@ -15,5 +15,5 @@ begin
 end add;
 
 begin
-  add(a,b)
+  add(a,b,a)
 end different_dimensions.

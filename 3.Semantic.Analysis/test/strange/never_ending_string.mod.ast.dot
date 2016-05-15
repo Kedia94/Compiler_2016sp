@@ -1,0 +1,19 @@
+digraph AST {
+  graph [fontname="Times New Roman",fontsize=10];
+  node  [fontname="Courier New",fontsize=10];
+  edge  [fontname="Times New Roman",fontsize=10];
+
+  node0 [label="m never_ending_string",shape=box];
+  node14 [label="call write",shape=box];
+  node0 -> node14 [style=dotted];
+  node4 [label="p/f write",shape=box];
+  node6 [label="call WriteStr",shape=box];
+  node8 [label="&()",shape=box];
+  node7 [label="\"\"",shape=ellipse];
+  node8->node7;
+  node6->node8;
+  node4 -> node6 [style=dotted];
+  node11 [label="call WriteLn",shape=box];
+  node6 -> node11 [style=dotted];
+  node0 -> node4;
+}

@@ -4,7 +4,7 @@ var a, b: integer;
 
 procedure copy(A : integer);
 begin
-  a[0] := A[0]
+  a := A
 end copy;
 
 begin

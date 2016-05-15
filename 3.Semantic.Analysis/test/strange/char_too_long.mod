@@ -6,5 +6,5 @@ begin
 end f;
 
 begin
-    f('ab')
+    f('a')
 end char_too_long.

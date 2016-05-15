@@ -8,7 +8,7 @@ ch0, ch1, ch2: char;
 procedure return_recursive_procedure(proc, proc1: integer[][]);
 begin
   proc[1][2] := proc1[2][3];
-  return return_recursive_procedure(proc, proc1)
+  return 
 end return_recursive_procedure;
 
 function foo(b: boolean; i0, i1: integer) : integer;
@@ -29,12 +29,12 @@ end return_function_named_variable;
 function return_function() : integer;
 var foox: integer;
 begin
-  return foo
+  return foox
 end return_function;
 
 procedure return_procedure();
 begin
-  return return_recursive_procedure
+  return 
 end return_procedure;
 
 begin

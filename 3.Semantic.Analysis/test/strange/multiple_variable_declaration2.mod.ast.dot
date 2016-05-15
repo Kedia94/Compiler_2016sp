@@ -4,10 +4,10 @@ digraph AST {
   edge  [fontname="Times New Roman",fontsize=10];
 
   node0 [label="m multiple_variable_declaration2",shape=box];
-  node1 [label="p/f print",shape=box];
-  node2 [label="call WriteInt",shape=box];
-  node3 [label="X",shape=ellipse];
-  node2->node3;
-  node1 -> node2 [style=dotted];
-  node0 -> node1;
+  node2 [label="p/f print",shape=box];
+  node5 [label="call WriteInt",shape=box];
+  node6 [label="X",shape=ellipse];
+  node5->node6;
+  node2 -> node5 [style=dotted];
+  node0 -> node2;
 }

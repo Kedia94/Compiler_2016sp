@@ -544,7 +544,7 @@ bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 
 	if (st->Match(CTypeManager::Get()->GetNull())) {		// If return value should be void
 		if (e != NULL) { 									// If return value is not void, error
-			if (t != NULL) *t = GetToken();
+			if (t != NULL) *t = _expr->GetToken();
 			if (msg != NULL) *msg = "superflous expression after return.";
 			return false;
 		}
@@ -1260,7 +1260,7 @@ bool CAstFunctionCall::TypeCheck(CToken *t, string *msg) const
 		if (arg != NULL && !arg->TypeCheck(t, msg)) return false;			// Type check argument
 		if (!decl->GetParam(i)->GetDataType()->Match(arg->GetType())) {		// Arguement type mismatch
 			if (t != NULL) *t = arg->GetToken();
-			if (msg != NULL) *msg = "(Function Call) type of arguments mismatched";
+			if (msg != NULL) *msg = "(Function Call) type of arguments mismatched.";
 			return false;
 		}
 	}
@@ -1499,7 +1499,7 @@ const CType* CAstArrayDesignator::GetType(void) const
 	for (int i=0; i<GetNIndices(); ++i) 		// else dereferencing each time
 		at = dynamic_cast<const CArrayType*>(at->GetInnerType());
 
-	return t;
+	return at;
 }
 
 ostream& CAstArrayDesignator::print(ostream &out, int indent) const

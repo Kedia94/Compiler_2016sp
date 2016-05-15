@@ -891,6 +891,9 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 
 	Consume(tIdent, &tname);	// consumes ident
 
+        if (table->FindSymbol(tname.GetValue()) != NULL){
+          SetError(tname, "duplicate procedure/function declaration");
+        }
 	// formalparam
 	if (_scanner->Peek().GetType() == tLBrak) {
 		// Consumes keywords

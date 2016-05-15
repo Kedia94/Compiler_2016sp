@@ -1,0 +1,37 @@
+digraph AST {
+  graph [fontname="Times New Roman",fontsize=10];
+  node  [fontname="Courier New",fontsize=10];
+  edge  [fontname="Times New Roman",fontsize=10];
+
+  node0 [label="m call_latter_defined_function",shape=box];
+  node24 [label="call call_latter",shape=box];
+  node26 [label="&()",shape=box];
+  node25 [label="sum",shape=ellipse];
+  node26->node25;
+  node24->node26;
+  node0 -> node24 [style=dotted];
+  node5 [label="p/f call_latter",shape=box];
+  node0 -> node5;
+  node10 [label="p/f latter_func",shape=box];
+  node14 [label="return",shape=box];
+  node11 [label="intarr[]",shape=ellipse];
+  node12 [label="a",shape=ellipse];
+  node11-> node12;
+  node13 [label="2",shape=ellipse];
+  node11-> node13;
+  node14->node11;
+  node10 -> node14 [style=dotted];
+  node0 -> node10;
+  node17 [label="p/f latter_proc",shape=box];
+  node22 [label=":=",shape=box];
+  node18 [label="a",shape=ellipse];
+  node22->node18;
+  node19 [label="intarr[]",shape=ellipse];
+  node20 [label="a",shape=ellipse];
+  node19-> node20;
+  node21 [label="a",shape=ellipse];
+  node19-> node21;
+  node22->node19;
+  node17 -> node22 [style=dotted];
+  node0 -> node17;
+}

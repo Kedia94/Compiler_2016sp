@@ -4,23 +4,29 @@ digraph AST {
   edge  [fontname="Times New Roman",fontsize=10];
 
   node0 [label="m multiple_type_formalparam",shape=box];
-  node34 [label="call add",shape=box];
-  node36 [label="&()",shape=box];
-  node35 [label="a",shape=ellipse];
-  node36->node35;
-  node34->node36;
-  node38 [label="&()",shape=box];
-  node37 [label="b",shape=ellipse];
-  node38->node37;
-  node34->node38;
-  node0 -> node34 [style=dotted];
-  node5 [label="p/f add",shape=box];
+  node35 [label="call add",shape=box];
+  node37 [label="&()",shape=box];
+  node36 [label="a",shape=ellipse];
+  node37->node36;
+  node35->node37;
+  node39 [label="&()",shape=box];
+  node38 [label="b",shape=ellipse];
+  node39->node38;
+  node35->node39;
+  node41 [label="&()",shape=box];
+  node40 [label="c",shape=ellipse];
+  node41->node40;
+  node35->node41;
+  node42 [label="X",shape=ellipse];
+  node35->node42;
+  node0 -> node35 [style=dotted];
+  node7 [label="p/f add",shape=box];
   node11 [label=":=",shape=box];
   node9 [label="i",shape=ellipse];
   node11->node9;
   node10 [label="0",shape=ellipse];
   node11->node10;
-  node5 -> node11 [style=dotted];
+  node7 -> node11 [style=dotted];
   node33 [label="while",shape=box];
   node14 [label="<",shape=box];
   node12 [label="i",shape=ellipse];
@@ -65,5 +71,5 @@ digraph AST {
   node32 -> node31 [style=dotted];
   node17 -> node32 [style=dotted];
   node11 -> node33 [style=dotted];
-  node0 -> node5;
+  node0 -> node7;
 }

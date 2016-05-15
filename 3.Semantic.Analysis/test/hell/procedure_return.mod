@@ -4,7 +4,7 @@ var sum: integer[5][5];
 
 procedure proc_return1(a : integer[][]);
 begin
-  return sum[1][2]
+  return 
 end proc_return1;
 
 procedure proc_return(a: integer[][]);

@@ -1,9 +1,9 @@
 module arraylength_notnumber;
 
 var X, Y: integer;
-a,b,c,d: integer[X][Y];
+a,b,c,d: integer[3][4];
 
-procedure add(A,B,C: integer[X][Y]);
+procedure add(A,B,C: integer[][]);
 var i,j: integer;
 begin
   i := 0;
@@ -16,5 +16,5 @@ begin
 end add;
 
 begin
-  add(a,b)
+  add(a,b,a)
 end arraylength_notnumber.

@@ -7,8 +7,8 @@ p, q, r: integer;
 procedure rec_arr(a: integer[][][]; b: boolean[][][]);
 var i, j, k: integer;
 begin
-  a[a[a[2][3][5]]] := a[j][a[2][k][j]][i];
-  b[a[2][a[4][1][2]][i+k]] := false || false || b[a[2][a[i*k][2][3]][i/k]]
+  a[1][1][a[1][2][a[2][3][5]]] := a[j][a[2][k][j]][i];
+  b[a[2][a[4][1][2]][i+k]][2][3] := false || false || b[2][3][a[2][a[i*k][2][3]][i/k]]
 end rec_arr;
 
 function add(a, b, c: integer): integer;
