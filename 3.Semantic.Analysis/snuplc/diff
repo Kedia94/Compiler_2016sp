@@ -1,6 +1,0 @@
-2,4c2
-< parse error : at 63:5 : incompatible types in assignment:
-<   LHS: <char>
-<   RHS: <bool>
----
-> parse error : at 63:5 : (Assign) left and right have different type
