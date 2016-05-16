@@ -848,11 +848,15 @@ void CParser::vardeclsequence(CAstScope *s)
 	//
 
 	vardecl(s);
+	if (_scanner->Peek().GetType() != tSemicolon)
+	  SetError(_scanner->Peek(), "tSemicolon expected");
 	while(_scanner->Peek().GetType() == tSemicolon) {	// repeatedly consume Semicolons
 		Consume(tSemicolon);							// consumes semicolon
 		if (_scanner->Peek().GetType() != tIdent)		
 			break;
 		vardecl(s);
+		if (_scanner->Peek().GetType() != tSemicolon)
+		  SetError(_scanner->Peek(), "tSemicolon expected");
 	}
 }
 
