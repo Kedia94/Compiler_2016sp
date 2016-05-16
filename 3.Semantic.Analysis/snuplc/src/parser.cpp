@@ -532,8 +532,7 @@ CAstConstant* CParser::number(bool pos)
 	errno = 0;
 	long long v = strtoll(t.GetValue().c_str(), NULL, 10);
 	if (!pos) v = -v;
-	if (v < INT_MIN) SetError(t, "smaller than min int");
-        else if (v > INT_MAX) SetError(t, "bigger than max int");
+	if (v < INT_MIN ||v > INT_MAX) SetError(t, "int range overflow");
 	if (errno != 0) SetError(t, "invalid number.");
 
 	return new CAstConstant(t, CTypeManager::Get()->GetInt(), v);

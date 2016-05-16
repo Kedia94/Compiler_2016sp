@@ -59,8 +59,8 @@ begin
 //  p2(a[0]);                       // fail 이런 류들에서 special op로 들어가버림
 //  p2(a, a);                       // fail
 
-//  p2(B);                          // pass
-//  p2(b);                          // pass
+  p2(B);                          // pass
+  p2(b);                          // pass
 //  p2(c);                          // fail
 
   a[0][0][0] := 0

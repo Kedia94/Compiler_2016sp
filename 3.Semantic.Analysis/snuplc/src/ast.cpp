@@ -404,7 +404,7 @@ bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 		return false;
 	}
 
-	if (!lt->Compare(rt)){										// If two types are different, error
+	if (!lt->Compare(rt)) {												// If two types are different, error
 		if (msg != NULL) *msg = "(Assign) left and right have different type";
 		if (t != NULL) *t = GetToken();
 		return false;
@@ -412,7 +412,7 @@ bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 
 
 	Dprintf(("[Assign::TypeCheck] End\n"));
-	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
+	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;// Move on to the next statement
 
 	return true;
 }
@@ -479,7 +479,7 @@ CAstFunctionCall* CAstStatCall::GetCall(void) const
 bool CAstStatCall::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Call::TypeCheck] Start\n"));
-	if (!GetCall()->TypeCheck(t, msg)) return false;	// If Calling sequence has invalid type, error
+	if (!GetCall()->TypeCheck(t, msg)) return false;						// If Calling sequence has invalid type, error
 
 
 	Dprintf(("[Call::TypeCheck] End\n"));
@@ -541,15 +541,15 @@ bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 	const CType *st = GetScope() -> GetType();			// Get type of enclosing procedure
 	CAstExpression *e = GetExpression();				// Get return expression
 
-	if (st->Match(CTypeManager::Get()->GetNull())) {		// If return value should be void
-		if (e != NULL) { 					// If return value is not void, error
+	if (st->Match(CTypeManager::Get()->GetNull())) {	// If return value should be void
+		if (e != NULL) { 								// If return value is not void, error
 			if (t != NULL) *t = _expr->GetToken();
 			if (msg != NULL) *msg = "superflous expression after return.";
 			return false;
 		}
 	}
-	else {								// If return value should be something else
-		if (e == NULL) {					// If return value is null, error
+	else {												// If return value should be something else
+		if (e == NULL) {								// If return value is null, error
 			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "expression expected after return.";
 			return false;
@@ -557,7 +557,7 @@ bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 
 		if (!e->TypeCheck(t, msg)) return false;		// If type of return expression fails
 
-		if (!st->Match(e->GetType())) {				// If return type has wrong type
+		if (!st->Match(e->GetType())) {					// If return type has wrong type
 			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "return type mismatch.";
 			return false;
@@ -654,7 +654,7 @@ bool CAstStatIf::TypeCheck(CToken *t, string *msg) const
 	if (!_ifBody->TypeCheck(t, msg)) return false;							// Type check body statement
 	if (_elseBody != NULL && !_elseBody->TypeCheck(t, msg)) return false;	// Type check else body statement, if has any
 
-	if (!_cond->GetType()->Compare(CTypeManager::Get()->GetBool())) {			// If condition statement is not a bool type, error
+	if (!_cond->GetType()->Compare(CTypeManager::Get()->GetBool())) {		// If condition statement is not a bool type, error
 		if (t != NULL) *t = _cond->GetToken();
 		if (msg != NULL) *msg = "boolean type expected";
 		return false;
@@ -939,12 +939,22 @@ bool CAstBinaryOp::TypeCheck(CToken *t, string *msg) const
 	}
 	else if (IsRelOp(op) && op != opEqual && op != opNotEqual) {	// If it uses relational operator
 		if (!(lt->Match(CTypeManager::Get()->GetChar()) ||
-			  lt->Match(CTypeManager::Get()->GetInt()))) {			// If type is not char or integer, error
+					lt->Match(CTypeManager::Get()->GetInt()))) {	// If type is not char or integer, error
 			if (t != NULL) *t = GetToken();
 			if (msg != NULL) *msg = "(BinaryOp) relational operation: type mismatch";
 			return false;
 		}
 	}
+	else if (op == opEqual || op == opNotEqual) {
+		if (!(lt->Match(CTypeManager::Get()->GetChar()) ||
+					lt->Match(CTypeManager::Get()->GetInt()) ||
+					lt->Match(CTypeManager::Get()->GetBool()))) {	// If type is not char or integer or bool, error
+			if (t != NULL) *t = GetToken();
+			if (msg != NULL) *msg = "(BinaryOp) equal/unequal operation: type mismatch";
+			return false;
+		}
+	}
+	
 
 	Dprintf(("[Binary::TypeCheck] End\n"));
 	return true;
@@ -1124,26 +1134,26 @@ CAstExpression* CAstSpecialOp::GetOperand(void) const
 bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 {
 
-        if (!_operand->TypeCheck(t, msg)) return false;
+	if (!_operand->TypeCheck(t, msg)) return false;
 
-        EOperation op = GetOperation();
+	EOperation op = GetOperation();
 
 	if (op == opAddress){
-        }
-        else if (op == opDeref){
-        }
-        else {
-        }
+	}
+	else if (op == opDeref){
+	}
+	else {
+	}
 	return true;
 }
 
 const CType* CAstSpecialOp::GetType(void) const
 {
 	EOperation op = GetOperation();
-	
-	if (op == opAddress){
-	  const CType* type = _operand->GetType();
-		return CTypeManager::Get()->GetPointer(type);
+
+	if (op == opAddress) {
+		const CType* type = _operand->GetType();
+		return CTypeManager::Get()->GetPointer(type);	// return valid pointer type
 	}
 	return _operand->GetType();
 }
@@ -1231,7 +1241,7 @@ bool CAstFunctionCall::TypeCheck(CToken *t, string *msg) const
 
 	for (int i=0; i<decl->GetNParams(); ++i) {
 		const CAstExpression* arg = GetArg(i);
-		
+
 		if (arg != NULL && !arg->TypeCheck(t, msg)) return false;			// Type check argument
 		if (!decl->GetParam(i)->GetDataType()->Match(arg->GetType())) {		// Arguement type mismatch
 			if (t != NULL) *t = arg->GetToken();
@@ -1239,7 +1249,7 @@ bool CAstFunctionCall::TypeCheck(CToken *t, string *msg) const
 			return false;
 		}
 	}
-	
+
 	return true;
 }
 

@@ -1,10 +1,21 @@
 module a;
+var A : integer[3];
 
-procedure If(a: integer[][]);
-var b: integer[2];
+function f() : integer;
 begin
-If(b)
-end If;
+end f;
+
+procedure test(a : integer[][]);
+begin
+	a := a;
+	return
+end test;
+
+procedure foo(a: integer);
+begin
+return 
+end foo;
 
 begin
+A[-1] := 0
 end a.
