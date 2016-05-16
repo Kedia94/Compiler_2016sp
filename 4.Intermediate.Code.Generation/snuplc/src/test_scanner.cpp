@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-/// @brief SNUPL IR test
+/// @brief SNUPL scanner test
 /// @author Bernhard Egger <bernhard@csap.snu.ac.kr>
 /// @section changelog Change Log
 /// 2012/09/14 Bernhard Egger created
@@ -35,8 +35,6 @@
 #include <fstream>
 
 #include "scanner.h"
-#include "parser.h"
-#include "ir.h"
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -44,49 +42,16 @@ int main(int argc, char *argv[])
   int i = 1;
 
   while (i < argc) {
-    // scanning, parsing & semantical analysis
     CScanner *s = new CScanner(new ifstream(argv[i]));
-    CParser *p = new CParser(s);
 
-    cout << "parsing '" << argv[i] << "'..." << endl;
-    CAstNode *ast = p->Parse();
+    cout << "scanning '" << argv[i] << "'..." << endl;
 
-    if (p->HasError()) {
-      const CToken *error = p->GetErrorToken();
-      cout << "parse error : at " << error->GetLineNumber() << ":"
-           << error->GetCharPosition() << " : "
-           << p->GetErrorMessage() << endl;
-    } else {
-      // AST to TAC conversion
-      cout << "converting to TAC..." << endl;
-      CModule *m = new CModule(ast);
+    if (!s->Good()) cout << "  cannot open input stream: " << s->Peek() << endl;
 
-      // print TAC to console
-      cout << m << endl;
-      cout << endl;
-
-      // output TAC as .dot and generate a PDF file from it
-      ofstream out(string(argv[i]) + ".dot");
-      out << "digraph IR {" << endl
-          << "  graph [fontname=\"Times New Roman\",fontsize=10];" << endl
-          << "  node  [fontname=\"Courier New\",fontsize=10];" << endl
-          << "  edge  [fontname=\"Times New Roman\",fontsize=10];" << endl
-          << endl;
-      m->toDot(out, 2);
-      const vector<CScope*> &proc = m->GetSubscopes();
-      for (size_t p=0; p<proc.size(); p++) {
-        proc[p]->toDot(out, 2);
-      }
-      out << "};" << endl;
-      out.flush();
-
-      ostringstream cmd;
-      cmd << "dot -Tpdf -o" << argv[i] << ".pdf " << argv[i] << ".dot";
-      cout << "run the following command to convert the .dot file into a PDF:" << endl
-           << "  " << cmd.str() << 
-           endl;
-
-      delete m;
+    while (s->Good()) {
+      CToken t = s->Get();
+      cout << "  " << t << endl;
+      if (t.GetType() == tEOF) break;
     }
 
     cout << endl << endl;

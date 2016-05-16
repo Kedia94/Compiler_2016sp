@@ -94,7 +94,7 @@ char EOperationName[][OPERATION_STRLEN] = {
   "label",                          ///< jump label; no arguments
   "nop",                            ///< no operation
 };
-
+/*
 bool IsRelOp(EOperation t)
 {
   return (t == opEqual) ||
@@ -104,7 +104,7 @@ bool IsRelOp(EOperation t)
          (t == opBiggerThan) ||
          (t == opBiggerEqual);
 }
-
+*/
 ostream& operator<<(ostream &out, EOperation t)
 {
   out << EOperationName[t];
