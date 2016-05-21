@@ -243,11 +243,21 @@ void CAstScope::toDot(ostream &out, int indent) const
 
 CTacAddr* CAstScope::ToTac(CCodeBlock *cb)
 {
-  CTacLabel *next = cb->CreateLabel();
 
-  if (_statseq != NULL)
-    _statseq->ToTac(cb, next);
-  	return NULL;
+  assert(cb != NULL);
+
+  CAstStatement *s = GetStatementSequence();
+
+  while (s != NULL){
+    CTacLabel *next = cb->CreateLabel();
+    s->ToTac(cb, next);
+    cb->AddInstr(next);
+    s = s->GetNext();
+  }
+
+  cb->CleanupControlFlow();
+  
+  return NULL;
 }
 
 CCodeBlock* CAstScope::GetCodeBlock(void) const
@@ -467,9 +477,6 @@ CTacAddr* CAstStatAssign::ToTac(CCodeBlock *cb, CTacLabel *next)
 
   cb->AddInstr(new CTacInstr(opAssign, lt, rt, NULL));
   
-  
- if (GetNext() != NULL) GetNext()->ToTac(cb, next);
-  
 	return NULL;
 }
 
@@ -525,8 +532,6 @@ void CAstStatCall::toDot(ostream &out, int indent) const
 CTacAddr* CAstStatCall::ToTac(CCodeBlock *cb, CTacLabel *next)
 {
   GetCall()->ToTac(cb);
-
-  if (GetNext() != NULL) GetNext()->ToTac(cb, next);
 
 	return NULL;
 }
@@ -637,8 +642,6 @@ CTacAddr* CAstStatReturn::ToTac(CCodeBlock *cb, CTacLabel *next)
   CTacAddr* rt = _expr->ToTac(cb);
 
   cb->AddInstr(new CTacInstr(opReturn, NULL, rt, NULL));
-
-  if (GetNext() != NULL) GetNext()->ToTac(cb, next);
 
 	return NULL;
 }
@@ -775,7 +778,6 @@ CTacAddr* CAstStatIf::ToTac(CCodeBlock *cb, CTacLabel *next)
 
   next = cb->CreateLabel();
 
-  if (GetNext() != NULL) GetNext()->ToTac(cb, next);
 	return NULL;
 }
 
@@ -1203,14 +1205,27 @@ CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb)
 {
 
   if (GetType()->IsBoolean()){
+    CTacLabel *lt = cb->CreateLabel();
+    CTacLabel *lf = cb->CreateLabel();
+    CTacLabel *ln = cb->CreateLabel();
+
+    ToTac(cb, lt, lf);
+
     _addr = cb->CreateTemp(CTypeManager::Get()->GetBool());
 
-    cb->AddInstr(new CTacInstr(opNot, _addr, GetOperand()->ToTac(cb)));
+    cb->AddInstr(lt);
+    cb->AddInstr(new CTacInstr(opAssign, _addr, new CTacConst(1)));
+    cb->AddInstr(new CTacInstr(opGoto, ln));
+    cb->AddInstr(lf);
+    cb->AddInstr(new CTacInstr(opAssign, _addr, new CTacConst(0)));
+    cb->AddInstr(ln);
   }
   else {
+    CTacAddr *src = GetOperand()->ToTac(cb);
+    
     _addr = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
-    cb->AddInstr(new CTacInstr(GetOperation(), _addr, GetOperand()->ToTac(cb)));
+    cb->AddInstr(new CTacInstr(GetOperation(), _addr, src));
   }
 
   return _addr;
@@ -1219,7 +1234,9 @@ CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb)
 CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb,
 		CTacLabel *ltrue, CTacLabel *lfalse)
 {
-	return NULL;
+  assert (GetType()->IsBoolean());
+
+  return GetOperand()->ToTac(cb, lfalse, ltrue);
 }
 
 
@@ -1302,7 +1319,132 @@ void CAstSpecialOp::toDot(ostream &out, int indent) const
 
 CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 {
-	return NULL;
+  CAstArrayDesignator *array = (CAstArrayDesignator *)GetOperand();
+  const CSymbol *temp = array -> GetSymbol();
+
+//printf("\n\n%d %d\n\n", ((CArrayType *)array->GetType())->GetNDim(), array->GetNIndices());
+  if (temp->GetDataType()->IsArray()){
+    CTacAddr *src = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp -> GetDataType()));
+    CTacAddr *pointer = new CTacName(temp);
+    CTacAddr *s1, *s2, *s3, *s4, *s5;
+    CTacTemp *ret;
+    cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL));
+    if (array->GetNIndices() < 1){
+      return src;
+    }
+    for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
+      s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp->GetDataType()));
+      s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      if (i==2){
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
+      cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1, NULL));
+
+      //TODO: below line is correct?
+      cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DIM", CTypeManager::Get()->GetInt())), NULL));
+      if (i==2){
+        cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
+      }
+      else{
+        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+      if (i >= array->GetNIndices()+1){
+        cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
+      }
+      else {
+        cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
+      }
+    }
+/*
+    if (array->GetNIndices() == 1){
+      s4 = array->GetIndex(0)->ToTac(cb);
+    }
+    */
+    s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp->GetDataType()));
+    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
+
+    cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
+
+    cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
+    cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1));
+
+    //TODO: below line is correct?
+    cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DOFS", CTypeManager::Get()->GetInt())), NULL));    cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
+    cb->AddInstr(new CTacInstr(opAdd, ret, src, s3));
+
+    s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(CTypeManager::Get()->GetInt()));
+    cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
+    return s1;
+  }
+  else {
+    CTacAddr *pointer = new CTacName(temp);
+    CTacAddr *s1, *s2, *s3, *s4, *s5;
+    CTacTemp *ret;
+    if (array->GetNIndices() < 1){
+      return pointer;
+    }
+    for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
+      s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      if (i==2){
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer, NULL));
+
+      //TODO: below line is correct?
+      cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DIM", CTypeManager::Get()->GetInt())), NULL));
+      if (i==2){
+        cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
+      }
+      else{
+        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+      if (i >= array->GetNIndices()+1){
+        cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
+      }
+      else {
+        cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
+      }
+    }
+/*
+    if (array->GetNIndices() == 1){
+      s4 = array->GetIndex(0)->ToTac(cb);
+    }
+    */
+    s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
+
+    cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
+
+    cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer));
+
+    //TODO: below line is correct?
+    cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DOFS", CTypeManager::Get()->GetInt())), NULL));    cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
+    cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
+
+    s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(CTypeManager::Get()->GetInt()));
+    cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
+    return s1;
+}
+/*
+  const CSymbol *temp = ((CAstArrayDesignator *)GetOperand()) -> GetSymbol();
+  CTacAddr *ret = cb->CreateTemp(temp -> GetDataType());
+  cb->AddInstr(new CTacInstr(opAddress, ret, new CTacName(temp), NULL));
+  return ret;
+*/
 }
 
 
@@ -1408,7 +1550,7 @@ CTacAddr* CAstFunctionCall::ToTac(CCodeBlock *cb)
   for (int i=0; i<GetNArgs(); i++){
     cb->AddInstr(new CTacInstr(opParam, new CTacConst(i), GetArg(i)->ToTac(cb), NULL));
   }
-  // TODO: new CTacConst(i) is right?
+  // XXX: new CTacConst(i) is right?
   
   cb->AddInstr(new CTacInstr(opCall, NULL, new CTacName(GetSymbol()), NULL));
 
@@ -1648,13 +1790,109 @@ void CAstArrayDesignator::toDot(ostream &out, int indent) const
 
 CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 {
-	return NULL;
+  if (GetSymbol()->GetDataType()->IsArray()){
+    CTacAddr *src = cb->CreateTemp(CTypeManager::Get()->GetPointer(GetSymbol() -> GetDataType()));
+    CTacAddr *pointer = new CTacName(GetSymbol());
+    CTacAddr *s1, *s2, *s3, *s4, *s5;
+    CTacTemp *ret;
+    cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL));
+    for (int i=2; i<=GetNIndices(); i++){
+      s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(GetSymbol()->GetDataType()));
+      s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      if (i==2){
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
+      cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1, NULL));
+
+      //TODO: below line is correct?
+      cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DIM", CTypeManager::Get()->GetInt())), NULL));
+      if (i==2){
+        cb->AddInstr(new CTacInstr(opMul, s3, GetIndex(i-2)->ToTac(cb), s2));
+      }
+      else{
+        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+      cb->AddInstr(new CTacInstr(opAdd, s4, s3, GetIndex(i-1)->ToTac(cb)));
+    }
+
+    if (GetNIndices() == 1){
+      s4 = GetIndex(0)->ToTac(cb);
+    }
+    s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(GetSymbol()->GetDataType()));
+    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
+
+    cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
+
+    cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
+    cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1));
+
+    //TODO: below line is correct?
+    cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DOFS", CTypeManager::Get()->GetInt())), NULL));
+    cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
+    cb->AddInstr(new CTacInstr(opAdd, ret, src, s3));
+
+    return new CTacReference(ret->GetSymbol());
+  }
+  else {
+    CTacAddr *pointer = new CTacName(GetSymbol());
+    CTacAddr *s1, *s2, *s3, *s4, *s5;
+    CTacTemp *ret;
+    for (int i=2; i<=GetNIndices(); i++){
+      s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      if (i==2){
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
+      cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer, NULL));
+
+      //TODO: below line is correct?
+      cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DIM", CTypeManager::Get()->GetInt())), NULL));
+      if (i==2){
+        cb->AddInstr(new CTacInstr(opMul, s3, GetIndex(i-2)->ToTac(cb), s2));
+      }
+      else{
+        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      }
+      cb->AddInstr(new CTacInstr(opAdd, s4, s3, GetIndex(i-1)->ToTac(cb)));
+    }
+
+    if (GetNIndices() == 1){
+      s4 = GetIndex(0)->ToTac(cb);
+    }
+    s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
+
+    cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
+
+    cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer));
+
+    //TODO: below line is correct?
+    cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(new CSymProc("DOFS", CTypeManager::Get()->GetInt())), NULL));    cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
+    cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
+
+    return new CTacReference(ret->GetSymbol());
+
+  }
 }
 
 CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb,
-		CTacLabel *ltrue, CTacLabel *lfalse)
+    CTacLabel *ltrue, CTacLabel *lfalse)
 {
-	return NULL;
+  printf("\n\n ArrayDesignator lt lf called\n\n");
+  return NULL;
 }
 
 

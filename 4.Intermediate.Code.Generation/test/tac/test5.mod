@@ -7,8 +7,8 @@
 module test5;
 
 var i: integer;
-    A: integer[10][5];
+    A: integer[100][200][300][400];
 
 begin
-  A[1][3] := i
+  A[10][20][30][40] := i
 end test5.

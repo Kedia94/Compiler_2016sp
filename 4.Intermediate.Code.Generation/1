@@ -1,0 +1,90 @@
+parsing 'test/tac/test6.mod'...
+converting to TAC...
+[[ module: test6
+  [[ type manager
+    base types:
+      <NULL>
+      <int>
+      <char>
+      <bool>
+      <ptr(4) to <NULL>>
+    pointer types:
+      <ptr(4) to <NULL>>
+      <ptr(4) to <array of <char>>>
+      <ptr(4) to <array of <int>>>
+      <ptr(4) to <array 20 of <int>>>
+      <ptr(4) to <array 10 of <array 20 of <int>>>>
+      <ptr(4) to <int>>
+    array types:
+      <array of <char>>
+      <array 20 of <int>>
+      <array 10 of <array 20 of <int>>>
+      <array of <int>>
+  ]]
+  [[
+    [ @A        <array 10 of <array 20 of <int>>>     ]
+    [ *DIM(<ptr(4) to <NULL>>,<int>) --> <int>     ]
+    [ *DOFS(<ptr(4) to <NULL>>) --> <int>     ]
+    [ *ReadInt() --> <int>     ]
+    [ *WriteChar(<char>) --> <NULL>     ]
+    [ *WriteInt(<int>) --> <NULL>     ]
+    [ *WriteLn() --> <NULL>     ]
+    [ *WriteStr(<ptr(4) to <array of <char>>>) --> <NULL>     ]
+    [ *foo(<ptr(4) to <array of <int>>>) --> <NULL>     ]
+    [ @i        <int>     ]
+    [ $t0       <ptr(4) to <array 10 of <array 20 of <int>>>>     ]
+    [ $t1       <ptr(4) to <array 10 of <array 20 of <int>>>>     ]
+    [ $t10      <ptr(4) to <int>>     ]
+    [ $t2       <int>     ]
+    [ $t3       <int>     ]
+    [ $t4       <int>     ]
+    [ $t5       <int>     ]
+    [ $t6       <ptr(4) to <array 10 of <array 20 of <int>>>>     ]
+    [ $t7       <int>     ]
+    [ $t8       <int>     ]
+    [ $t9       <int>     ]
+  ]]
+  [[ test6
+      0:     assign i <- 0
+      1:     &()    t0 <- A
+      2:     param  1 <- 2
+      3:     &()    t1 <- A
+      4:     param  0 <- t1
+      5:     call   t2 <- DIM
+      6:     mul    t3 <- 5, t2
+      7:     add    t4 <- t3, 0
+      8:     mul    t5 <- t4, 4
+      9:     &()    t6 <- A
+     10:     param  0 <- t6
+     11:     call   t7 <- DOFS
+     12:     add    t8 <- t5, t7
+     13:     add    t9 <- t0, t8
+     14:     &()    t10 <- @t9
+     15:     param  0 <- t10
+     16:     call   foo
+  ]]
+
+  [[ procedure: foo
+    [[
+      [ %M        <ptr(4) to <array of <int>>>       ]
+      [ $t0       <int>       ]
+      [ $t1       <int>       ]
+      [ $t2       <int>       ]
+      [ $t3       <int>       ]
+    ]]
+    [[ foo
+        0:     mul    t0 <- 10, 4
+        1:     param  0 <- M
+        2:     call   t1 <- DOFS
+        3:     add    t2 <- t0, t1
+        4:     add    t3 <- M, t2
+        5:     assign @t3 <- i
+    ]]
+  ]]
+]]
+
+run the following command to convert the .dot file into a PDF:
+  dot -Tpdf -otest/tac/test6.mod.pdf test/tac/test6.mod.dot
+
+
+Done.
