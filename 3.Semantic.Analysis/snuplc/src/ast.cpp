@@ -771,7 +771,7 @@ bool CAstStatWhile::TypeCheck(CToken *t, string *msg) const
 		return false;		
 
 	Dprintf(("[While::TypeCheck] End\n"));
-	if (GetNext() != NULL && GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
+	if (GetNext() != NULL && !GetNext()->TypeCheck(t, msg)) return false;	// Move on to the next statement
 
 	return true;
 }
