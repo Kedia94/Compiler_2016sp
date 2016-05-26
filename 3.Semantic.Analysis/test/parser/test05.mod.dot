@@ -4,5 +4,5 @@ digraph IR {
   edge  [fontname="Times New Roman",fontsize=10];
 
   // scope 'test05'
-  test05_cb [label="test05\r  0:     neg    t0 <- -2147483648\l  1:     assign min <- t0\l  2:     assign max <- 2147483647\l",shape=box]
+  test05_cb [label="test05\r  0:     assign min <- -2147483648\l  1:     assign max <- 2147483647\l",shape=box]
 };

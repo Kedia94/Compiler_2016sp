@@ -4,7 +4,7 @@ digraph IR {
   edge  [fontname="Times New Roman",fontsize=10];
 
   // scope 'test2'
-  test2_cb [label="test2\r  0:     param  0 <- 1\l  1:     call   foo\l  2:     param  3 <- 4\l  3:     param  2 <- 3\l  4:     param  1 <- 2\l  5:     param  0 <- 1\l  6:     call   t0 <- bar\l",shape=box]
+  test2_cb [label="test2\r  0:     param  0 <- 1\l  1:     call   foo\l  2:     param  0 <- 1\l  3:     param  1 <- 2\l  4:     param  2 <- 3\l  5:     param  3 <- 4\l  6:     call   bar\l",shape=box]
   // scope 'foo'
   foo_cb [label="foo\r  0:     add    t0 <- 1, 2\l  1:     mul    t1 <- t0, v\l  2:     assign i <- t1\l",shape=box]
   // scope 'bar'

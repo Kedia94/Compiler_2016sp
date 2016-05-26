@@ -10,5 +10,6 @@ var i: integer;
 j,k,l: boolean;
 
 begin
-  i := (1 + 2) * 3;
+//  i := (1 + 2) * 3;
+WriteStr("Hello")
 end test1.

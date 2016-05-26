@@ -17,16 +17,17 @@ end Set;
 procedure Print(A: integer[][]);
 var i,j,N,M: integer;
 begin
-  N := DIM(A, 1);
-  M := DIM(A, 2);
-  i := 0;
+//  N := DIM(A, 1);
+//  M := DIM(A, 2);
+//  i := 0;
   while (i < N) do
-    j := 0;
+//    j := 0;
     while (j < M) do
-      WriteInt(A[i][j]); WriteLn();
-      j := j+1
-    end;
-    i := i+1
+//      WriteInt(A[i][j]); 
+//      WriteLn();
+//      j := j+1
+    end
+//    i := i+1
   end
 end Print;
 
