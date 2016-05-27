@@ -169,6 +169,9 @@ CAstStatement* CAstScope::GetStatementSequence(void) const
 	return _statseq;
 }
 
+/* CAstScope::TypeCheck
+ * Description : Repeatedly check _children's type. After finished, move on to the next sequence
+ */
 bool CAstScope::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Scope::TypeCheck] Start: %s \n", _name.c_str()));
@@ -241,22 +244,25 @@ void CAstScope::toDot(ostream &out, int indent) const
 
 }
 
+/* CAstScope::ToTac
+ * Description : Repeatedly genereate tac of statements and add it to the codeblocks.
+ *				Reomove unnecessary labels after(Should delete when debugging)
+ */
+
 CTacAddr* CAstScope::ToTac(CCodeBlock *cb)
 {
-  // from PDF
-
   assert(cb != NULL);
 
-  CAstStatement *s = GetStatementSequence();
+  CAstStatement *s = GetStatementSequence();	// Get statement sequence
 
   while (s != NULL){
-    CTacLabel *next = cb->CreateLabel();
-    s->ToTac(cb, next);
-    cb->AddInstr(next);
-    s = s->GetNext();
+    CTacLabel *next = cb->CreateLabel();		// Create label for next statseq
+    s->ToTac(cb, next);							// Call statseq totac (generate sub tacs...)
+    cb->AddInstr(next);							// Add label
+    s = s->GetNext();							
   }
 
-  cb->CleanupControlFlow();
+  cb->CleanupControlFlow();						// Erase unnecessary labels
   
   return NULL;
 }
@@ -405,6 +411,12 @@ CAstExpression* CAstStatAssign::GetRHS(void) const
 	return _rhs;
 }
 
+
+/* CAstStatAssign::TypeCheck
+ * Description : Typecheck left and right operand. If two types are different return error.
+ * 				SNUPL/1 compiler doesn't support assignment of compound variable. After all tests,
+ *				move on to next statement
+ */
 bool CAstStatAssign::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Assign::TypeCheck] Start\n"));
@@ -471,6 +483,10 @@ void CAstStatAssign::toDot(ostream &out, int indent) const
 	out << ind << dotID() << "->" << _rhs->dotID() << ";" << endl;
 }
 
+/* CAstStatAssign::ToTac
+ * Description : Make assign statement. Compute rt and lt
+ */
+
 CTacAddr* CAstStatAssign::ToTac(CCodeBlock *cb, CTacLabel *next)
 {
 
@@ -478,10 +494,10 @@ CTacAddr* CAstStatAssign::ToTac(CCodeBlock *cb, CTacLabel *next)
   CTacAddr* rt = _rhs->ToTac(cb);
   CTacAddr* lt = _lhs->ToTac(cb);
 
-  // Assign
+  // Assign : opAssign, LHS, RHS
   cb->AddInstr(new CTacInstr(opAssign, lt, rt, NULL));
   cb->AddInstr(new CTacInstr(opGoto, next));
-	return NULL;
+  return NULL;
 }
 
 
@@ -499,6 +515,10 @@ CAstFunctionCall* CAstStatCall::GetCall(void) const
 	return _call;
 }
 
+
+/* CAstStatCall::TypeCheck
+ * Description : Type check operand first, if it is not right, return error
+ */
 bool CAstStatCall::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Call::TypeCheck] Start\n"));
@@ -533,6 +553,9 @@ void CAstStatCall::toDot(ostream &out, int indent) const
 	_call->toDot(out, indent);
 }
 
+/* CAstStatCall::ToTac
+ * Description : Call procdure or functions
+ */
 CTacAddr* CAstStatCall::ToTac(CCodeBlock *cb, CTacLabel *next)
 {
   //Call GetCall()'s ToTac
@@ -562,6 +585,9 @@ CAstExpression* CAstStatReturn::GetExpression(void) const
 	return _expr;
 }
 
+/* CAstStatReturn::TypeCheck
+ * Description : Type check return statement whether it matches with function definition
+ */
 bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Return::TypeCheck] Start\n"));
@@ -597,6 +623,9 @@ bool CAstStatReturn::TypeCheck(CToken *t, string *msg) const
 	return true;
 }
 
+/* CAstStatReturn::GetType
+ * Description : Get type by function definition
+ */
 const CType* CAstStatReturn::GetType(void) const
 {
 	const CType *t = NULL;
@@ -643,10 +672,14 @@ void CAstStatReturn::toDot(ostream &out, int indent) const
 	}
 }
 
+/* CAstStatReturn::ToTac
+ * Description : Distinguish return value whether NULL or not. Add appropriate instruction
+ */
 CTacAddr* CAstStatReturn::ToTac(CCodeBlock *cb, CTacLabel *next)
 {
   //Get expression ToTac
-  if (GetExpression () == NULL){ // Case 'return'
+  // Case 'return'
+  if (GetExpression () == NULL){ 
     cb->AddInstr(new CTacInstr(opReturn, NULL, NULL, NULL));
   }
   
@@ -686,11 +719,16 @@ CAstStatement* CAstStatIf::GetElseBody(void) const
 	return _elseBody;
 }
 
+
+/* CAstStatIf::TypeCheck
+ * Description : Type check _cond is boolean value and type check ifBody, elseBody too.
+ * 				If _cond type is not a boolean type, return error. After all tests finished, move on to next stat
+ */
 bool CAstStatIf::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[If::TypeCheck] Start\n"));
 	if (!_cond->TypeCheck(t, msg)) return false;							// Type check condition statement
-	if (_ifBody != NULL && !_ifBody->TypeCheck(t, msg)) return false;							// Type check body statement
+	if (_ifBody != NULL && !_ifBody->TypeCheck(t, msg)) return false;		// Type check body statement
 	if (_elseBody != NULL && !_elseBody->TypeCheck(t, msg)) return false;	// Type check else body statement, if has any
 
 	if (!_cond->GetType()->Compare(CTypeManager::Get()->GetBool())) {		// If condition statement is not a bool type, error
@@ -774,6 +812,10 @@ void CAstStatIf::toDot(ostream &out, int indent) const
 	}
 }
 
+
+/* CAstStatIf::ToTac
+ * Description : 
+ */
 CTacAddr* CAstStatIf::ToTac(CCodeBlock *cb, CTacLabel *next)
 {
   CTacLabel *ltrue = cb->CreateLabel("if_true");
@@ -984,19 +1026,32 @@ CAstExpression* CAstBinaryOp::GetRight(void) const
 	return _right;
 }
 
-bool IsRelOp(EOperation t) {	// return true for RelOp
+/* IsRelOp
+ * Description : return true if operator is relational operator
+ */
+bool IsRelOp(EOperation t) {	
 	return (t == opEqual) || (t == opNotEqual) || (t == opLessThan)
 		|| (t == opLessEqual) || (t == opBiggerThan) || (t == opBiggerEqual);
 }
 
-bool IsArith(EOperation t) {	// return true for ArithOp
+/* IsArith
+ * Description : return true if operator is arithmatic operator
+ */
+bool IsArith(EOperation t) {
 	return (t == opAdd) || (t == opSub) || (t == opMul) || (t == opDiv);
 }
 
-bool IsLogic(EOperation t) {	// return true for LogicOp
+/* IsLogic
+ * Description : return true if operator is logical operator
+ */
+bool IsLogic(EOperation t) {	
 	return (t == opAnd) || (t == opOr) || (t == opNot);
 }
 
+/* CAstBinaryOp::TypeCheck
+ * Description : TypeCheck for binary operator. First check left and right side has valid type.
+ *				Next, check two types match or not. Finally matches childs' types with operators type
+ */
 bool CAstBinaryOp::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Binary::TypeCheck] Start\n"));
@@ -1053,6 +1108,9 @@ bool CAstBinaryOp::TypeCheck(CToken *t, string *msg) const
 
 
 
+/* CAstBinaryOp::GetType
+ * Description : Get type inferenced by operator
+ */
 const CType* CAstBinaryOp::GetType(void) const
 {
 	EOperation op = GetOperation(); 					// Get operation
@@ -1098,25 +1156,32 @@ void CAstBinaryOp::toDot(ostream &out, int indent) const
 	out << ind << dotID() << "->" << _right->dotID() << ";" << endl;
 }
 
+/* CAstBinaryOp::ToTac
+ * Description : BinaryOp = operator, result, left, right
+ *				First, check whether binary operator is boolean operation or not.
+ * 				If it's boolean value, it needs special treatment (check textbook ch 6.4)
+ *				Else, it's good old integer value, it can use staright forward methods :)
+ */
+
 CTacAddr* CAstBinaryOp::ToTac(CCodeBlock *cb)
 {
-  const CType *t = GetType();
-  if (IsRelOp(GetOperation())){
-    cb->CreateLabel();  // Dummy label
-    printf("Dummy!\n\n");
+  const CType *t = GetType();			// Get Type 
+
+  if (IsRelOp(GetOperation())){			// If operator is relational operator
+    cb->CreateLabel();  				// Dummy label for synchronizing label #
   }
 
-  if (t->IsBoolean()){  // Boolean
-    CTacLabel *lt = cb->CreateLabel();
-    CTacLabel *lf = cb->CreateLabel();
-    CTacLabel *ln = cb->CreateLabel();
+  if (t->IsBoolean()){  				// If type is boolean
+    CTacLabel *lt = cb->CreateLabel();	// Label for true
+    CTacLabel *lf = cb->CreateLabel();	// Label for false
+    CTacLabel *ln = cb->CreateLabel();	// Label for next
 
-    printf("Dummy!\n\n");
     ToTac(cb, lt, lf);
 
     // result
     _addr = cb->CreateTemp(CTypeManager::Get()->GetBool());
 
+	// Assign true or false according to branch
     cb->AddInstr(lt);
     cb->AddInstr(new CTacInstr(opAssign, _addr, new CTacConst(1)));
     cb->AddInstr(new CTacInstr(opGoto, ln));
@@ -1124,9 +1189,9 @@ CTacAddr* CAstBinaryOp::ToTac(CCodeBlock *cb)
     cb->AddInstr(new CTacInstr(opAssign, _addr, new CTacConst(0)));
     cb->AddInstr(ln);
   }
-  else {  // Integer
-    CTacAddr *src1 = _left->ToTac(cb);
-    CTacAddr *src2 = _right->ToTac(cb);
+  else {  								// If type is integer 
+    CTacAddr *src1 = _left->ToTac(cb);	// Convert left to tac
+    CTacAddr *src2 = _right->ToTac(cb);	// Convert right to tac
 
     // result
     _addr = cb->CreateTemp(_left->GetType());
@@ -1136,37 +1201,32 @@ CTacAddr* CAstBinaryOp::ToTac(CCodeBlock *cb)
 	return _addr;
 }
 
-CTacAddr* CAstBinaryOp::ToTac(CCodeBlock *cb,
-		CTacLabel *ltrue, CTacLabel *lfalse)
+/* CAstBinaryOp::ToTac 
+ * Description : generate appropriate goto labels to compute boolean vlaues 
+ */
+CTacAddr* CAstBinaryOp::ToTac(CCodeBlock *cb, CTacLabel *ltrue, CTacLabel *lfalse)
 {
   if (IsRelOp(GetOperation())){
     cb->CreateLabel();
   }
-  // Type must be Boolean
 
+  // Type must be Boolean
+  // B -> B1 && B2
   if (GetOperation() == opAnd){
-    CTacLabel *lt = cb->CreateLabel();
-_left->print(cout, 2);
-    // Arg 1 is false -> result is false
-    _left->ToTac(cb, lt, lfalse);
-    cb->AddInstr(lt);
-    
-    // Arg 2 decides result
-    _right->ToTac(cb, ltrue, lfalse);
+    CTacLabel *lt = cb->CreateLabel();		// B1.true = new Label()
+    _left->ToTac(cb, lt, lfalse);			// B1.false = B.false
+    cb->AddInstr(lt);						// Add label B1.true : 
+    _right->ToTac(cb, ltrue, lfalse);		// B2.true = B.true, B2.false = B.false
 
   }
+  // B -> B1 || B2
   else if (GetOperation() == opOr){
-    CTacLabel *lt = cb->CreateLabel();
-
-    // Arg 1 is true -> result is true
-    _left->ToTac(cb, ltrue, lt);
-    cb->AddInstr(lt);
-
-    // Arg 2 decides result
-    _right->ToTac(cb, ltrue, lfalse);
+    CTacLabel *lt = cb->CreateLabel();		// B1.false = new Label()
+    _left->ToTac(cb, ltrue, lt);			// B1.true = B.true
+    cb->AddInstr(lt);						// Add label B1.false :
+    _right->ToTac(cb, ltrue, lfalse);		// B2.true = B.true, B2.false = B.false
   }
   else {
-
     // In other operations, it's simple
     cb->AddInstr(new CTacInstr(GetOperation(), ltrue, _left->ToTac(cb), _right->ToTac(cb)));
     cb->AddInstr(new CTacInstr(opGoto, lfalse));
@@ -1190,6 +1250,9 @@ CAstExpression* CAstUnaryOp::GetOperand(void) const
 	return _operand;
 }
 
+/* CAstUnaryOp::TypeCheck 
+ * Description : Type check operand first, if it does not belong to right operator return error
+ */
 bool CAstUnaryOp::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[Unary::TypeCheck] Start\n"));
@@ -1218,6 +1281,9 @@ bool CAstUnaryOp::TypeCheck(CToken *t, string *msg) const
 	return true;
 }
 
+/* CAstUnaryOp::GetType
+ * Description : Get type of unary operator
+ */
 const CType* CAstUnaryOp::GetType(void) const
 {
 	EOperation op = GetOperation();							// Get operator
@@ -1257,9 +1323,13 @@ void CAstUnaryOp::toDot(ostream &out, int indent) const
 	out << ind << dotID() << "->" << _operand->dotID() << ";" << endl;
 }
 
+/* CAstUnaryOp::ToTac
+ * Description : Unary = operator, _addr, operand
+ *				Distinguish boolean operator and non-boolean operator
+ */
 CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb)
 {
-
+	// If boolean type
   if (GetType()->IsBoolean()){
     CTacLabel *lt = cb->CreateLabel();
     CTacLabel *lf = cb->CreateLabel();
@@ -1281,10 +1351,8 @@ CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb)
 
     // Call ToTac
     CTacAddr *src = GetOperand()->ToTac(cb);
-    
     // return address
     _addr = cb->CreateTemp(CTypeManager::Get()->GetInt());
-
     // get value
     cb->AddInstr(new CTacInstr(GetOperation(), _addr, src));
   }
@@ -1292,11 +1360,12 @@ CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb)
   return _addr;
 }
 
-CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb,
-		CTacLabel *ltrue, CTacLabel *lfalse)
+/* CAstUnaryOp::ToTac
+ * Description : Swap ltrue and lfalse 
+ */
+CTacAddr* CAstUnaryOp::ToTac(CCodeBlock *cb, CTacLabel *ltrue, CTacLabel *lfalse)
 {
   assert (GetType()->IsBoolean());
-// Call ToTac with reversed ltrue and lfalse
   return GetOperand()->ToTac(cb, lfalse, ltrue);
 }
 
