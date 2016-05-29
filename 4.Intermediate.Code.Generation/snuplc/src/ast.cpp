@@ -1524,12 +1524,12 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 
 	  //cout << "GetNDim() + GetNIndices() : " << ((CArrayType *)array->GetType())->GetNDim() << " + " << array->GetNIndices() << endl;
 	  for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
+	          if (i==2){
+	            s4 = array->GetIndex(i-2)->ToTac(cb);
+                  }
 		  s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp->GetDataType()));
 		  s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());					
 		  s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-		  if (i==2){
-			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-		  }
 
 		  // param 1 <- i
 		  cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
@@ -1540,16 +1540,10 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 		  // call s2 <- DIM
 		  cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
 		  
-		  if (i==2){
-			  // mul s3 <- first index, s2
-			  cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
-		  }
-		  else{
-			  // mul s3 <- s4, s2
-			  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
-			  // reset s4 for new variable
-			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-		  }
+		  // mul s3 <- s4, s2
+		  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+		  // reset s4 for new variable
+		  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
 		  // If it was last indexes
 		  if (i >= array->GetNIndices()+1){
@@ -1606,11 +1600,11 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 		  return pointer;
 	  }
 	  for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
+	          if (i==2){
+	            s4 = array->GetIndex(i-2)->ToTac(cb);
+                  }
 		  s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 		  s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-		  if (i==2){
-			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-		  }
 
 		  // FIXME 위에랑 조금 다름, pinter의 주소를 넣어주는거랑~
 		  // Param 1 <- i
@@ -1620,16 +1614,10 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 		  // call s2 <- DIM
 		  cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
 
-		  if (i==2){
-			  // mul s3 <- first index, s2
-			  cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
-		  }
-		  else{
-			  // mul s3 <- s4, s2
-			  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
-			  // reset s4 for new variable
-			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-		  }
+		  // mul s3 <- s4, s2
+		  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+		  // reset s4 for new variable
+		  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
 		  // If it was last indexes
 		  if (i >= array->GetNIndices()+1){
@@ -2052,13 +2040,13 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
     cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL)); // Get Address of array
     for (int i=2; i<=GetNIndices(); i++){
 
+      if (i==2){
+        s4 = GetIndex(i-2)->ToTac(cb);
+      }
       // Declare temporary variables
       s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(GetSymbol()->GetDataType()));
       s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
       s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      if (i==2){ // exception when initial i
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
 
       // Assign Parameter of function DIM
       cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
@@ -2067,13 +2055,10 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 
       // Call DIM
       cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
-      if (i==2){ // exception when initial i
-        cb->AddInstr(new CTacInstr(opMul, s3, GetIndex(i-2)->ToTac(cb), s2));
-      }
-      else{
-        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
+      
+      cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+
+      s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
       cb->AddInstr(new CTacInstr(opAdd, s4, s3, GetIndex(i-1)->ToTac(cb)));
     }
     // Exception if NIndices == 1
