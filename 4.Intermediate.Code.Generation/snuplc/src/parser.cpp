@@ -628,6 +628,9 @@ CAstType* CParser::type(CAstScope *s, bool declare, bool pointer)
 			Consume(tInteger, &t);
 			type = tm->GetInt();
 			break;
+		
+		default :
+			SetError(_scanner->Peek(), "basetype expected");
 	}
 
 	if (_scanner->Peek().GetType() != tLLBrak) {		// check if it has additionarl array parts

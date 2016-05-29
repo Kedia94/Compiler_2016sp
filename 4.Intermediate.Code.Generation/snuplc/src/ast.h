@@ -1546,6 +1546,11 @@ class CAstStringConstant : public CAstOperand {
 
 		/// @}
 
+		/// @brief my new function
+		virtual CSymGlobal* GetSymbol(void) const;
+
+		/// @}
+
 
 		/// @name output
 		/// @{

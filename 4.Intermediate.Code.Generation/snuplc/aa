@@ -1,0 +1,73 @@
+parsing 'mytest.mod'...
+converting to TAC...
+[[ module: test
+  [[ type manager
+    base types:
+      <NULL>
+      <int>
+      <char>
+      <bool>
+      <ptr(4) to <NULL>>
+    pointer types:
+      <ptr(4) to <NULL>>
+      <ptr(4) to <array of <char>>>
+      <ptr(4) to <array 2 of <array 3 of <array 4 of <char>>>>>
+    array types:
+      <array of <char>>
+      <array 4 of <char>>
+      <array 3 of <array 4 of <char>>>
+      <array 2 of <array 3 of <array 4 of <char>>>>
+  ]]
+  [[
+    [ *DIM(<ptr(4) to <NULL>>,<int>) --> <int>     ]
+    [ *DOFS(<ptr(4) to <NULL>>) --> <int>     ]
+    [ *ReadInt() --> <int>     ]
+    [ *WriteChar(<char>) --> <NULL>     ]
+    [ *WriteInt(<int>) --> <NULL>     ]
+    [ *WriteLn() --> <NULL>     ]
+    [ *WriteStr(<ptr(4) to <array of <char>>>) --> <NULL>     ]
+    [ @a        <array 2 of <array 3 of <array 4 of <char>>>>     ]
+    [ $t0       <ptr(4) to <array 2 of <array 3 of <array 4 of <char>>>>>     ]
+    [ $t1       <ptr(4) to <array 2 of <array 3 of <array 4 of <char>>>>>     ]
+    [ $t10      <ptr(4) to <array 2 of <array 3 of <array 4 of <char>>>>>     ]
+    [ $t11      <int>     ]
+    [ $t12      <int>     ]
+    [ $t13      <int>     ]
+    [ $t2       <int>     ]
+    [ $t3       <int>     ]
+    [ $t4       <int>     ]
+    [ $t5       <ptr(4) to <array 2 of <array 3 of <array 4 of <char>>>>>     ]
+    [ $t6       <int>     ]
+    [ $t7       <int>     ]
+    [ $t8       <int>     ]
+    [ $t9       <int>     ]
+  ]]
+  [[ test
+      0:     &()    t0 <- a
+      1:     param  1 <- 2
+      2:     &()    t1 <- a
+      3:     param  0 <- t1
+      4:     call   t2 <- DIM
+      5:     mul    t3 <- 1, t2
+      6:     add    t4 <- t3, 1
+      7:     param  1 <- 3
+      8:     &()    t5 <- a
+      9:     param  0 <- t5
+     10:     call   t6 <- DIM
+     11:     mul    t7 <- t4, t6
+     12:     add    t8 <- t7, 1
+     13:     mul    t9 <- t8, 1
+     14:     &()    t10 <- a
+     15:     param  0 <- t10
+     16:     call   t11 <- DOFS
+     17:     add    t12 <- t9, t11
+     18:     add    t13 <- t0, t12
+     19:     assign @t13 <- 51
+  ]]
+]]
+
+run the following command to convert the .dot file into a PDF:
+  dot -Tpdf -omytest.mod.pdf mytest.mod.dot
+
+
+Done.

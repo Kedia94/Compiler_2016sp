@@ -1,0 +1,229 @@
+parsing './xxx/mytest.mod'...
+converting to TAC...
+[[ module: hardcore
+  [[ type manager
+    base types:
+      <NULL>
+      <int>
+      <char>
+      <bool>
+      <ptr(4) to <NULL>>
+    pointer types:
+      <ptr(4) to <NULL>>
+      <ptr(4) to <array of <char>>>
+      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>
+      <ptr(4) to <array 13 of <char>>>
+    array types:
+      <array of <char>>
+      <array 1 of <int>>
+      <array 4 of <array 1 of <int>>>
+      <array 3 of <array 4 of <array 1 of <int>>>>
+      <array 5 of <bool>>
+      <array 6 of <array 5 of <bool>>>
+      <array 5 of <array 6 of <array 5 of <bool>>>>
+      <array 7 of <char>>
+      <array 13 of <char>>
+  ]]
+  [[
+    [ @B        <array 5 of <array 6 of <array 5 of <bool>>>>     ]
+    [ @C        <array 7 of <char>>     ]
+    [ *DIM(<ptr(4) to <NULL>>,<int>) --> <int>     ]
+    [ *DOFS(<ptr(4) to <NULL>>) --> <int>     ]
+    [ @I        <array 3 of <array 4 of <array 1 of <int>>>>     ]
+    [ *ReadInt() --> <int>     ]
+    [ *WriteChar(<char>) --> <NULL>     ]
+    [ *WriteInt(<int>) --> <NULL>     ]
+    [ *WriteLn() --> <NULL>     ]
+    [ *WriteStr(<ptr(4) to <array of <char>>>) --> <NULL>     ]
+    [ @_str_1   <array 13 of <char>>     ]
+      [ data: 'Hello World!' ]
+    [ @b        <bool>     ]
+    [ *fint(<int>,<bool>,<ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>) --> <int>     ]
+    [ @i        <int>     ]
+    [ $t0       <ptr(4) to <array 13 of <char>>>     ]
+  ]]
+  [[ hardcore
+      0:     &()    t0 <- _str_1
+      1:     param  0 <- t0
+      2:     call   WriteStr
+  ]]
+
+  [[ procedure: fint
+    [[
+      [ %B        <bool>       ]
+      [ %C        <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>       ]
+      [ %a        <int>       ]
+      [ $b        <int>       ]
+      [ $t0       <int>       ]
+      [ $t1       <int>       ]
+      [ $t10      <int>       ]
+      [ $t11      <int>       ]
+      [ $t12      <int>       ]
+      [ $t13      <int>       ]
+      [ $t14      <int>       ]
+      [ $t15      <int>       ]
+      [ $t16      <int>       ]
+      [ $t17      <int>       ]
+      [ $t18      <int>       ]
+      [ $t19      <int>       ]
+      [ $t2       <int>       ]
+      [ $t20      <int>       ]
+      [ $t21      <int>       ]
+      [ $t22      <int>       ]
+      [ $t23      <int>       ]
+      [ $t24      <int>       ]
+      [ $t25      <int>       ]
+      [ $t26      <int>       ]
+      [ $t27      <int>       ]
+      [ $t28      <int>       ]
+      [ $t29      <int>       ]
+      [ $t3       <int>       ]
+      [ $t30      <int>       ]
+      [ $t31      <int>       ]
+      [ $t32      <int>       ]
+      [ $t33      <int>       ]
+      [ $t34      <int>       ]
+      [ $t35      <int>       ]
+      [ $t36      <int>       ]
+      [ $t37      <int>       ]
+      [ $t38      <int>       ]
+      [ $t39      <int>       ]
+      [ $t4       <int>       ]
+      [ $t40      <int>       ]
+      [ $t41      <int>       ]
+      [ $t42      <int>       ]
+      [ $t43      <int>       ]
+      [ $t44      <int>       ]
+      [ $t45      <int>       ]
+      [ $t46      <int>       ]
+      [ $t47      <int>       ]
+      [ $t48      <int>       ]
+      [ $t49      <int>       ]
+      [ $t5       <int>       ]
+      [ $t50      <int>       ]
+      [ $t51      <int>       ]
+      [ $t52      <bool>       ]
+      [ $t53      <int>       ]
+      [ $t54      <int>       ]
+      [ $t55      <int>       ]
+      [ $t6       <int>       ]
+      [ $t7       <int>       ]
+      [ $t8       <int>       ]
+      [ $t9       <int>       ]
+    ]]
+    [[ fint
+        0:     if     b # 0 goto 3
+        1:     goto   2_if_false
+        2: 3:
+        3:     if     B = 1 goto 1_if_true
+        4:     goto   2_if_false
+        5: 1_if_true:
+        6:     neg    t0 <- a
+        7:     param  1 <- 2
+        8:     param  0 <- C
+        9:     call   t1 <- DIM
+       10:     mul    t2 <- 1, t1
+       11:     add    t3 <- t2, 1
+       12:     param  1 <- 3
+       13:     param  0 <- C
+       14:     call   t4 <- DIM
+       15:     mul    t5 <- t3, t4
+       16:     add    t6 <- t5, 1
+       17:     mul    t7 <- t6, 4
+       18:     param  0 <- C
+       19:     call   t8 <- DOFS
+       20:     add    t9 <- t7, t8
+       21:     add    t10 <- C, t9
+       22:     add    t11 <- t0, @t10
+       23:     return t11
+       24:     goto   0
+       25: 2_if_false:
+       26:     param  1 <- 2
+       27:     param  0 <- C
+       28:     call   t12 <- DIM
+       29:     mul    t13 <- 0, t12
+       30:     add    t14 <- t13, a
+       31:     param  1 <- 3
+       32:     param  0 <- C
+       33:     call   t15 <- DIM
+       34:     mul    t16 <- t14, t15
+       35:     add    t17 <- t16, 7
+       36:     mul    t18 <- t17, 4
+       37:     param  0 <- C
+       38:     call   t19 <- DOFS
+       39:     add    t20 <- t18, t19
+       40:     add    t21 <- C, t20
+       41:     param  1 <- 2
+       42:     param  0 <- C
+       43:     call   t22 <- DIM
+       44:     param  1 <- 2
+       45:     param  0 <- C
+       46:     call   t25 <- DIM
+       47:     mul    t26 <- a, t25
+       48:     add    t27 <- t26, a
+       49:     param  1 <- 3
+       50:     param  0 <- C
+       51:     call   t28 <- DIM
+       52:     mul    t29 <- t27, t28
+       53:     add    t30 <- t29, a
+       54:     mul    t31 <- t30, 4
+       55:     param  0 <- C
+       56:     call   t32 <- DOFS
+       57:     add    t33 <- t31, t32
+       58:     add    t34 <- C, t33
+       59:     mul    t23 <- @t34, t22
+       60:     add    t24 <- t23, 0
+       61:     param  1 <- 3
+       62:     param  0 <- C
+       63:     call   t35 <- DIM
+       64:     mul    t36 <- t24, t35
+       65:     param  1 <- 2
+       66:     param  0 <- C
+       67:     call   t38 <- DIM
+       68:     mul    t39 <- a, t38
+       69:     add    t40 <- t39, a
+       70:     param  1 <- 3
+       71:     param  0 <- C
+       72:     call   t41 <- DIM
+       73:     mul    t42 <- t40, t41
+       74:     add    t43 <- t42, a
+       75:     mul    t44 <- t43, 4
+       76:     param  0 <- C
+       77:     call   t45 <- DOFS
+       78:     add    t46 <- t44, t45
+       79:     add    t47 <- C, t46
+       80:     add    t37 <- t36, @t47
+       81:     mul    t48 <- t37, 4
+       82:     param  0 <- C
+       83:     call   t49 <- DOFS
+       84:     add    t50 <- t48, t49
+       85:     add    t51 <- C, t50
+       86:     if     @t21 # @t51 goto 7_if_true
+       87:     goto   8_if_false
+       88: 7_if_true:
+       89:     goto   6
+       90: 8_if_false:
+       91:     param  2 <- C
+       92:     if     B = 1 goto 12
+       93:     assign t52 <- 1
+       94:     goto   13
+       95: 12:
+       96:     assign t52 <- 0
+       97: 13:
+       98:     param  1 <- t52
+       99:     sub    t53 <- a, 1
+      100:     param  0 <- t53
+      101:     call   t54 <- fint
+      102:     pos    t55 <- t54
+      103:     return t55
+      104: 6:
+      105: 0:
+    ]]
+  ]]
+]]
+
+run the following command to convert the .dot file into a PDF:
+  dot -Tpdf -o./xxx/mytest.mod.pdf ./xxx/mytest.mod.dot
+
+
+Done.

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./test_ir ./xxx/mytest.mod > our_result
+../reference/4_test_ir ./xxx/mytest.mod > ref_result
+vimdiff our_result ref_result

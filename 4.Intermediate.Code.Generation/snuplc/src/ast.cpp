@@ -814,7 +814,8 @@ void CAstStatIf::toDot(ostream &out, int indent) const
 
 
 /* CAstStatIf::ToTac
- * Description : 
+ * Description : First make jump statement according to _cond statement. Then, check if if statement has
+ *				_body and _else part and make appropriate instructions regarding them.
  */
 CTacAddr* CAstStatIf::ToTac(CCodeBlock *cb, CTacLabel *next)
 {
@@ -822,8 +823,8 @@ CTacAddr* CAstStatIf::ToTac(CCodeBlock *cb, CTacLabel *next)
   CTacLabel *lfalse = cb->CreateLabel("if_false");
   GetCondition()->ToTac(cb, ltrue, lfalse);
 
-  // XXX
   cb->AddInstr(ltrue);
+  // If _body parts, repeatedly consumes body statement
   CAstStatement *s = GetIfBody();
   if (s != NULL){
     do {
@@ -833,9 +834,11 @@ CTacAddr* CAstStatIf::ToTac(CCodeBlock *cb, CTacLabel *next)
       s = s->GetNext();
     } while (s != NULL);
   }
+  // If _body parts finished, goto next label
   cb->AddInstr(new CTacInstr(opGoto, next));
-  cb->AddInstr(lfalse);
 
+  // Start If _else parts
+  cb->AddInstr(lfalse);
   // Check else is exist or not
   s = GetElseBody();
   if (s != NULL){
@@ -847,10 +850,11 @@ CTacAddr* CAstStatIf::ToTac(CCodeBlock *cb, CTacLabel *next)
     } while (s != NULL);
   }
 
+  // If _else parts finished, goto next label
   cb->AddInstr(new CTacInstr(opGoto, next));
-
-
-	return NULL;
+  return NULL;
+  // FIXME
+  // 다른 곳에서 NULL을 받으면 문제 될 소지 없나?
 }
 
 
@@ -874,11 +878,15 @@ CAstStatement* CAstStatWhile::GetBody(void) const
 	return _body;
 }
 
+/* CAstStatWhile::TypeCheck 
+ * Description : Type check while statement. First, check it has right _cond & _body statement.
+ *				Then checks if _cond has boolean type.
+ */
 bool CAstStatWhile::TypeCheck(CToken *t, string *msg) const
 {
 	Dprintf(("[While::TypeCheck] Start\n"));
 	if (!_cond->TypeCheck(t, msg)) return false;							// Type check condition statement
-	if (_body != NULL && !_body->TypeCheck(t, msg)) return false;							// Type check body statement
+	if (_body != NULL && !_body->TypeCheck(t, msg)) return false;			// Type check body statement
 
 	if (!_cond->GetType()->Match(CTypeManager::Get()->GetBool())) 			// If condition statement is not a bool type, error
 		return false;		
@@ -937,17 +945,23 @@ void CAstStatWhile::toDot(ostream &out, int indent) const
 	}
 }
 
+
+/* CAstStatWhile::ToTac
+ * Description : Make labels for cond statement. If _cond is true, then run _body statement and go back
+ *				to condtion statement. Else, goto next.
+ */
 CTacAddr* CAstStatWhile::ToTac(CCodeBlock *cb, CTacLabel *next)
 {
-  //XXX: Add Comment
   CTacLabel *cond = cb->CreateLabel("while_cond");
   CTacLabel *ltrue = cb->CreateLabel("while_body");
   CTacLabel *lfalse = next;
 
+  // Make jump statement for condition statement
   cb->AddInstr(cond);
   GetCondition()->ToTac(cb, ltrue, lfalse);
   cb->AddInstr(ltrue);
 
+  // Make instructions for body statement
   if (GetBody() != NULL){
       CAstStatement *s = GetBody();
       do {
@@ -957,6 +971,8 @@ CTacAddr* CAstStatWhile::ToTac(CCodeBlock *cb, CTacLabel *next)
         s = s->GetNext();
       } while (s != NULL);
   }
+  
+  // Goto condition statement to check condition again
   cb->AddInstr(new CTacInstr(opGoto, cond));
 
   return NULL;
@@ -1388,6 +1404,10 @@ CAstExpression* CAstSpecialOp::GetOperand(void) const
 	return _operand;
 }
 
+
+/* CAstSpecialOp::TypeCheck
+ * Description : Do nothing but checking operand's type 
+ */
 bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 {
 
@@ -1404,6 +1424,10 @@ bool CAstSpecialOp::TypeCheck(CToken *t, string *msg) const
 	return true;
 }
 
+// FIXME * 오는 경우에는 어떻게?
+/* CAstSpecialOp::GetType
+ * Description : If operator is &() type, then return pointer to operand. else return operand's type.
+ */
 const CType* CAstSpecialOp::GetType(void) const
 {
 	EOperation op = GetOperation();
@@ -1447,149 +1471,199 @@ void CAstSpecialOp::toDot(ostream &out, int indent) const
 	out << ind << dotID() << "->" << _operand->dotID() << ";" << endl;
 }
 
+/* CAstSpecialOp::ToTac
+ * Description : Divide cases into 3 symbols. 1) String constant -> simply add &() instruction
+ *				2) Array -> change to pointer type, 3) Pointer -> Same with array designator
+ */
 CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 {
   // It's almost same as CAstArrayDesignator
   // I'll explain only different part from CAstArrayDesignator
-  CAstArrayDesignator *array = (CAstArrayDesignator *)GetOperand();
-  const CSymbol *temp = array -> GetSymbol();
+  CAstArrayDesignator *array;
+  const CSymbol *temp;
   CSymtab* symtab = cb->GetOwner()->GetSymbolTable();
 
-//printf("\n\n%d %d\n\n", ((CArrayType *)array->GetType())->GetNDim(), array->GetNIndices());
-//printf("Here is it!\n");
+  // string constant part
+  if (GetOperand()->GetToken().GetType() == tString) {
+	  CAstStringConstant *str = (CAstStringConstant *)GetOperand();
+	  temp = str -> GetSymbol();
+	  CTacAddr *src = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp -> GetDataType()));
+	  CTacAddr *pointer = new CTacName(temp);
+	  
+	  // &() src <- pointer
+	  cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL));
 
-if (temp == NULL)
-  return NULL;
-if (temp->GetDataType()->IsArray()){
-//    if (dynamic_cast<CAstArrayDesignator *>(GetOperand()) == NULL){
-//      printf("Here\n\n");
-//      return GetOperand()->ToTac(cb);
-//    }
-//    printf("Check1\n");
-    CTacAddr *src = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp -> GetDataType()));
-    CTacAddr *pointer = new CTacName(temp);
-    CTacAddr *s1, *s2, *s3, *s4, *s5;
-    CTacTemp *ret;
-    cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL));
-//    printf("Checkout!\n");
-    if (array->GetNIndices() < 1){
-      return src;
-    }
-    
-    // ((CArrayType *)array->GetType())->GetNDim() + array->GetNIndices()
-    //  is value that variable's array dimension when it was declared
-    for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
-      s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp->GetDataType()));
-      s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      if (i==2){
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
-
-      cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
-      cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
-      cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1, NULL));
-
-      cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
-      if (i==2){
-        cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
-      }
-      else{
-        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
-      if (i >= array->GetNIndices()+1){
-        cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
-      }
-      else {
-        cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
-      }
-    }
-/*
-    if (array->GetNIndices() == 1){
-      s4 = array->GetIndex(0)->ToTac(cb);
-    }
-    */
-    s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp->GetDataType()));
-    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
-
-    cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
-
-    cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
-    cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1));
-
-    cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DOFS")), NULL));    cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
-    cb->AddInstr(new CTacInstr(opAdd, ret, src, s3));
-
-    s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(CTypeManager::Get()->GetInt()));
-    cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
-    return s1;
+	  return src;
   }
   else {
-    CTacAddr *pointer = new CTacName(temp);
-    CTacAddr *s1, *s2, *s3, *s4, *s5;
-    CTacTemp *ret;
-    if (array->GetNIndices() < 1){
-      return pointer;
-    }
-    // ((CArrayType *)array->GetType())->GetNDim() + array->GetNIndices()
-    //  is value that variable's array dimension when it was declared
-    for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
-      s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      if (i==2){
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
+	  array = (CAstArrayDesignator *)GetOperand();
+	  temp = array -> GetSymbol();
+  }
 
-      cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
-      cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer, NULL));
 
-      cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
-      if (i==2){
-        cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
-      }
-      else{
-        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
-      if (i >= array->GetNIndices()+1){
-        cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
-      }
-      else {
-        cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
-      }
-    }
-/*
-    if (array->GetNIndices() == 1){
-      s4 = array->GetIndex(0)->ToTac(cb);
-    }
-    */
-    s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
-    cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
+  if (temp == NULL) {
+	  return NULL;
+  }
+  if (temp->GetDataType()->IsArray()){
+	  CTacAddr *src = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp -> GetDataType()));
+	  CTacAddr *pointer = new CTacName(temp);
+	  CTacAddr *s1, *s2, *s3, *s4, *s5;
+	  CTacTemp *ret;
 
-    cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer));
+	  // &() src <- pointer 
+	  cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL));
 
-    cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DOFS")), NULL));   
-    cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
-    cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
+	  // If indices are 0, return src
+	  if (array->GetNIndices() < 1){
+		  return src;
+	  }
 
-    s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(CTypeManager::Get()->GetInt()));
-    cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
-    return s1;
-}
-/*
-  const CSymbol *temp = ((CAstArrayDesignator *)GetOperand()) -> GetSymbol();
-  CTacAddr *ret = cb->CreateTemp(temp -> GetDataType());
-  cb->AddInstr(new CTacInstr(opAddress, ret, new CTacName(temp), NULL));
-  return ret;
-*/
+	  // is value that variable's array dimension when it was declared
+	  // i means ith index
+
+	  //cout << "GetNDim() + GetNIndices() : " << ((CArrayType *)array->GetType())->GetNDim() << " + " << array->GetNIndices() << endl;
+	  for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
+		  s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp->GetDataType()));
+		  s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());					
+		  s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+		  if (i==2){
+			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+		  }
+
+		  // param 1 <- i
+		  cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
+		  // &() s1 <- pointer
+		  cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
+		  // param 0 <- s1
+		  cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1, NULL));
+		  // call s2 <- DIM
+		  cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
+		  
+		  if (i==2){
+			  // mul s3 <- first index, s2
+			  cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
+		  }
+		  else{
+			  // mul s3 <- s4, s2
+			  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+			  // reset s4 for new variable
+			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+		  }
+
+		  // If it was last indexes
+		  if (i >= array->GetNIndices()+1){
+			  // add s4 <- s3, 0
+			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
+		  }
+		  else {
+			  // add s4 <- s3, next index
+			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
+		  }
+	  }
+
+	  //Assign new variables 
+	  s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+	  s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(temp->GetDataType()));
+	  s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+	  s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+	  ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
+
+
+	  // mul s5 <- s4, base type size 
+	  //cout << "My type is " << GetType() << endl;
+	  //cout << "And my DataType is " << temp->GetDataType() << endl;
+	  //cout << "My base type is " << ((CArrayType *)array->GetType())->GetBaseType() << endl;
+	  cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(((CArrayType *)array->GetType())->GetBaseType()->GetSize())));
+
+	  // &() s1 <- pointer
+	  cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
+	  // param 0 <- s1
+	  cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1));
+
+	  // call s2 <- DOFS
+	  cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DOFS")), NULL));
+	  // add s3 <- s5, s2
+	  cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
+	  // add  ret <- src, s3
+	  cb->AddInstr(new CTacInstr(opAdd, ret, src, s3));
+
+	  s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(((CArrayType *)array->GetType())->GetBaseType()));
+	  //cout << s1 << endl;
+	  
+	  // &() s1 <- ret
+	  //cout << "ret->GetSymbol is " << ret->GetSymbol() << endl;
+	  cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
+	  return s1;
+  }
+  else {
+	  // It has similar process to above. We will skip explanation about it :)
+	  CTacAddr *pointer = new CTacName(temp);
+	  CTacAddr *s1, *s2, *s3, *s4, *s5;
+	  CTacTemp *ret;
+	  
+	  if (array->GetNIndices() < 1){
+		  return pointer;
+	  }
+	  for (int i=2; i<=((CArrayType *)array->GetType())->GetNDim()+array->GetNIndices(); i++){
+		  s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+		  s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+		  if (i==2){
+			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+		  }
+
+		  // FIXME 위에랑 조금 다름, pinter의 주소를 넣어주는거랑~
+		  // Param 1 <- i
+		  cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
+		  // Param 0 <- pointer
+		  cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer, NULL));
+		  // call s2 <- DIM
+		  cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
+
+		  if (i==2){
+			  // mul s3 <- first index, s2
+			  cb->AddInstr(new CTacInstr(opMul, s3, array->GetIndex(i-2)->ToTac(cb), s2));
+		  }
+		  else{
+			  // mul s3 <- s4, s2
+			  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+			  // reset s4 for new variable
+			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+		  }
+
+		  // If it was last indexes
+		  if (i >= array->GetNIndices()+1){
+			  // add s4 <- s3, 0
+			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
+		  }
+		  else {
+			  // add s4 <- s3, next index
+			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
+		  }
+	  }
+	  s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+	  s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+	  s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+	  ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
+
+	  // mul s4 <- s4, base type size
+	  cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(((CArrayType *)array->GetType())->GetBaseType()->GetSize())));
+
+	  // FIXME 주소가 아니라 그냥 들어감 와이?
+	  // param 0 <- pointer
+	  cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer));
+
+	  // call s2 <- DOFS
+	  cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DOFS")), NULL));   
+	  // add s3 <- s5, s2
+	  cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
+	  // add ret <- pointer, s3
+	  cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
+
+	  s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(((CArrayType *)array->GetType())->GetBaseType()));
+	  cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
+	  return s1;
+  }
 }
 
 
@@ -1623,6 +1697,9 @@ CAstExpression* CAstFunctionCall::GetArg(int index) const
 	return _arg[index];
 }
 
+/* CAstFunctionCall::TypeCheck
+ * Description : Type check arguments number are same. And type of arguments and definitions match.
+ */
 bool CAstFunctionCall::TypeCheck(CToken *t, string *msg) const
 {
 
@@ -1690,9 +1767,14 @@ void CAstFunctionCall::toDot(ostream &out, int indent) const
 	}
 }
 
+/* CAstFunctionCall::ToTac
+ * Description : Generate IR for arguments and call functions. Treat differently by function return type
+ */
 CTacAddr* CAstFunctionCall::ToTac(CCodeBlock *cb)
 {
-  for (int i=GetNArgs()-1; i>=0; i--){ //GetNArgs(); i++){
+  // reverse order function parameters
+  // param i <- arg i
+  for (int i=GetNArgs()-1; i>=0; i--){ 
     cb->AddInstr(new CTacInstr(opParam, new CTacConst(i), GetArg(i)->ToTac(cb), NULL));
   }
   // XXX: new CTacConst(i) is right?
@@ -1837,6 +1919,11 @@ CAstExpression* CAstArrayDesignator::GetIndex(int index) const
 	return _idx[index];
 }
 
+
+/* CAstArrayDesignator::TypeCheck
+ * Description : Type check array indexes. First, check whether it has smaller or equal number of indcies than definition.
+ * 				Then check they are all appropriate types and integer types.
+ */
 bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 {
 	const CType* sm = GetSymbol() -> GetDataType();				// Get Datatype of array from symboltable
@@ -1883,6 +1970,10 @@ bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 	return result;
 }
 
+
+/* CAstArrayDesignator::GetType
+ * Description : Return type of array. It can be base type or pointer to array
+ */
 const CType* CAstArrayDesignator::GetType(void) const
 {
 	Dprintf(("[Array::GetType] started\n"));
@@ -1944,6 +2035,9 @@ void CAstArrayDesignator::toDot(ostream &out, int indent) const
 	}
 }
 
+/* CAstArrayDesignator::ToTac
+ * Description : It's funciton is simmillar with special op. Regarding the type of operand, treat differently 
+ */
 CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 {
   CSymtab* symtab = cb->GetOwner()->GetSymbolTable();
@@ -1954,6 +2048,7 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
     CTacAddr *pointer = new CTacName(GetSymbol());
     CTacAddr *s1, *s2, *s3, *s4, *s5;
     CTacTemp *ret;
+	
     cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL)); // Get Address of array
     for (int i=2; i<=GetNIndices(); i++){
 
@@ -1993,8 +2088,7 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
     s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
     ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
-    cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
-
+	cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
     // Assign Parameters of function DOFS
     cb->AddInstr(new CTacInstr(opAddress, s1, pointer, NULL));
     cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), s1));
@@ -2032,7 +2126,8 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
         cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
         s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
       }
-      cb->AddInstr(new CTacInstr(opAdd, s4, s3, GetIndex(i-1)->ToTac(cb)));
+	  CTacAddr *tmp = GetIndex(i-1)->ToTac(cb);
+      cb->AddInstr(new CTacInstr(opAdd, s4, s3,tmp)); 
     }
 
     if (GetNIndices() == 1){
@@ -2056,14 +2151,17 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
   }
 }
 
-CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb,
-    CTacLabel *ltrue, CTacLabel *lfalse)
+//XXX returning what?
+/* CTacAddr::ToTac
+ * Description : Case for array is used in branch condition
+ */
+CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb, CTacLabel *ltrue, CTacLabel *lfalse)
 {
+  CTacAddr *src = ToTac(cb);
+  CTacTemp *ret;
+  cb->AddInstr(new CTacInstr(opEqual, ltrue, src, new CTacConst(1)));
+  cb->AddInstr(new CTacInstr(opGoto, lfalse));
   return NULL;
-//  CTacAddr *src = cb->CreateTemp(CTypeManager::Get()->GetPointer(GetSymbol()->GetDataType()));
-//  CTacAddr *pointer = new CTacName(GetSymbol());
-//  cb->AddInstr(new CTacInstr(opAddress, src, pointer, NULL));
-//  return pointer;
 }
 
 
@@ -2140,10 +2238,15 @@ CTacAddr* CAstConstant::ToTac(CCodeBlock *cb)
 	return _addr;
 }
 
-CTacAddr* CAstConstant::ToTac(CCodeBlock *cb,
-		CTacLabel *ltrue, CTacLabel *lfalse)
+CTacAddr* CAstConstant::ToTac(CCodeBlock *cb, CTacLabel *ltrue, CTacLabel *lfalse)
 {
-	return NULL;
+  // Assign Constant
+  CTacAddr* src = ToTac(cb);
+  if (GetValue()) 
+  	cb->AddInstr(new CTacInstr(opEqual, ltrue, src, new CTacConst(1)));
+  else
+  	cb->AddInstr(new CTacInstr(opGoto, lfalse));
+  return NULL;
 }
 
 
@@ -2186,6 +2289,11 @@ bool CAstStringConstant::TypeCheck(CToken *t, string *msg) const
 	return true;
 }
 
+CSymGlobal* CAstStringConstant::GetSymbol(void) const {
+	return _sym;
+}
+
+
 const CType* CAstStringConstant::GetType(void) const
 {
 	return _type;
@@ -2221,8 +2329,7 @@ CTacAddr* CAstStringConstant::ToTac(CCodeBlock *cb)
   return src;
 }
 
-CTacAddr* CAstStringConstant::ToTac(CCodeBlock *cb,
-		CTacLabel *ltrue, CTacLabel *lfalse)
+CTacAddr* CAstStringConstant::ToTac(CCodeBlock *cb, CTacLabel *ltrue, CTacLabel *lfalse)
 {
   return NULL;
 }
