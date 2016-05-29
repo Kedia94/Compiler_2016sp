@@ -2109,24 +2109,20 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
     CTacAddr *s1, *s2, *s3, *s4, *s5;
     CTacTemp *ret;
     for (int i=2; i<=GetNIndices(); i++){
+      if (i==2){
+        s4 = GetIndex(i-2)->ToTac(cb);
+      }
       s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
       s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      if (i==2){
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
 
       cb->AddInstr(new CTacInstr(opParam, new CTacConst(1), new CTacConst(i), NULL));
       cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer, NULL));
-
       cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
-      if (i==2){
-        cb->AddInstr(new CTacInstr(opMul, s3, GetIndex(i-2)->ToTac(cb), s2));
-      }
-      else{
-        cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
-        s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      }
-	  CTacAddr *tmp = GetIndex(i-1)->ToTac(cb);
+
+      cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
+      s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+
+      CTacAddr *tmp = GetIndex(i-1)->ToTac(cb);
       cb->AddInstr(new CTacInstr(opAdd, s4, s3,tmp)); 
     }
 
