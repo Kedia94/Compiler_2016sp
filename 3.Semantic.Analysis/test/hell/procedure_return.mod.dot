@@ -1,0 +1,12 @@
+digraph IR {
+  graph [fontname="Times New Roman",fontsize=10];
+  node  [fontname="Courier New",fontsize=10];
+  edge  [fontname="Times New Roman",fontsize=10];
+
+  // scope 'procedure_return'
+  procedure_return_cb [label="procedure_return\r  0:     &()    t0 <- sum\l  1:     param  0 <- t0\l  2:     call   proc_return1\l  3:     &()    t1 <- sum\l  4:     param  0 <- t1\l  5:     call   proc_return\l",shape=box]
+  // scope 'proc_return1'
+  proc_return1_cb [label="proc_return1\r  0:     return \l",shape=box]
+  // scope 'proc_return'
+  proc_return_cb [label="proc_return\r  0:     &()    t0 <- sum\l  1:     param  1 <- 2\l  2:     &()    t1 <- sum\l  3:     param  0 <- t1\l  4:     call   t2 <- DIM\l  5:     mul    t3 <- 2, t2\l  6:     add    t4 <- t3, 4\l  7:     mul    t5 <- t4, 4\l  8:     &()    t6 <- sum\l  9:     param  0 <- t6\l 10:     call   t7 <- DOFS\l 11:     add    t8 <- t5, t7\l 12:     add    t9 <- t0, t8\l 13:     &()    t10 <- sum\l 14:     param  1 <- 2\l 15:     &()    t11 <- sum\l 16:     param  0 <- t11\l 17:     call   t12 <- DIM\l 18:     mul    t13 <- 2, t12\l 19:     add    t14 <- t13, 3\l 20:     mul    t15 <- t14, 4\l 21:     &()    t16 <- sum\l 22:     param  0 <- t16\l 23:     call   t17 <- DOFS\l 24:     add    t18 <- t15, t17\l 25:     add    t19 <- t10, t18\l 26:     assign @t19 <- @t9\l",shape=box]
+};

@@ -1,0 +1,14 @@
+digraph IR {
+  graph [fontname="Times New Roman",fontsize=10];
+  node  [fontname="Courier New",fontsize=10];
+  edge  [fontname="Times New Roman",fontsize=10];
+
+  // scope 'call_latter_defined_function'
+  call_latter_defined_function_cb [label="call_latter_defined_function\r  0:     &()    t0 <- sum\l  1:     param  0 <- t0\l  2:     call   call_latter\l",shape=box]
+  // scope 'call_latter'
+  call_latter_cb [label="call_latter\r",shape=box]
+  // scope 'latter_func'
+  latter_func_cb [label="latter_func\r  0:     param  1 <- 2\l  1:     param  0 <- intarr\l  2:     call   t0 <- DIM\l  3:     mul    t1 <- a, t0\l  4:     add    t2 <- t1, 2\l  5:     mul    t3 <- t2, 4\l  6:     param  0 <- intarr\l  7:     call   t4 <- DOFS\l  8:     add    t5 <- t3, t4\l  9:     add    t6 <- intarr, t5\l 10:     return @t6\l",shape=box]
+  // scope 'latter_proc'
+  latter_proc_cb [label="latter_proc\r  0:     param  1 <- 2\l  1:     param  0 <- intarr\l  2:     call   t0 <- DIM\l  3:     mul    t1 <- a, t0\l  4:     add    t2 <- t1, a\l  5:     mul    t3 <- t2, 4\l  6:     param  0 <- intarr\l  7:     call   t4 <- DOFS\l  8:     add    t5 <- t3, t4\l  9:     add    t6 <- intarr, t5\l 10:     assign a <- @t6\l",shape=box]
+};

@@ -25,5 +25,6 @@ end fint;
 
 
 begin
+	i := -fint(1, !true, I, I, I, I);
     WriteStr("Hello World!")
 end hardcore.

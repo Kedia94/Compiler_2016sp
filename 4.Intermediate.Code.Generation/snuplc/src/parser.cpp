@@ -333,13 +333,13 @@ CAstExpression* CParser::simpleexpr(CAstScope *s)
 
 	if (_scanner->Peek().GetType() == tTermOp) {			// if it has ["+"|"-"] parts
 		Consume(tTermOp, &topt);							// consume operator
-        }
+	}
 
-        n = term(s);
+	n = term(s);
 
-        if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
-        else if (topt.GetValue() == "-") n = new CAstUnaryOp(topt, opNeg, n);
-        else if (topt.GetValue() == "||") SetError(topt, "invalid unary operation.");
+	if (topt.GetValue() == "+") n = new CAstUnaryOp(topt, opPos, n);
+	else if (topt.GetValue() == "-")  n = new CAstUnaryOp(topt, opNeg, n); 
+	else if (topt.GetValue() == "||") SetError(topt, "invalid unary operation.");
 
 	while (_scanner->Peek().GetType() == tTermOp) {			// { termOp term } parts
 		CToken t;
@@ -628,7 +628,7 @@ CAstType* CParser::type(CAstScope *s, bool declare, bool pointer)
 			Consume(tInteger, &t);
 			type = tm->GetInt();
 			break;
-		
+
 		default :
 			SetError(_scanner->Peek(), "basetype expected");
 	}
@@ -647,10 +647,10 @@ CAstType* CParser::type(CAstScope *s, bool declare, bool pointer)
 			vec.push_back(number());					// get number
 		}
 		else {
-		  if (declare){
-		    Consume(tRRBrak, &t);
-		    SetError(t, "expected \'tNumber\', got \'tRRBrak\'");
-                  }
+			if (declare){
+				Consume(tRRBrak, &t);
+				SetError(t, "expected \'tNumber\', got \'tRRBrak\'");
+			}
 			vec.push_back(NULL);						// mark
 		}
 
@@ -694,16 +694,16 @@ CAstStatCall* CParser::subroutinecall(CAstScope *s)
 	if (_scanner->Peek().GetType() != tRBrak) {			// while it is not a void type
 		l = expression(s);								// expression part
 		if (l->GetType()->IsArray()){
-		l = new CAstSpecialOp(l->GetToken(), opAddress, l);
-                }
+			l = new CAstSpecialOp(l->GetToken(), opAddress, l);
+		}
 		funccall->AddArg(l);							// add expression as argument
 		while (_scanner->Peek().GetType() == tComma) {	// repeatedly scans for arguments
 			Consume(tComma);
 			l = expression(s);
 
 			if (l->GetType()->IsArray()){
-			  l = new CAstSpecialOp(l->GetToken(), opAddress, l);
-                        }
+				l = new CAstSpecialOp(l->GetToken(), opAddress, l);
+			}
 			funccall->AddArg(l);
 		}
 	}
@@ -852,14 +852,14 @@ void CParser::vardeclsequence(CAstScope *s)
 
 	vardecl(s);
 	if (_scanner->Peek().GetType() != tSemicolon)
-	  SetError(_scanner->Peek(), "tSemicolon expected");
+		SetError(_scanner->Peek(), "tSemicolon expected");
 	while(_scanner->Peek().GetType() == tSemicolon) {	// repeatedly consume Semicolons
 		Consume(tSemicolon);							// consumes semicolon
 		if (_scanner->Peek().GetType() != tIdent)		
 			break;
 		vardecl(s);
 		if (_scanner->Peek().GetType() != tSemicolon)
-		  SetError(_scanner->Peek(), "tSemicolon expected");
+			SetError(_scanner->Peek(), "tSemicolon expected");
 	}
 }
 
@@ -897,9 +897,9 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 
 	Consume(tIdent, &tname);	// consumes ident
 
-        if (table->FindSymbol(tname.GetValue()) != NULL){
-          SetError(tname, "duplicate procedure/function declaration");
-        }
+	if (table->FindSymbol(tname.GetValue()) != NULL){
+		SetError(tname, "duplicate procedure/function declaration");
+	}
 	// formalparam
 	if (_scanner->Peek().GetType() == tLBrak) {
 		// Consumes keywords
@@ -913,10 +913,10 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 				Consume(tComma);
 				Consume(tIdent, &tval);
 				for (int i=0;i<vec.size(); i++){
-				  if (vec[i].GetValue().compare(tval.GetValue())==0){
-				    SetError(tval, "duplicated variables");
-                                  }
-                                }
+					if (vec[i].GetValue().compare(tval.GetValue())==0){
+						SetError(tval, "duplicated variables");
+					}
+				}
 				vec.push_back(tval);
 			}
 			Consume(tColon);								// Consuems colon 
@@ -935,20 +935,20 @@ CAstProcedure* CParser::subroutinedecl(CAstScope *s)
 				vec.push_back(tval);
 
 				for (int i=0;i<v.size(); i++){
-				  if (tval.GetValue().compare(v[i]->GetName()) == 0){
-				    SetError(tval, "duplicated variables");
-                                  }
-                                }
+					if (tval.GetValue().compare(v[i]->GetName()) == 0){
+						SetError(tval, "duplicated variables");
+					}
+				}
 				while (_scanner->Peek().GetType() == tComma) {
 					Consume(tComma);						// Consuems keywords
 					Consume(tIdent, &tval);
 					vec.push_back(tval);
 
 					for (int i=0;i<v.size();i++){
-					  if (tval.GetValue().compare(v[i]->GetName()) == 0){
-					    SetError(tval, "duplicated variables");
-                                          }
-                                        }
+						if (tval.GetValue().compare(v[i]->GetName()) == 0){
+							SetError(tval, "duplicated variables");
+						}
+					}
 				}
 				Consume(tColon);							// Consumes keywords
 				typ = type(s, false, true);

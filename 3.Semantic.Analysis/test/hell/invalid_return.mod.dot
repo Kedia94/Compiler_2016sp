@@ -1,0 +1,18 @@
+digraph IR {
+  graph [fontname="Times New Roman",fontsize=10];
+  node  [fontname="Courier New",fontsize=10];
+  edge  [fontname="Times New Roman",fontsize=10];
+
+  // scope 'invalid_return'
+  invalid_return_cb [label="invalid_return\r  0:     &()    t0 <- proc1\l  1:     param  1 <- t0\l  2:     &()    t1 <- proc\l  3:     param  0 <- t1\l  4:     call   return_recursive_procedure\l  5:     call   t2 <- return_function_named_variable\l  6:     call   t3 <- return_function\l  7:     call   return_procedure\l",shape=box]
+  // scope 'return_recursive_procedure'
+  return_recursive_procedure_cb [label="return_recursive_procedure\r  0:     param  1 <- 2\l  1:     param  0 <- proc1\l  2:     call   t0 <- DIM\l  3:     mul    t1 <- 2, t0\l  4:     add    t2 <- t1, 3\l  5:     mul    t3 <- t2, 4\l  6:     param  0 <- proc1\l  7:     call   t4 <- DOFS\l  8:     add    t5 <- t3, t4\l  9:     add    t6 <- proc1, t5\l 10:     param  1 <- 2\l 11:     param  0 <- proc\l 12:     call   t7 <- DIM\l 13:     mul    t8 <- 1, t7\l 14:     add    t9 <- t8, 2\l 15:     mul    t10 <- t9, 4\l 16:     param  0 <- proc\l 17:     call   t11 <- DOFS\l 18:     add    t12 <- t10, t11\l 19:     add    t13 <- proc, t12\l 20:     assign @t13 <- @t6\l 21:     return \l",shape=box]
+  // scope 'foo'
+  foo_cb [label="foo\r  0:     if     b = 1 goto 1_if_true\l  1:     goto   2_if_false\l  2: 1_if_true:\l  3:     add    t0 <- i0, i1\l  4:     return t0\l  5:     goto   0\l  6: 2_if_false:\l  7:     sub    t1 <- i0, i1\l  8:     return t1\l  9: 0:\l",shape=box]
+  // scope 'return_function_named_variable'
+  return_function_named_variable_cb [label="return_function_named_variable\r  0:     return foo\l",shape=box]
+  // scope 'return_function'
+  return_function_cb [label="return_function\r  0:     return foox\l",shape=box]
+  // scope 'return_procedure'
+  return_procedure_cb [label="return_procedure\r  0:     return \l",shape=box]
+};
