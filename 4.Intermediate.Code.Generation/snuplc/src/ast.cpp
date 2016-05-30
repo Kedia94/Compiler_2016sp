@@ -1782,6 +1782,9 @@ CTacAddr* CAstFunctionCall::ToTac(CCodeBlock *cb)
 	}
 }
 
+/* CAstFunctionCall::ToTac
+ * Description : Generate IR for arguments and call functions. Treat differently by function return type
+ */
 CTacAddr* CAstFunctionCall::ToTac(CCodeBlock *cb,
 		CTacLabel *ltrue, CTacLabel *lfalse)
 {
@@ -1859,6 +1862,10 @@ void CAstDesignator::toDot(ostream &out, int indent) const
 	CAstNode::toDot(out, indent);
 }
 
+
+/* CAstDesignator::ToTac
+ * Description : make _symbol CTacName and return 
+ */
 CTacAddr* CAstDesignator::ToTac(CCodeBlock *cb)
 {
 	if (_addr == NULL) delete _addr;
@@ -1868,6 +1875,9 @@ CTacAddr* CAstDesignator::ToTac(CCodeBlock *cb)
 	return _addr;
 }
 
+/* CAstDesignator::ToTac
+ * Description : make _symbol CTacName and return 
+ */
 CTacAddr* CAstDesignator::ToTac(CCodeBlock *cb,
 		CTacLabel *ltrue, CTacLabel *lfalse)
 {
@@ -2140,7 +2150,6 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 	}
 }
 
-//XXX returning what?
 /* CTacAddr::ToTac
  * Description : Case for array is used in branch condition
  */
@@ -2217,6 +2226,9 @@ string CAstConstant::dotAttr(void) const
 	return out.str();
 }
 
+/* CAstConstant::ToTac
+ * Description : Make Const value for that type
+ */
 CTacAddr* CAstConstant::ToTac(CCodeBlock *cb)
 {
 	// Assign Constant
@@ -2227,6 +2239,9 @@ CTacAddr* CAstConstant::ToTac(CCodeBlock *cb)
 	return _addr;
 }
 
+/* CAstConstant::ToTac
+ * Description : Make Const value for that type
+ */
 CTacAddr* CAstConstant::ToTac(CCodeBlock *cb, CTacLabel *ltrue, CTacLabel *lfalse)
 {
 	// Assign Constant
@@ -2311,6 +2326,9 @@ string CAstStringConstant::dotAttr(void) const
 	return out.str();
 }
 
+/* CAstStringConstant::ToTac
+ * Description : make temporary variable and return that variable
+ */
 CTacAddr* CAstStringConstant::ToTac(CCodeBlock *cb)
 {
 	CTacAddr *src = cb->CreateTemp(CTypeManager::Get()->GetPointer(GetType()));
