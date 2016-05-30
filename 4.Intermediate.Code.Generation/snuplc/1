@@ -1,4 +1,4 @@
-parsing './xxx/hard.mod'...
+parsing 'xxx/hard.mod'...
 converting to TAC...
 [[ module: hardcore
   [[ type manager
@@ -48,19 +48,19 @@ converting to TAC...
     [ $t0       <ptr(4) to <array 13 of <char>>>     ]
     [ $t1       <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t10      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t100     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t100     <int>     ]
     [ $t101     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t102     <int>     ]
+    [ $t102     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t103     <int>     ]
     [ $t104     <int>     ]
-    [ $t105     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t106     <int>     ]
+    [ $t105     <int>     ]
+    [ $t106     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t107     <int>     ]
     [ $t108     <int>     ]
     [ $t109     <int>     ]
     [ $t11      <int>     ]
-    [ $t110     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t111     <int>     ]
+    [ $t110     <int>     ]
+    [ $t111     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t112     <int>     ]
     [ $t113     <int>     ]
     [ $t114     <int>     ]
@@ -78,19 +78,19 @@ converting to TAC...
     [ $t125     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
     [ $t126     <int>     ]
     [ $t127     <int>     ]
-    [ $t128     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t128     <int>     ]
     [ $t129     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t13      <int>     ]
-    [ $t130     <int>     ]
+    [ $t130     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t131     <int>     ]
     [ $t132     <int>     ]
-    [ $t133     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t134     <int>     ]
+    [ $t133     <int>     ]
+    [ $t134     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t135     <int>     ]
     [ $t136     <int>     ]
     [ $t137     <int>     ]
-    [ $t138     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t139     <int>     ]
+    [ $t138     <int>     ]
+    [ $t139     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t14      <int>     ]
     [ $t140     <int>     ]
     [ $t141     <int>     ]
@@ -109,19 +109,19 @@ converting to TAC...
     [ $t153     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
     [ $t154     <int>     ]
     [ $t155     <int>     ]
-    [ $t156     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t156     <int>     ]
     [ $t157     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t158     <int>     ]
+    [ $t158     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t159     <int>     ]
     [ $t16      <int>     ]
     [ $t160     <int>     ]
-    [ $t161     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t162     <int>     ]
+    [ $t161     <int>     ]
+    [ $t162     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t163     <int>     ]
     [ $t164     <int>     ]
     [ $t165     <int>     ]
-    [ $t166     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t167     <int>     ]
+    [ $t166     <int>     ]
+    [ $t167     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t168     <int>     ]
     [ $t169     <int>     ]
     [ $t17      <int>     ]
@@ -145,21 +145,21 @@ converting to TAC...
     [ $t186     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
     [ $t187     <int>     ]
     [ $t188     <int>     ]
-    [ $t189     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t189     <int>     ]
     [ $t19      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t190     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t191     <int>     ]
+    [ $t191     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t192     <int>     ]
     [ $t193     <int>     ]
-    [ $t194     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t195     <int>     ]
+    [ $t194     <int>     ]
+    [ $t195     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t196     <int>     ]
     [ $t197     <int>     ]
     [ $t198     <int>     ]
-    [ $t199     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t199     <int>     ]
     [ $t2       <int>     ]
     [ $t20      <int>     ]
-    [ $t200     <int>     ]
+    [ $t200     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t201     <int>     ]
     [ $t202     <int>     ]
     [ $t203     <int>     ]
@@ -206,8 +206,8 @@ converting to TAC...
     [ $t240     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
     [ $t241     <int>     ]
     [ $t242     <int>     ]
-    [ $t243     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t244     <int>     ]
+    [ $t243     <int>     ]
+    [ $t244     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t245     <int>     ]
     [ $t246     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
     [ $t247     <int>     ]
@@ -240,19 +240,19 @@ converting to TAC...
     [ $t41      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
     [ $t42      <int>     ]
     [ $t43      <int>     ]
-    [ $t44      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t44      <int>     ]
     [ $t45      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t46      <int>     ]
+    [ $t46      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t47      <int>     ]
     [ $t48      <int>     ]
-    [ $t49      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t49      <int>     ]
     [ $t5       <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t50      <int>     ]
+    [ $t50      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t51      <int>     ]
     [ $t52      <int>     ]
     [ $t53      <int>     ]
-    [ $t54      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t55      <int>     ]
+    [ $t54      <int>     ]
+    [ $t55      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t56      <int>     ]
     [ $t57      <int>     ]
     [ $t58      <int>     ]
@@ -271,19 +271,19 @@ converting to TAC...
     [ $t7       <int>     ]
     [ $t70      <int>     ]
     [ $t71      <int>     ]
-    [ $t72      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t72      <int>     ]
     [ $t73      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t74      <int>     ]
+    [ $t74      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t75      <int>     ]
     [ $t76      <int>     ]
-    [ $t77      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t78      <int>     ]
+    [ $t77      <int>     ]
+    [ $t78      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t79      <int>     ]
     [ $t8       <int>     ]
     [ $t80      <int>     ]
     [ $t81      <int>     ]
-    [ $t82      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
-    [ $t83      <int>     ]
+    [ $t82      <int>     ]
+    [ $t83      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
     [ $t84      <int>     ]
     [ $t85      <int>     ]
     [ $t86      <int>     ]
@@ -377,27 +377,27 @@ converting to TAC...
      71:     param  0 <- t41
      72:     call   t42 <- DIM
      73:     mul    t43 <- t40, t42
-     74:     &()    t44 <- I
+     74:     &()    t45 <- I
      75:     param  1 <- 2
-     76:     &()    t45 <- I
-     77:     param  0 <- t45
-     78:     call   t46 <- DIM
-     79:     mul    t47 <- 7, t46
-     80:     add    t48 <- t47, i
+     76:     &()    t46 <- I
+     77:     param  0 <- t46
+     78:     call   t47 <- DIM
+     79:     mul    t48 <- 7, t47
+     80:     add    t49 <- t48, i
      81:     param  1 <- 3
-     82:     &()    t49 <- I
-     83:     param  0 <- t49
-     84:     call   t50 <- DIM
-     85:     mul    t51 <- t48, t50
-     86:     add    t52 <- t51, i
-     87:     mul    t53 <- t52, 4
-     88:     &()    t54 <- I
-     89:     param  0 <- t54
-     90:     call   t55 <- DOFS
-     91:     add    t56 <- t53, t55
-     92:     add    t57 <- t44, t56
-     93:     add    t58 <- t43, @t57
-     94:     mul    t59 <- t58, 1
+     82:     &()    t50 <- I
+     83:     param  0 <- t50
+     84:     call   t51 <- DIM
+     85:     mul    t52 <- t49, t51
+     86:     add    t53 <- t52, i
+     87:     mul    t54 <- t53, 4
+     88:     &()    t55 <- I
+     89:     param  0 <- t55
+     90:     call   t56 <- DOFS
+     91:     add    t57 <- t54, t56
+     92:     add    t58 <- t45, t57
+     93:     add    t44 <- t43, @t58
+     94:     mul    t59 <- t44, 1
      95:     &()    t60 <- B
      96:     param  0 <- t60
      97:     call   t61 <- DOFS
@@ -416,27 +416,27 @@ converting to TAC...
     110:     param  0 <- t69
     111:     call   t70 <- DIM
     112:     mul    t71 <- t68, t70
-    113:     &()    t72 <- I
+    113:     &()    t73 <- I
     114:     param  1 <- 2
-    115:     &()    t73 <- I
-    116:     param  0 <- t73
-    117:     call   t74 <- DIM
-    118:     mul    t75 <- 7, t74
-    119:     add    t76 <- t75, i
+    115:     &()    t74 <- I
+    116:     param  0 <- t74
+    117:     call   t75 <- DIM
+    118:     mul    t76 <- 7, t75
+    119:     add    t77 <- t76, i
     120:     param  1 <- 3
-    121:     &()    t77 <- I
-    122:     param  0 <- t77
-    123:     call   t78 <- DIM
-    124:     mul    t79 <- t76, t78
-    125:     add    t80 <- t79, i
-    126:     mul    t81 <- t80, 4
-    127:     &()    t82 <- I
-    128:     param  0 <- t82
-    129:     call   t83 <- DOFS
-    130:     add    t84 <- t81, t83
-    131:     add    t85 <- t72, t84
-    132:     add    t86 <- t71, @t85
-    133:     mul    t87 <- t86, 1
+    121:     &()    t78 <- I
+    122:     param  0 <- t78
+    123:     call   t79 <- DIM
+    124:     mul    t80 <- t77, t79
+    125:     add    t81 <- t80, i
+    126:     mul    t82 <- t81, 4
+    127:     &()    t83 <- I
+    128:     param  0 <- t83
+    129:     call   t84 <- DOFS
+    130:     add    t85 <- t82, t84
+    131:     add    t86 <- t73, t85
+    132:     add    t72 <- t71, @t86
+    133:     mul    t87 <- t72, 1
     134:     &()    t88 <- B
     135:     param  0 <- t88
     136:     call   t89 <- DOFS
@@ -455,27 +455,27 @@ converting to TAC...
     149:     param  0 <- t97
     150:     call   t98 <- DIM
     151:     mul    t99 <- t96, t98
-    152:     &()    t100 <- I
+    152:     &()    t101 <- I
     153:     param  1 <- 2
-    154:     &()    t101 <- I
-    155:     param  0 <- t101
-    156:     call   t102 <- DIM
-    157:     mul    t103 <- 7, t102
-    158:     add    t104 <- t103, i
+    154:     &()    t102 <- I
+    155:     param  0 <- t102
+    156:     call   t103 <- DIM
+    157:     mul    t104 <- 7, t103
+    158:     add    t105 <- t104, i
     159:     param  1 <- 3
-    160:     &()    t105 <- I
-    161:     param  0 <- t105
-    162:     call   t106 <- DIM
-    163:     mul    t107 <- t104, t106
-    164:     add    t108 <- t107, i
-    165:     mul    t109 <- t108, 4
-    166:     &()    t110 <- I
-    167:     param  0 <- t110
-    168:     call   t111 <- DOFS
-    169:     add    t112 <- t109, t111
-    170:     add    t113 <- t100, t112
-    171:     add    t114 <- t99, @t113
-    172:     mul    t115 <- t114, 1
+    160:     &()    t106 <- I
+    161:     param  0 <- t106
+    162:     call   t107 <- DIM
+    163:     mul    t108 <- t105, t107
+    164:     add    t109 <- t108, i
+    165:     mul    t110 <- t109, 4
+    166:     &()    t111 <- I
+    167:     param  0 <- t111
+    168:     call   t112 <- DOFS
+    169:     add    t113 <- t110, t112
+    170:     add    t114 <- t101, t113
+    171:     add    t100 <- t99, @t114
+    172:     mul    t115 <- t100, 1
     173:     &()    t116 <- B
     174:     param  0 <- t116
     175:     call   t117 <- DOFS
@@ -493,27 +493,27 @@ converting to TAC...
     187:     param  0 <- t125
     188:     call   t126 <- DIM
     189:     mul    t127 <- t124, t126
-    190:     &()    t128 <- I
+    190:     &()    t129 <- I
     191:     param  1 <- 2
-    192:     &()    t129 <- I
-    193:     param  0 <- t129
-    194:     call   t130 <- DIM
-    195:     mul    t131 <- 7, t130
-    196:     add    t132 <- t131, i
+    192:     &()    t130 <- I
+    193:     param  0 <- t130
+    194:     call   t131 <- DIM
+    195:     mul    t132 <- 7, t131
+    196:     add    t133 <- t132, i
     197:     param  1 <- 3
-    198:     &()    t133 <- I
-    199:     param  0 <- t133
-    200:     call   t134 <- DIM
-    201:     mul    t135 <- t132, t134
-    202:     add    t136 <- t135, i
-    203:     mul    t137 <- t136, 4
-    204:     &()    t138 <- I
-    205:     param  0 <- t138
-    206:     call   t139 <- DOFS
-    207:     add    t140 <- t137, t139
-    208:     add    t141 <- t128, t140
-    209:     add    t142 <- t127, @t141
-    210:     mul    t143 <- t142, 1
+    198:     &()    t134 <- I
+    199:     param  0 <- t134
+    200:     call   t135 <- DIM
+    201:     mul    t136 <- t133, t135
+    202:     add    t137 <- t136, i
+    203:     mul    t138 <- t137, 4
+    204:     &()    t139 <- I
+    205:     param  0 <- t139
+    206:     call   t140 <- DOFS
+    207:     add    t141 <- t138, t140
+    208:     add    t142 <- t129, t141
+    209:     add    t128 <- t127, @t142
+    210:     mul    t143 <- t128, 1
     211:     &()    t144 <- B
     212:     param  0 <- t144
     213:     call   t145 <- DOFS
@@ -536,27 +536,27 @@ converting to TAC...
     230:     param  0 <- t153
     231:     call   t154 <- DIM
     232:     mul    t155 <- t152, t154
-    233:     &()    t156 <- I
+    233:     &()    t157 <- I
     234:     param  1 <- 2
-    235:     &()    t157 <- I
-    236:     param  0 <- t157
-    237:     call   t158 <- DIM
-    238:     mul    t159 <- 7, t158
-    239:     add    t160 <- t159, i
+    235:     &()    t158 <- I
+    236:     param  0 <- t158
+    237:     call   t159 <- DIM
+    238:     mul    t160 <- 7, t159
+    239:     add    t161 <- t160, i
     240:     param  1 <- 3
-    241:     &()    t161 <- I
-    242:     param  0 <- t161
-    243:     call   t162 <- DIM
-    244:     mul    t163 <- t160, t162
-    245:     add    t164 <- t163, i
-    246:     mul    t165 <- t164, 4
-    247:     &()    t166 <- I
-    248:     param  0 <- t166
-    249:     call   t167 <- DOFS
-    250:     add    t168 <- t165, t167
-    251:     add    t169 <- t156, t168
-    252:     add    t170 <- t155, @t169
-    253:     mul    t171 <- t170, 1
+    241:     &()    t162 <- I
+    242:     param  0 <- t162
+    243:     call   t163 <- DIM
+    244:     mul    t164 <- t161, t163
+    245:     add    t165 <- t164, i
+    246:     mul    t166 <- t165, 4
+    247:     &()    t167 <- I
+    248:     param  0 <- t167
+    249:     call   t168 <- DOFS
+    250:     add    t169 <- t166, t168
+    251:     add    t170 <- t157, t169
+    252:     add    t156 <- t155, @t170
+    253:     mul    t171 <- t156, 1
     254:     &()    t172 <- B
     255:     param  0 <- t172
     256:     call   t173 <- DOFS
@@ -578,7 +578,7 @@ converting to TAC...
     272:     goto   16
     273: 18_if_false:
     274: 16:
-    275:     goto   22
+    275:     if     1 = 1 goto 22
     276: 22:
     277:     assign t180 <- 1
     278:     goto   24
@@ -596,27 +596,27 @@ converting to TAC...
     290:     param  0 <- t186
     291:     call   t187 <- DIM
     292:     mul    t188 <- t185, t187
-    293:     &()    t189 <- I
+    293:     &()    t190 <- I
     294:     param  1 <- 2
-    295:     &()    t190 <- I
-    296:     param  0 <- t190
-    297:     call   t191 <- DIM
-    298:     mul    t192 <- 7, t191
-    299:     add    t193 <- t192, 1
+    295:     &()    t191 <- I
+    296:     param  0 <- t191
+    297:     call   t192 <- DIM
+    298:     mul    t193 <- 7, t192
+    299:     add    t194 <- t193, 1
     300:     param  1 <- 3
-    301:     &()    t194 <- I
-    302:     param  0 <- t194
-    303:     call   t195 <- DIM
-    304:     mul    t196 <- t193, t195
-    305:     add    t197 <- t196, i
-    306:     mul    t198 <- t197, 4
-    307:     &()    t199 <- I
-    308:     param  0 <- t199
-    309:     call   t200 <- DOFS
-    310:     add    t201 <- t198, t200
-    311:     add    t202 <- t189, t201
-    312:     add    t203 <- t188, @t202
-    313:     mul    t204 <- t203, 1
+    301:     &()    t195 <- I
+    302:     param  0 <- t195
+    303:     call   t196 <- DIM
+    304:     mul    t197 <- t194, t196
+    305:     add    t198 <- t197, i
+    306:     mul    t199 <- t198, 4
+    307:     &()    t200 <- I
+    308:     param  0 <- t200
+    309:     call   t201 <- DOFS
+    310:     add    t202 <- t199, t201
+    311:     add    t203 <- t190, t202
+    312:     add    t189 <- t188, @t203
+    313:     mul    t204 <- t189, 1
     314:     &()    t205 <- B
     315:     param  0 <- t205
     316:     call   t206 <- DOFS
@@ -642,7 +642,7 @@ converting to TAC...
     336: 38:
     337:     assign b <- t210
     338:     goto   41
-    339:     goto   42
+    339:     if     1 = 1 goto 42
     340: 41:
     341:     assign t211 <- 1
     342:     goto   43
@@ -663,7 +663,7 @@ converting to TAC...
     357: 48:
     358:     assign b <- t212
     359:     goto   57
-    360:     goto   57
+    360:     if     1 = 1 goto 57
     361:     if     0 = 1 goto 55_if_true
     362: 57:
     363:     if     0 # 1 goto 55_if_true
@@ -673,7 +673,7 @@ converting to TAC...
     367:     goto   54
     368: 56_if_false:
     369: 54:
-    370:     goto   65_if_false
+    370:     if     1 = 1 goto 65_if_false
     371:     return 
     372:     goto   63
     373: 65_if_false:
@@ -692,9 +692,9 @@ converting to TAC...
     386:     param  0 <- t219
     387:     call   t220 <- DIM
     388:     mul    t221 <- t218, t220
-    389:     add    t222 <- i, i
-    390:     add    t223 <- t221, t222
-    391:     mul    t224 <- t223, 1
+    389:     add    t223 <- i, i
+    390:     add    t222 <- t221, t223
+    391:     mul    t224 <- t222, 1
     392:     &()    t225 <- B
     393:     param  0 <- t225
     394:     call   t226 <- DOFS
@@ -720,7 +720,7 @@ converting to TAC...
     414: 73:
     415:     assign b <- t233
     416:     goto   79
-    417:     goto   76
+    417:     if     1 = 1 goto 76
     418: 79:
     419:     &()    t234 <- I
     420:     param  2 <- t234
@@ -746,17 +746,17 @@ converting to TAC...
     440:     param  0 <- t240
     441:     call   t241 <- DIM
     442:     mul    t242 <- 3, t241
-    443:     &()    t243 <- I
-    444:     param  2 <- t243
+    443:     &()    t244 <- I
+    444:     param  2 <- t244
     445:     param  1 <- b
     446:     param  0 <- i
-    447:     call   t244 <- fint
-    448:     add    t245 <- t242, t244
+    447:     call   t245 <- fint
+    448:     add    t243 <- t242, t245
     449:     param  1 <- 3
     450:     &()    t246 <- B
     451:     param  0 <- t246
     452:     call   t247 <- DIM
-    453:     mul    t248 <- t245, t247
+    453:     mul    t248 <- t243, t247
     454:     add    t249 <- t248, 5
     455:     mul    t250 <- t249, 1
     456:     &()    t251 <- B
@@ -888,21 +888,21 @@ converting to TAC...
        49:     mul    t26 <- t24, t25
        50:     param  1 <- 2
        51:     param  0 <- C
-       52:     call   t27 <- DIM
-       53:     mul    t28 <- a, t27
-       54:     add    t29 <- t28, a
+       52:     call   t28 <- DIM
+       53:     mul    t29 <- a, t28
+       54:     add    t30 <- t29, a
        55:     param  1 <- 3
        56:     param  0 <- C
-       57:     call   t30 <- DIM
-       58:     mul    t31 <- t29, t30
-       59:     add    t32 <- t31, a
-       60:     mul    t33 <- t32, 4
+       57:     call   t31 <- DIM
+       58:     mul    t32 <- t30, t31
+       59:     add    t33 <- t32, a
+       60:     mul    t34 <- t33, 4
        61:     param  0 <- C
-       62:     call   t34 <- DOFS
-       63:     add    t35 <- t33, t34
-       64:     add    t36 <- C, t35
-       65:     add    t37 <- t26, @t36
-       66:     mul    t38 <- t37, 4
+       62:     call   t35 <- DOFS
+       63:     add    t36 <- t34, t35
+       64:     add    t37 <- C, t36
+       65:     add    t27 <- t26, @t37
+       66:     mul    t38 <- t27, 4
        67:     param  0 <- C
        68:     call   t39 <- DOFS
        69:     add    t40 <- t38, t39
@@ -1059,7 +1059,7 @@ converting to TAC...
 ]]
 
 run the following command to convert the .dot file into a PDF:
-  dot -Tpdf -o./xxx/hard.mod.pdf ./xxx/hard.mod.dot
+  dot -Tpdf -oxxx/hard.mod.pdf xxx/hard.mod.dot
 
 
 Done.

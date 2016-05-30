@@ -1,4 +1,4 @@
-parsing './xxx/hard.mod'...
+parsing 'xxx/hard.mod'...
 converting to TAC...
 [[ module: hardcore
   [[ type manager
@@ -1059,7 +1059,7 @@ converting to TAC...
 ]]
 
 run the following command to convert the .dot file into a PDF:
-  dot -Tpdf -o./xxx/hard.mod.pdf ./xxx/hard.mod.dot
+  dot -Tpdf -oxxx/hard.mod.pdf xxx/hard.mod.dot
 
 
 Done.

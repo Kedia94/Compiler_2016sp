@@ -1,4 +1,4 @@
-parsing './xxx/mytest.mod'...
+parsing './xxx/hard.mod'...
 converting to TAC...
 [[ module: hardcore
   [[ type manager
@@ -12,7 +12,9 @@ converting to TAC...
       <ptr(4) to <NULL>>
       <ptr(4) to <array of <char>>>
       <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>
+      <ptr(4) to <array 9 of <char>>>
       <ptr(4) to <array 13 of <char>>>
+      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>
     array types:
       <array of <char>>
       <array 1 of <int>>
@@ -22,6 +24,7 @@ converting to TAC...
       <array 6 of <array 5 of <bool>>>
       <array 5 of <array 6 of <array 5 of <bool>>>>
       <array 7 of <char>>
+      <array 9 of <char>>
       <array 13 of <char>>
   ]]
   [[
@@ -38,14 +41,745 @@ converting to TAC...
     [ @_str_1   <array 13 of <char>>     ]
       [ data: 'Hello World!' ]
     [ @b        <bool>     ]
+    [ *fbool(<int>,<bool>,<ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>) --> <bool>     ]
     [ *fint(<int>,<bool>,<ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>) --> <int>     ]
     [ @i        <int>     ]
+    [ *printSomething(<ptr(4) to <array 9 of <char>>>) --> <NULL>     ]
     [ $t0       <ptr(4) to <array 13 of <char>>>     ]
+    [ $t1       <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t10      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t100     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t101     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t102     <int>     ]
+    [ $t103     <int>     ]
+    [ $t104     <int>     ]
+    [ $t105     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t106     <int>     ]
+    [ $t107     <int>     ]
+    [ $t108     <int>     ]
+    [ $t109     <int>     ]
+    [ $t11      <int>     ]
+    [ $t110     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t111     <int>     ]
+    [ $t112     <int>     ]
+    [ $t113     <int>     ]
+    [ $t114     <int>     ]
+    [ $t115     <int>     ]
+    [ $t116     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t117     <int>     ]
+    [ $t118     <int>     ]
+    [ $t119     <int>     ]
+    [ $t12      <int>     ]
+    [ $t120     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t121     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t122     <int>     ]
+    [ $t123     <int>     ]
+    [ $t124     <int>     ]
+    [ $t125     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t126     <int>     ]
+    [ $t127     <int>     ]
+    [ $t128     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t129     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t13      <int>     ]
+    [ $t130     <int>     ]
+    [ $t131     <int>     ]
+    [ $t132     <int>     ]
+    [ $t133     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t134     <int>     ]
+    [ $t135     <int>     ]
+    [ $t136     <int>     ]
+    [ $t137     <int>     ]
+    [ $t138     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t139     <int>     ]
+    [ $t14      <int>     ]
+    [ $t140     <int>     ]
+    [ $t141     <int>     ]
+    [ $t142     <int>     ]
+    [ $t143     <int>     ]
+    [ $t144     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t145     <int>     ]
+    [ $t146     <int>     ]
+    [ $t147     <int>     ]
+    [ $t148     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t149     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t15      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t150     <int>     ]
+    [ $t151     <int>     ]
+    [ $t152     <int>     ]
+    [ $t153     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t154     <int>     ]
+    [ $t155     <int>     ]
+    [ $t156     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t157     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t158     <int>     ]
+    [ $t159     <int>     ]
+    [ $t16      <int>     ]
+    [ $t160     <int>     ]
+    [ $t161     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t162     <int>     ]
+    [ $t163     <int>     ]
+    [ $t164     <int>     ]
+    [ $t165     <int>     ]
+    [ $t166     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t167     <int>     ]
+    [ $t168     <int>     ]
+    [ $t169     <int>     ]
+    [ $t17      <int>     ]
+    [ $t170     <int>     ]
+    [ $t171     <int>     ]
+    [ $t172     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t173     <int>     ]
+    [ $t174     <int>     ]
+    [ $t175     <int>     ]
+    [ $t176     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t177     <bool>     ]
+    [ $t178     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t179     <bool>     ]
+    [ $t18      <int>     ]
+    [ $t180     <bool>     ]
+    [ $t181     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t182     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t183     <int>     ]
+    [ $t184     <int>     ]
+    [ $t185     <int>     ]
+    [ $t186     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t187     <int>     ]
+    [ $t188     <int>     ]
+    [ $t189     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t19      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t190     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t191     <int>     ]
+    [ $t192     <int>     ]
+    [ $t193     <int>     ]
+    [ $t194     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t195     <int>     ]
+    [ $t196     <int>     ]
+    [ $t197     <int>     ]
+    [ $t198     <int>     ]
+    [ $t199     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t2       <int>     ]
+    [ $t20      <int>     ]
+    [ $t200     <int>     ]
+    [ $t201     <int>     ]
+    [ $t202     <int>     ]
+    [ $t203     <int>     ]
+    [ $t204     <int>     ]
+    [ $t205     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t206     <int>     ]
+    [ $t207     <int>     ]
+    [ $t208     <int>     ]
+    [ $t209     <bool>     ]
+    [ $t21      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t210     <bool>     ]
+    [ $t211     <bool>     ]
+    [ $t212     <bool>     ]
+    [ $t213     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t214     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t215     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t216     <int>     ]
+    [ $t217     <int>     ]
+    [ $t218     <int>     ]
+    [ $t219     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t22      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t220     <int>     ]
+    [ $t221     <int>     ]
+    [ $t222     <int>     ]
+    [ $t223     <int>     ]
+    [ $t224     <int>     ]
+    [ $t225     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t226     <int>     ]
+    [ $t227     <int>     ]
+    [ $t228     <int>     ]
+    [ $t229     <int>     ]
+    [ $t23      <int>     ]
+    [ $t230     <int>     ]
+    [ $t231     <int>     ]
+    [ $t232     <bool>     ]
+    [ $t233     <bool>     ]
+    [ $t234     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t235     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t236     <bool>     ]
+    [ $t237     <bool>     ]
+    [ $t238     <bool>     ]
+    [ $t239     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t24      <int>     ]
+    [ $t240     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t241     <int>     ]
+    [ $t242     <int>     ]
+    [ $t243     <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t244     <int>     ]
+    [ $t245     <int>     ]
+    [ $t246     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t247     <int>     ]
+    [ $t248     <int>     ]
+    [ $t249     <int>     ]
+    [ $t25      <int>     ]
+    [ $t250     <int>     ]
+    [ $t251     <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t252     <int>     ]
+    [ $t253     <int>     ]
+    [ $t254     <int>     ]
+    [ $t255     <bool>     ]
+    [ $t26      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t27      <int>     ]
+    [ $t28      <int>     ]
+    [ $t29      <int>     ]
+    [ $t3       <int>     ]
+    [ $t30      <int>     ]
+    [ $t31      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t32      <int>     ]
+    [ $t33      <int>     ]
+    [ $t34      <int>     ]
+    [ $t35      <bool>     ]
+    [ $t36      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t37      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t38      <int>     ]
+    [ $t39      <int>     ]
+    [ $t4       <int>     ]
+    [ $t40      <int>     ]
+    [ $t41      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t42      <int>     ]
+    [ $t43      <int>     ]
+    [ $t44      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t45      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t46      <int>     ]
+    [ $t47      <int>     ]
+    [ $t48      <int>     ]
+    [ $t49      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t5       <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t50      <int>     ]
+    [ $t51      <int>     ]
+    [ $t52      <int>     ]
+    [ $t53      <int>     ]
+    [ $t54      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t55      <int>     ]
+    [ $t56      <int>     ]
+    [ $t57      <int>     ]
+    [ $t58      <int>     ]
+    [ $t59      <int>     ]
+    [ $t6       <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t60      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t61      <int>     ]
+    [ $t62      <int>     ]
+    [ $t63      <int>     ]
+    [ $t64      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t65      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t66      <int>     ]
+    [ $t67      <int>     ]
+    [ $t68      <int>     ]
+    [ $t69      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t7       <int>     ]
+    [ $t70      <int>     ]
+    [ $t71      <int>     ]
+    [ $t72      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t73      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t74      <int>     ]
+    [ $t75      <int>     ]
+    [ $t76      <int>     ]
+    [ $t77      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t78      <int>     ]
+    [ $t79      <int>     ]
+    [ $t8       <int>     ]
+    [ $t80      <int>     ]
+    [ $t81      <int>     ]
+    [ $t82      <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>     ]
+    [ $t83      <int>     ]
+    [ $t84      <int>     ]
+    [ $t85      <int>     ]
+    [ $t86      <int>     ]
+    [ $t87      <int>     ]
+    [ $t88      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t89      <int>     ]
+    [ $t9       <int>     ]
+    [ $t90      <int>     ]
+    [ $t91      <int>     ]
+    [ $t92      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t93      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t94      <int>     ]
+    [ $t95      <int>     ]
+    [ $t96      <int>     ]
+    [ $t97      <ptr(4) to <array 5 of <array 6 of <array 5 of <bool>>>>>     ]
+    [ $t98      <int>     ]
+    [ $t99      <int>     ]
   ]]
   [[ hardcore
       0:     &()    t0 <- _str_1
       1:     param  0 <- t0
       2:     call   WriteStr
+      3:     &()    t1 <- I
+      4:     param  0 <- t1
+      5:     call   t2 <- DOFS
+      6:     assign i <- t2
+      7:     add    t3 <- 1, 2
+      8:     mul    t4 <- t3, 3
+      9:     assign i <- t4
+     10:     &()    t5 <- I
+     11:     param  1 <- 2
+     12:     &()    t6 <- I
+     13:     param  0 <- t6
+     14:     call   t7 <- DIM
+     15:     mul    t8 <- 2, t7
+     16:     add    t9 <- t8, 0
+     17:     param  1 <- 3
+     18:     &()    t10 <- I
+     19:     param  0 <- t10
+     20:     call   t11 <- DIM
+     21:     mul    t12 <- t9, t11
+     22:     add    t13 <- t12, 1
+     23:     mul    t14 <- t13, 4
+     24:     &()    t15 <- I
+     25:     param  0 <- t15
+     26:     call   t16 <- DOFS
+     27:     add    t17 <- t14, t16
+     28:     add    t18 <- t5, t17
+     29:     assign @t18 <- 9
+     30:     &()    t19 <- I
+     31:     param  2 <- t19
+     32:     param  1 <- b
+     33:     param  0 <- i
+     34:     call   t20 <- fint
+     35:     &()    t21 <- I
+     36:     param  1 <- 2
+     37:     &()    t22 <- I
+     38:     param  0 <- t22
+     39:     call   t23 <- DIM
+     40:     mul    t24 <- 2, t23
+     41:     add    t25 <- t24, 0
+     42:     param  1 <- 3
+     43:     &()    t26 <- I
+     44:     param  0 <- t26
+     45:     call   t27 <- DIM
+     46:     mul    t28 <- t25, t27
+     47:     add    t29 <- t28, 1
+     48:     mul    t30 <- t29, 4
+     49:     &()    t31 <- I
+     50:     param  0 <- t31
+     51:     call   t32 <- DOFS
+     52:     add    t33 <- t30, t32
+     53:     add    t34 <- t21, t33
+     54:     assign @t34 <- t20
+     55:     if     b = 1 goto 6_if_true
+     56:     goto   7_if_false
+     57: 6_if_true:
+     58:     assign t35 <- 1
+     59:     goto   11
+     60:     assign t35 <- 0
+     61: 11:
+     62:     &()    t36 <- B
+     63:     param  1 <- 2
+     64:     &()    t37 <- B
+     65:     param  0 <- t37
+     66:     call   t38 <- DIM
+     67:     mul    t39 <- 7, t38
+     68:     add    t40 <- t39, i
+     69:     param  1 <- 3
+     70:     &()    t41 <- B
+     71:     param  0 <- t41
+     72:     call   t42 <- DIM
+     73:     mul    t43 <- t40, t42
+     74:     &()    t44 <- I
+     75:     param  1 <- 2
+     76:     &()    t45 <- I
+     77:     param  0 <- t45
+     78:     call   t46 <- DIM
+     79:     mul    t47 <- 7, t46
+     80:     add    t48 <- t47, i
+     81:     param  1 <- 3
+     82:     &()    t49 <- I
+     83:     param  0 <- t49
+     84:     call   t50 <- DIM
+     85:     mul    t51 <- t48, t50
+     86:     add    t52 <- t51, i
+     87:     mul    t53 <- t52, 4
+     88:     &()    t54 <- I
+     89:     param  0 <- t54
+     90:     call   t55 <- DOFS
+     91:     add    t56 <- t53, t55
+     92:     add    t57 <- t44, t56
+     93:     add    t58 <- t43, @t57
+     94:     mul    t59 <- t58, 1
+     95:     &()    t60 <- B
+     96:     param  0 <- t60
+     97:     call   t61 <- DOFS
+     98:     add    t62 <- t59, t61
+     99:     add    t63 <- t36, t62
+    100:     assign @t63 <- t35
+    101:     &()    t64 <- B
+    102:     param  1 <- 2
+    103:     &()    t65 <- B
+    104:     param  0 <- t65
+    105:     call   t66 <- DIM
+    106:     mul    t67 <- 7, t66
+    107:     add    t68 <- t67, i
+    108:     param  1 <- 3
+    109:     &()    t69 <- B
+    110:     param  0 <- t69
+    111:     call   t70 <- DIM
+    112:     mul    t71 <- t68, t70
+    113:     &()    t72 <- I
+    114:     param  1 <- 2
+    115:     &()    t73 <- I
+    116:     param  0 <- t73
+    117:     call   t74 <- DIM
+    118:     mul    t75 <- 7, t74
+    119:     add    t76 <- t75, i
+    120:     param  1 <- 3
+    121:     &()    t77 <- I
+    122:     param  0 <- t77
+    123:     call   t78 <- DIM
+    124:     mul    t79 <- t76, t78
+    125:     add    t80 <- t79, i
+    126:     mul    t81 <- t80, 4
+    127:     &()    t82 <- I
+    128:     param  0 <- t82
+    129:     call   t83 <- DOFS
+    130:     add    t84 <- t81, t83
+    131:     add    t85 <- t72, t84
+    132:     add    t86 <- t71, @t85
+    133:     mul    t87 <- t86, 1
+    134:     &()    t88 <- B
+    135:     param  0 <- t88
+    136:     call   t89 <- DOFS
+    137:     add    t90 <- t87, t89
+    138:     add    t91 <- t64, t90
+    139:     assign @t91 <- b
+    140:     &()    t92 <- B
+    141:     param  1 <- 2
+    142:     &()    t93 <- B
+    143:     param  0 <- t93
+    144:     call   t94 <- DIM
+    145:     mul    t95 <- 7, t94
+    146:     add    t96 <- t95, i
+    147:     param  1 <- 3
+    148:     &()    t97 <- B
+    149:     param  0 <- t97
+    150:     call   t98 <- DIM
+    151:     mul    t99 <- t96, t98
+    152:     &()    t100 <- I
+    153:     param  1 <- 2
+    154:     &()    t101 <- I
+    155:     param  0 <- t101
+    156:     call   t102 <- DIM
+    157:     mul    t103 <- 7, t102
+    158:     add    t104 <- t103, i
+    159:     param  1 <- 3
+    160:     &()    t105 <- I
+    161:     param  0 <- t105
+    162:     call   t106 <- DIM
+    163:     mul    t107 <- t104, t106
+    164:     add    t108 <- t107, i
+    165:     mul    t109 <- t108, 4
+    166:     &()    t110 <- I
+    167:     param  0 <- t110
+    168:     call   t111 <- DOFS
+    169:     add    t112 <- t109, t111
+    170:     add    t113 <- t100, t112
+    171:     add    t114 <- t99, @t113
+    172:     mul    t115 <- t114, 1
+    173:     &()    t116 <- B
+    174:     param  0 <- t116
+    175:     call   t117 <- DOFS
+    176:     add    t118 <- t115, t117
+    177:     add    t119 <- t92, t118
+    178:     &()    t120 <- B
+    179:     param  1 <- 2
+    180:     &()    t121 <- B
+    181:     param  0 <- t121
+    182:     call   t122 <- DIM
+    183:     mul    t123 <- 7, t122
+    184:     add    t124 <- t123, i
+    185:     param  1 <- 3
+    186:     &()    t125 <- B
+    187:     param  0 <- t125
+    188:     call   t126 <- DIM
+    189:     mul    t127 <- t124, t126
+    190:     &()    t128 <- I
+    191:     param  1 <- 2
+    192:     &()    t129 <- I
+    193:     param  0 <- t129
+    194:     call   t130 <- DIM
+    195:     mul    t131 <- 7, t130
+    196:     add    t132 <- t131, i
+    197:     param  1 <- 3
+    198:     &()    t133 <- I
+    199:     param  0 <- t133
+    200:     call   t134 <- DIM
+    201:     mul    t135 <- t132, t134
+    202:     add    t136 <- t135, i
+    203:     mul    t137 <- t136, 4
+    204:     &()    t138 <- I
+    205:     param  0 <- t138
+    206:     call   t139 <- DOFS
+    207:     add    t140 <- t137, t139
+    208:     add    t141 <- t128, t140
+    209:     add    t142 <- t127, @t141
+    210:     mul    t143 <- t142, 1
+    211:     &()    t144 <- B
+    212:     param  0 <- t144
+    213:     call   t145 <- DOFS
+    214:     add    t146 <- t143, t145
+    215:     add    t147 <- t120, t146
+    216:     assign @t147 <- @t119
+    217:     return 
+    218:     goto   5
+    219: 7_if_false:
+    220: 5:
+    221:     &()    t148 <- B
+    222:     param  1 <- 2
+    223:     &()    t149 <- B
+    224:     param  0 <- t149
+    225:     call   t150 <- DIM
+    226:     mul    t151 <- 7, t150
+    227:     add    t152 <- t151, i
+    228:     param  1 <- 3
+    229:     &()    t153 <- B
+    230:     param  0 <- t153
+    231:     call   t154 <- DIM
+    232:     mul    t155 <- t152, t154
+    233:     &()    t156 <- I
+    234:     param  1 <- 2
+    235:     &()    t157 <- I
+    236:     param  0 <- t157
+    237:     call   t158 <- DIM
+    238:     mul    t159 <- 7, t158
+    239:     add    t160 <- t159, i
+    240:     param  1 <- 3
+    241:     &()    t161 <- I
+    242:     param  0 <- t161
+    243:     call   t162 <- DIM
+    244:     mul    t163 <- t160, t162
+    245:     add    t164 <- t163, i
+    246:     mul    t165 <- t164, 4
+    247:     &()    t166 <- I
+    248:     param  0 <- t166
+    249:     call   t167 <- DOFS
+    250:     add    t168 <- t165, t167
+    251:     add    t169 <- t156, t168
+    252:     add    t170 <- t155, @t169
+    253:     mul    t171 <- t170, 1
+    254:     &()    t172 <- B
+    255:     param  0 <- t172
+    256:     call   t173 <- DOFS
+    257:     add    t174 <- t171, t173
+    258:     add    t175 <- t148, t174
+    259:     if     @t175 = 1 goto 17_if_true
+    260:     goto   18_if_false
+    261: 17_if_true:
+    262:     &()    t176 <- I
+    263:     param  2 <- t176
+    264:     param  1 <- b
+    265:     param  0 <- 5
+    266:     call   t177 <- fbool
+    267:     &()    t178 <- I
+    268:     param  2 <- t178
+    269:     param  1 <- b
+    270:     param  0 <- 5
+    271:     call   t179 <- fbool
+    272:     goto   16
+    273: 18_if_false:
+    274: 16:
+    275:     goto   22
+    276: 22:
+    277:     assign t180 <- 1
+    278:     goto   24
+    279:     assign t180 <- 0
+    280: 24:
+    281:     &()    t181 <- B
+    282:     param  1 <- 2
+    283:     &()    t182 <- B
+    284:     param  0 <- t182
+    285:     call   t183 <- DIM
+    286:     mul    t184 <- 7, t183
+    287:     add    t185 <- t184, 1
+    288:     param  1 <- 3
+    289:     &()    t186 <- B
+    290:     param  0 <- t186
+    291:     call   t187 <- DIM
+    292:     mul    t188 <- t185, t187
+    293:     &()    t189 <- I
+    294:     param  1 <- 2
+    295:     &()    t190 <- I
+    296:     param  0 <- t190
+    297:     call   t191 <- DIM
+    298:     mul    t192 <- 7, t191
+    299:     add    t193 <- t192, 1
+    300:     param  1 <- 3
+    301:     &()    t194 <- I
+    302:     param  0 <- t194
+    303:     call   t195 <- DIM
+    304:     mul    t196 <- t193, t195
+    305:     add    t197 <- t196, i
+    306:     mul    t198 <- t197, 4
+    307:     &()    t199 <- I
+    308:     param  0 <- t199
+    309:     call   t200 <- DOFS
+    310:     add    t201 <- t198, t200
+    311:     add    t202 <- t189, t201
+    312:     add    t203 <- t188, @t202
+    313:     mul    t204 <- t203, 1
+    314:     &()    t205 <- B
+    315:     param  0 <- t205
+    316:     call   t206 <- DOFS
+    317:     add    t207 <- t204, t206
+    318:     add    t208 <- t181, t207
+    319:     assign @t208 <- t180
+    320:     if     i > 9 goto 31
+    321:     goto   30
+    322: 31:
+    323:     if     i < 3 goto 27
+    324: 30:
+    325: 27:
+    326:     assign t209 <- 1
+    327:     goto   29
+    328:     assign t209 <- 0
+    329: 29:
+    330:     assign b <- t209
+    331:     goto   36
+    332: 36:
+    333:     assign t210 <- 1
+    334:     goto   38
+    335:     assign t210 <- 0
+    336: 38:
+    337:     assign b <- t210
+    338:     goto   41
+    339:     goto   42
+    340: 41:
+    341:     assign t211 <- 1
+    342:     goto   43
+    343: 42:
+    344:     assign t211 <- 0
+    345: 43:
+    346:     assign b <- t211
+    347:     goto   49
+    348:     if     0 = 1 goto 46
+    349: 49:
+    350:     if     0 # 1 goto 46
+    351:     goto   47
+    352: 46:
+    353:     assign t212 <- 1
+    354:     goto   48
+    355: 47:
+    356:     assign t212 <- 0
+    357: 48:
+    358:     assign b <- t212
+    359:     goto   57
+    360:     goto   57
+    361:     if     0 = 1 goto 55_if_true
+    362: 57:
+    363:     if     0 # 1 goto 55_if_true
+    364:     goto   56_if_false
+    365: 55_if_true:
+    366:     return 
+    367:     goto   54
+    368: 56_if_false:
+    369: 54:
+    370:     goto   65_if_false
+    371:     return 
+    372:     goto   63
+    373: 65_if_false:
+    374: 63:
+    375:     &()    t213 <- I
+    376:     param  2 <- t213
+    377:     &()    t214 <- B
+    378:     param  1 <- 2
+    379:     &()    t215 <- B
+    380:     param  0 <- t215
+    381:     call   t216 <- DIM
+    382:     mul    t217 <- i, t216
+    383:     add    t218 <- t217, i
+    384:     param  1 <- 3
+    385:     &()    t219 <- B
+    386:     param  0 <- t219
+    387:     call   t220 <- DIM
+    388:     mul    t221 <- t218, t220
+    389:     add    t222 <- i, i
+    390:     add    t223 <- t221, t222
+    391:     mul    t224 <- t223, 1
+    392:     &()    t225 <- B
+    393:     param  0 <- t225
+    394:     call   t226 <- DOFS
+    395:     add    t227 <- t224, t226
+    396:     add    t228 <- t214, t227
+    397:     param  1 <- @t228
+    398:     mul    t229 <- i, i
+    399:     add    t230 <- i, t229
+    400:     add    t231 <- t230, i
+    401:     param  0 <- t231
+    402:     call   t232 <- fbool
+    403:     if     t232 = 1 goto 68_if_true
+    404:     goto   69_if_false
+    405: 68_if_true:
+    406:     goto   67
+    407: 69_if_false:
+    408: 67:
+    409:     if     0 # 1 goto 72
+    410:     assign t233 <- 1
+    411:     goto   73
+    412: 72:
+    413:     assign t233 <- 0
+    414: 73:
+    415:     assign b <- t233
+    416:     goto   79
+    417:     goto   76
+    418: 79:
+    419:     &()    t234 <- I
+    420:     param  2 <- t234
+    421:     &()    t235 <- I
+    422:     param  2 <- t235
+    423:     param  1 <- 1
+    424:     param  0 <- 1
+    425:     call   t236 <- fbool
+    426:     param  1 <- t236
+    427:     param  0 <- 5
+    428:     call   t237 <- fbool
+    429:     if     t237 = 1 goto 76
+    430:     goto   77
+    431: 76:
+    432:     assign t238 <- 1
+    433:     goto   78
+    434: 77:
+    435:     assign t238 <- 0
+    436: 78:
+    437:     &()    t239 <- B
+    438:     param  1 <- 2
+    439:     &()    t240 <- B
+    440:     param  0 <- t240
+    441:     call   t241 <- DIM
+    442:     mul    t242 <- 3, t241
+    443:     &()    t243 <- I
+    444:     param  2 <- t243
+    445:     param  1 <- b
+    446:     param  0 <- i
+    447:     call   t244 <- fint
+    448:     add    t245 <- t242, t244
+    449:     param  1 <- 3
+    450:     &()    t246 <- B
+    451:     param  0 <- t246
+    452:     call   t247 <- DIM
+    453:     mul    t248 <- t245, t247
+    454:     add    t249 <- t248, 5
+    455:     mul    t250 <- t249, 1
+    456:     &()    t251 <- B
+    457:     param  0 <- t251
+    458:     call   t252 <- DOFS
+    459:     add    t253 <- t250, t252
+    460:     add    t254 <- t239, t253
+    461:     assign @t254 <- t238
+    462:     return 
+    463:     return 
+    464:     return 
+    465:     return 
+    466:     return 
+    467:     goto   81
+    468: 81:
+    469:     goto   91
+    470:     assign t255 <- 1
+    471:     goto   92
+    472: 91:
+    473:     assign t255 <- 0
+    474: 92:
+    475:     assign b <- t255
+    476:     return 
   ]]
 
   [[ procedure: fint
@@ -91,21 +825,11 @@ converting to TAC...
       [ $t4       <int>       ]
       [ $t40      <int>       ]
       [ $t41      <int>       ]
-      [ $t42      <int>       ]
+      [ $t42      <bool>       ]
       [ $t43      <int>       ]
       [ $t44      <int>       ]
       [ $t45      <int>       ]
-      [ $t46      <int>       ]
-      [ $t47      <int>       ]
-      [ $t48      <int>       ]
-      [ $t49      <int>       ]
       [ $t5       <int>       ]
-      [ $t50      <int>       ]
-      [ $t51      <int>       ]
-      [ $t52      <bool>       ]
-      [ $t53      <int>       ]
-      [ $t54      <int>       ]
-      [ $t55      <int>       ]
       [ $t6       <int>       ]
       [ $t7       <int>       ]
       [ $t8       <int>       ]
@@ -156,74 +880,186 @@ converting to TAC...
        41:     param  1 <- 2
        42:     param  0 <- C
        43:     call   t22 <- DIM
-       44:     mul    t23 <- a, t22
-       45:     add    t24 <- t23, a
+       44:     mul    t23 <- 0, t22
+       45:     add    t24 <- t23, 0
        46:     param  1 <- 3
        47:     param  0 <- C
        48:     call   t25 <- DIM
        49:     mul    t26 <- t24, t25
-       50:     add    t27 <- t26, a
-       51:     mul    t28 <- t27, 4
-       52:     param  0 <- C
-       53:     call   t29 <- DOFS
-       54:     add    t30 <- t28, t29
-       55:     add    t31 <- C, t30
-       56:     param  1 <- 2
-       57:     param  0 <- C
-       58:     call   t32 <- DIM
-       59:     mul    t33 <- @t31, t32
-       60:     add    t34 <- t33, 0
-       61:     param  1 <- 3
-       62:     param  0 <- C
-       63:     call   t35 <- DIM
-       64:     mul    t36 <- t34, t35
-       65:     param  1 <- 2
-       66:     param  0 <- C
-       67:     call   t37 <- DIM
-       68:     mul    t38 <- a, t37
-       69:     add    t39 <- t38, a
-       70:     param  1 <- 3
-       71:     param  0 <- C
-       72:     call   t40 <- DIM
-       73:     mul    t41 <- t39, t40
-       74:     add    t42 <- t41, a
-       75:     mul    t43 <- t42, 4
-       76:     param  0 <- C
-       77:     call   t44 <- DOFS
-       78:     add    t45 <- t43, t44
-       79:     add    t46 <- C, t45
-       80:     add    t47 <- t36, @t46
-       81:     mul    t48 <- t47, 4
-       82:     param  0 <- C
-       83:     call   t49 <- DOFS
-       84:     add    t50 <- t48, t49
-       85:     add    t51 <- C, t50
-       86:     if     @t21 # @t51 goto 7_if_true
-       87:     goto   8_if_false
-       88: 7_if_true:
-       89:     goto   6
-       90: 8_if_false:
-       91:     param  2 <- C
-       92:     if     B = 1 goto 12
-       93:     assign t52 <- 1
-       94:     goto   13
-       95: 12:
-       96:     assign t52 <- 0
-       97: 13:
-       98:     param  1 <- t52
-       99:     sub    t53 <- a, 1
-      100:     param  0 <- t53
-      101:     call   t54 <- fint
-      102:     pos    t55 <- t54
-      103:     return t55
-      104: 6:
-      105: 0:
+       50:     param  1 <- 2
+       51:     param  0 <- C
+       52:     call   t27 <- DIM
+       53:     mul    t28 <- a, t27
+       54:     add    t29 <- t28, a
+       55:     param  1 <- 3
+       56:     param  0 <- C
+       57:     call   t30 <- DIM
+       58:     mul    t31 <- t29, t30
+       59:     add    t32 <- t31, a
+       60:     mul    t33 <- t32, 4
+       61:     param  0 <- C
+       62:     call   t34 <- DOFS
+       63:     add    t35 <- t33, t34
+       64:     add    t36 <- C, t35
+       65:     add    t37 <- t26, @t36
+       66:     mul    t38 <- t37, 4
+       67:     param  0 <- C
+       68:     call   t39 <- DOFS
+       69:     add    t40 <- t38, t39
+       70:     add    t41 <- C, t40
+       71:     if     @t21 # @t41 goto 7_if_true
+       72:     goto   8_if_false
+       73: 7_if_true:
+       74:     goto   6
+       75: 8_if_false:
+       76:     param  2 <- C
+       77:     if     B = 1 goto 12
+       78:     assign t42 <- 1
+       79:     goto   13
+       80: 12:
+       81:     assign t42 <- 0
+       82: 13:
+       83:     param  1 <- t42
+       84:     sub    t43 <- a, 1
+       85:     param  0 <- t43
+       86:     call   t44 <- fint
+       87:     pos    t45 <- t44
+       88:     return t45
+       89: 6:
+       90: 0:
+    ]]
+  ]]
+
+  [[ procedure: fbool
+    [[
+      [ %B        <bool>       ]
+      [ %C        <ptr(4) to <array 3 of <array 4 of <array 1 of <int>>>>>       ]
+      [ %a        <int>       ]
+      [ $t0       <int>       ]
+      [ $t1       <int>       ]
+      [ $t10      <int>       ]
+      [ $t11      <int>       ]
+      [ $t12      <int>       ]
+      [ $t13      <int>       ]
+      [ $t14      <int>       ]
+      [ $t15      <int>       ]
+      [ $t16      <int>       ]
+      [ $t17      <int>       ]
+      [ $t18      <int>       ]
+      [ $t19      <int>       ]
+      [ $t2       <int>       ]
+      [ $t20      <int>       ]
+      [ $t21      <int>       ]
+      [ $t22      <int>       ]
+      [ $t23      <int>       ]
+      [ $t24      <int>       ]
+      [ $t25      <int>       ]
+      [ $t26      <int>       ]
+      [ $t27      <int>       ]
+      [ $t28      <int>       ]
+      [ $t29      <int>       ]
+      [ $t3       <int>       ]
+      [ $t30      <bool>       ]
+      [ $t4       <int>       ]
+      [ $t5       <int>       ]
+      [ $t6       <int>       ]
+      [ $t7       <int>       ]
+      [ $t8       <int>       ]
+      [ $t9       <int>       ]
+    ]]
+    [[ fbool
+        0:     param  1 <- 2
+        1:     param  0 <- C
+        2:     call   t0 <- DIM
+        3:     mul    t1 <- a, t0
+        4:     add    t2 <- t1, 7
+        5:     param  1 <- 3
+        6:     param  0 <- C
+        7:     call   t3 <- DIM
+        8:     mul    t4 <- t2, t3
+        9:     add    t5 <- t4, a
+       10:     mul    t6 <- t5, 4
+       11:     param  0 <- C
+       12:     call   t7 <- DOFS
+       13:     add    t8 <- t6, t7
+       14:     add    t9 <- C, t8
+       15:     assign @t9 <- 7
+       16: 2_while_cond:
+       17:     if     B = 1 goto 4
+       18:     goto   1
+       19: 4:
+       20:     param  1 <- 2
+       21:     param  0 <- C
+       22:     call   t10 <- DIM
+       23:     mul    t11 <- 3, t10
+       24:     add    t12 <- t11, a
+       25:     param  1 <- 3
+       26:     param  0 <- C
+       27:     call   t13 <- DIM
+       28:     mul    t14 <- t12, t13
+       29:     add    t15 <- t14, 0
+       30:     mul    t16 <- t15, 4
+       31:     param  0 <- C
+       32:     call   t17 <- DOFS
+       33:     add    t18 <- t16, t17
+       34:     add    t19 <- C, t18
+       35:     if     a >= @t19 goto 3_while_body
+       36:     goto   1
+       37: 3_while_body:
+       38: 7_while_cond:
+       39:     if     B = 1 goto 8_while_body
+       40:     param  1 <- 2
+       41:     param  0 <- C
+       42:     call   t20 <- DIM
+       43:     mul    t21 <- 3, t20
+       44:     add    t22 <- t21, a
+       45:     param  1 <- 3
+       46:     param  0 <- C
+       47:     call   t23 <- DIM
+       48:     mul    t24 <- t22, t23
+       49:     add    t25 <- t24, 0
+       50:     mul    t26 <- t25, 4
+       51:     param  0 <- C
+       52:     call   t27 <- DOFS
+       53:     add    t28 <- t26, t27
+       54:     add    t29 <- C, t28
+       55:     if     a < @t29 goto 8_while_body
+       56:     goto   6
+       57: 8_while_body:
+       58:     goto   7_while_cond
+       59: 6:
+       60:     goto   2_while_cond
+       61: 1:
+       62:     if     B = 1 goto 15
+       63:     goto   13
+       64: 15:
+       65:     goto   13
+       66:     assign t30 <- 1
+       67:     goto   14
+       68: 13:
+       69:     assign t30 <- 0
+       70: 14:
+       71:     return t30
+    ]]
+  ]]
+
+  [[ procedure: printSomething
+    [[
+      [ %C        <ptr(4) to <array 9 of <char>>>       ]
+    ]]
+    [[ printSomething
+        0:     param  0 <- C
+        1:     call   WriteStr
+        2:     return 
+        3:     param  0 <- 7
+        4:     call   WriteInt
+        5:     call   WriteLn
     ]]
   ]]
 ]]
 
 run the following command to convert the .dot file into a PDF:
-  dot -Tpdf -o./xxx/mytest.mod.pdf ./xxx/mytest.mod.dot
+  dot -Tpdf -o./xxx/hard.mod.pdf ./xxx/hard.mod.dot
 
 
 Done.

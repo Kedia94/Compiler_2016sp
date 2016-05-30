@@ -1543,16 +1543,18 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 		  // mul s3 <- s4, s2
 		  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
 		  // reset s4 for new variable
-		  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
 		  // If it was last indexes
 		  if (i >= array->GetNIndices()+1){
 			  // add s4 <- s3, 0
+		          s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
 		  }
 		  else {
 			  // add s4 <- s3, next index
-			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
+		          CTacAddr *tmp = array->GetIndex(i-1)->ToTac(cb);
+		          s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, tmp));
 		  }
 	  }
 
@@ -1617,16 +1619,18 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 		  // mul s3 <- s4, s2
 		  cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
 		  // reset s4 for new variable
-		  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
 		  // If it was last indexes
 		  if (i >= array->GetNIndices()+1){
 			  // add s4 <- s3, 0
+			  s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, new CTacConst(0)));
 		  }
 		  else {
 			  // add s4 <- s3, next index
-			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, array->GetIndex(i-1)->ToTac(cb)));
+                          s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+			  CTacAddr *tmp = array->GetIndex(i-1)->ToTac(cb);
+			  cb->AddInstr(new CTacInstr(opAdd, s4, s3, tmp));
 		  }
 	  }
 	  s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
@@ -2058,8 +2062,9 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
       
       cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
 
+      CTacAddr *tmp = GetIndex(i-1)->ToTac(cb);
       s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-      cb->AddInstr(new CTacInstr(opAdd, s4, s3, GetIndex(i-1)->ToTac(cb)));
+      cb->AddInstr(new CTacInstr(opAdd, s4, s3, tmp));
     }
     // Exception if NIndices == 1
     if (GetNIndices() == 1){
@@ -2105,26 +2110,29 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
       cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DIM")), NULL));
 
       cb->AddInstr(new CTacInstr(opMul, s3, s4, s2));
-      s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
       CTacAddr *tmp = GetIndex(i-1)->ToTac(cb);
-      cb->AddInstr(new CTacInstr(opAdd, s4, s3,tmp)); 
+
+      s4 = cb->CreateTemp(CTypeManager::Get()->GetInt());
+      cb->AddInstr(new CTacInstr(opAdd, s4, s3, tmp)); 
     }
 
     if (GetNIndices() == 1){
       s4 = GetIndex(0)->ToTac(cb);
     }
     s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
-    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
     cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
 
     cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer));
 
+    s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
     cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DOFS")), NULL));    
+
+    s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
     cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
+
+    ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
     cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
 
     return new CTacReference(ret->GetSymbol());
@@ -2224,7 +2232,7 @@ CTacAddr* CAstConstant::ToTac(CCodeBlock *cb, CTacLabel *ltrue, CTacLabel *lfals
   // Assign Constant
   CTacAddr* src = ToTac(cb);
   if (GetValue()) 
-  	cb->AddInstr(new CTacInstr(opEqual, ltrue, src, new CTacConst(1)));
+  	cb->AddInstr(new CTacInstr(opGoto, ltrue));
   else
   	cb->AddInstr(new CTacInstr(opGoto, lfalse));
   return NULL;

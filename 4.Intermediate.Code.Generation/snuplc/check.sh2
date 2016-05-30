@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./test_ir ./xxx/mytest.mod > our_result
-../reference/4_test_ir ./xxx/mytest.mod > ref_result
+./test_ir ./xxx/hard.mod > our_result
+../reference/4_test_ir ./xxx/hard.mod > ref_result
 vimdiff our_result ref_result
