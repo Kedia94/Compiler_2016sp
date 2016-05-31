@@ -40,6 +40,12 @@
 #include "backend.h"
 using namespace std;
 
+//#define DEBUG
+#ifdef DEBUG
+#define Dprintf(a) printf a
+#else
+#define Dprintf(a) ;
+#endif
 
 //------------------------------------------------------------------------------
 // CBackend
@@ -138,6 +144,12 @@ void CBackendx86::EmitCode(void)
   //   EmitScope(s)
   // EmitScope(program)
 
+  const vector<CScope *> &children = _m->GetSubscopes();
+  for (int i=0; i<children.size(); ++i)
+	  EmitScope(children[i]);
+
+  EmitScope(children[0]->GetParent());
+
   _out << _ind << "# end of text section" << endl
        << _ind << "#-----------------------------------------" << endl
        << endl;
@@ -190,13 +202,38 @@ void CBackendx86::EmitScope(CScope *scope)
 
   // TODO
   // ComputeStackOffsets(scope)
+  size_t stack_size = ComputeStackOffsets(scope->GetSymbolTable(), 0, 0);
+
   //
   // emit function prologue
+
+  _out << _ind << "# prologue" << endl;
+  EmitInstruction("pushl", "\%ebp");
+  EmitInstruction("movl", "\%esp, \%ebp");
+  EmitInstruction("pushl", "\%ebx", "save callee saved registers");
+  EmitInstruction("pushl", "\%esi");
+  EmitInstruction("pushl", "\%edi");
+  EmitInstruction("subl", Imm(stack_size) + ", \%esp", "make room for locals");
+  _out << endl;
+
+  // initializelocaldata(scope)
   //
+
   // forall i in instructions do
   //   EmitInstruction(i)
+
+  _out << _ind << "# function body" << endl;
+  EmitCodeBlock(scope->GetCodeBlock());
+
   //
   // emit function epilogue
+  _out << _ind << "# epilogue" << endl;
+  EmitInstruction("addl", Imm(stack_size) + ", \%esp", "remove locals");
+  EmitInstruction("popl", "\%edi");
+  EmitInstruction("popl", "\%esi");
+  EmitInstruction("popl", "\%ebx");
+  EmitInstruction("popl", "\%ebp");
+  EmitInstruction("ret");
 
   _out << endl;
 }
@@ -303,11 +340,86 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
   string mnm;
   cmt << i;
 
+  cout << "Insturction is " << i << endl;
   EOperation op = i->GetOperation();
+/*
+  opAnd,                            ///< && binary and
+  opOr,                             ///< || binary or
+
+  // unary operators
+  // dst = op src1
+  opNeg,                            ///< -  negation
+  opPos,                            ///< +  unary +
+  opNot,                            ///< !  binary not
+
+  // memory operations
+  // dst = src1
+  opAssign,                         ///< assignment
+
+  // special and pointer operations
+  opAddress,                        ///< reference: dst = &src1
+  opDeref,                          ///< dereference: dst = *src1
+  opCast,                           ///< type cast: dst = (type)src1
+
+  // unconditional branching
+  // goto dst
+  opGoto,                           ///< dst = target
+
+  // conditional branching
+  // if src1 relOp src2 then goto dst
+  opEqual,                          ///< =  equal
+  opNotEqual,                       ///< #  not equal
+  opLessThan,                       ///< <  less than
+  opLessEqual,                      ///< <= less or equal
+  opBiggerThan,                     ///< >  bigger than
+  opBiggerEqual,                    ///< >= bigger or equal
+
+  // function call-related operations
+  opCall,                           ///< call:  dst = call src1
+  opReturn,                         ///< return: return optional src1
+  opParam,                          ///< parameter: dst = index,src1 = parameter
+
+  // special
+  opLabel,                          ///< jump label; no arguments
+  opNop,                            ///< no operation
+  */
 
   switch (op) {
     // binary operators
     // dst = src1 op src2
+	  case opAdd :
+		  Load(i->GetSrc(1), "\%eax", cmt.str());
+		  Load(i->GetSrc(2), "\%ebx");
+		  EmitInstruction("addl", "\%ebx, \%eax");
+		  Store(i->GetDest(), 'a');
+		  break;
+
+	  case opSub :
+		  Load(i->GetSrc(1), "\%eax", cmt.str());
+		  Load(i->GetSrc(2), "\%ebx");
+		  EmitInstruction("subl", "\%ebx, \%eax");
+		  Store(i->GetDest(), 'a');
+		  break;
+
+	  case opMul :
+		  Load(i->GetSrc(1), "\%eax", cmt.str());
+		  Load(i->GetSrc(2), "\%ebx");
+		  EmitInstruction("imull", "\%ebx");
+		  Store(i->GetDest(), 'a');
+		  break;
+
+	  case opDiv :
+		  Load(i->GetSrc(1), "\%eax", cmt.str());
+		  Load(i->GetSrc(2), "\%ebx");
+		  EmitInstruction("cdq");
+		  EmitInstruction("idivl", "\%ebx");
+		  Store(i->GetDest(), 'a');
+		  break;
+
+	  case opAnd:
+		  cout << " asdlfkjslkdfkjl ks " << endl;
+
+
     // TODO
     // unary operators
     // dst = op src1
@@ -340,7 +452,7 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 
     // special
     case opLabel:
-      _out << Label(dynamic_cast<CTacLabel*>(i)) << ":" << endl;
+      //_out << Label(dynamic_cast<CTacLabel*>(i)) << ":" << endl;
       break;
 
     case opNop:
@@ -469,8 +581,29 @@ size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab,
   assert(symtab != NULL);
   vector<CSymbol*> slist = symtab->GetSymbols();
 
-  // remove this
-  int size = 0;
+  _out << _ind << "# stack offsets:"  << endl;
+
+  size_t size = 0;
+
+  for (int i=0; i<slist.size(); ++i) {
+	  cout << "symbol name : " << slist[i]->GetName() << endl;
+	  cout << slist[i] << endl;
+	  cout << slist[i]->GetSymbolType() << endl;
+
+	  ESymbolType type = slist[i]->GetSymbolType();
+	  slist[i]->SetBaseRegister("\%ebp");
+
+	  switch (type) {
+		  case stLocal :
+
+			  break;
+	
+		  case stParam :
+
+			  break;
+	  }
+  }
+
   // TODO
   // foreach local symbol l in slist do
   //   compute aligned offset on stack and store in symbol l
