@@ -21,29 +21,60 @@
     # scope foo
 foo:
     # stack offsets:
+    #      8(%ebp)   1  [ %param_bool_a <bool> %ebp+8 ]
+    #     12(%ebp)   1  [ %param_char <char> %ebp+12 ]
+    #     16(%ebp)   4  [ %param_intarray_a <ptr(4) to <array 10 of <int>>> %ebp+16 ]
+    #     20(%ebp)   4  [ %param_intarray_b <ptr(4) to <array 10 of <int>>> %ebp+20 ]
+    #     24(%ebp)   4  [ %param_integer <int> %ebp+24 ]
+    #    -13(%ebp)   1  [ $t0       <bool> %ebp-13 ]
+    #    -14(%ebp)   1  [ $t1       <bool> %ebp-14 ]
+    #    -15(%ebp)   1  [ $t2       <bool> %ebp-15 ]
+    #    -16(%ebp)   1  [ $t3       <bool> %ebp-16 ]
+    #    -20(%ebp)   4  [ $t4       <int> %ebp-20 ]
+    #    -21(%ebp)   1  [ $t5       <bool> %ebp-21 ]
+
     # prologue
     pushl   %ebp                   
     movl    %esp, %ebp             
     pushl   %ebx                    # save callee saved registers
     pushl   %esi                   
     pushl   %edi                   
-    subl    $0, %esp                # make room for locals
+    subl    $12, %esp               # make room for locals
 
     # function body
-    movl    , %eax                  #   0:     add    t0 <- A, 1
+    # ???   not implemented         #   0:     goto   2
+    # ???   not implemented         #   1:     assign t0 <- 1
+    # ???   not implemented         #   2:     goto   3
+    # ???   not implemented         #   4:     assign t0 <- 0
+    # ???   not implemented         #   6:     assign param_bool_a <- t0
+    # ???   not implemented         #   7:     goto   6
+    # ???   not implemented         #   8:     assign t1 <- 1
+    # ???   not implemented         #   9:     goto   7
+    # ???   not implemented         #  11:     assign t1 <- 0
+    # ???   not implemented         #  13:     assign param_bool_a <- t1
+    # ???   not implemented         #  14:     goto   10
+    # ???   not implemented         #  15:     assign t2 <- 1
+    # ???   not implemented         #  16:     goto   11
+    # ???   not implemented         #  18:     assign t2 <- 0
+    # ???   not implemented         #  20:     assign param_bool_a <- t2
+    # ???   not implemented         #  21:     goto   14
+    # ???   not implemented         #  22:     assign t3 <- 1
+    # ???   not implemented         #  23:     goto   15
+    # ???   not implemented         #  25:     assign t3 <- 0
+    # ???   not implemented         #  27:     assign param_bool_a <- t3
+    movl    , %eax                  #  28:     add    t4 <- 1, param_integer
     movl    , %ebx                 
     addl    %ebx, %eax             
     movl    %eax,                  
-    # ???   not implemented         #   1:     assign aa <- t0
-    # ???   not implemented         #   2:     if     a > aa goto 3
-    # ???   not implemented         #   3:     goto   4
-    # ???   not implemented         #   5:     assign t1 <- 1
-    # ???   not implemented         #   6:     goto   5
-    # ???   not implemented         #   8:     assign t1 <- 0
-    # ???   not implemented         #  10:     assign bb <- t1
-    # ???   not implemented         #  11:     return aa
+    # ???   not implemented         #  29:     assign param_integer <- t4
+    # ???   not implemented         #  30:     goto   19
+    # ???   not implemented         #  31:     assign t5 <- 1
+    # ???   not implemented         #  32:     goto   20
+    # ???   not implemented         #  34:     assign t5 <- 0
+    # ???   not implemented         #  36:     assign param_bool_a <- t5
+    # ???   not implemented         #  37:     return param_bool_a
     # epilogue
-    addl    $0, %esp                # remove locals
+    addl    $12, %esp               # remove locals
     popl    %edi                   
     popl    %esi                   
     popl    %ebx                   
@@ -53,6 +84,7 @@ foo:
     # scope mytest
 main:
     # stack offsets:
+
     # prologue
     pushl   %ebp                   
     movl    %esp, %ebp             
@@ -62,23 +94,6 @@ main:
     subl    $0, %esp                # make room for locals
 
     # function body
-    # ???   not implemented         #   0:     if     B = 1 goto 1
-    # ???   not implemented         #   1:     if     B = 1 goto 1
-    # ???   not implemented         #   2:     goto   2
-    # ???   not implemented         #   4:     assign t0 <- 1
-    # ???   not implemented         #   5:     goto   3
-    # ???   not implemented         #   7:     assign t0 <- 0
-    # ???   not implemented         #   9:     assign B <- t0
-    # ???   not implemented         #  10:     if     B = 1 goto 9
-    # ???   not implemented         #  11:     goto   7
-    # ???   not implemented         #  13:     if     B = 1 goto 6
-    # ???   not implemented         #  14:     goto   7
-    # ???   not implemented         #  16:     assign t1 <- 1
-    # ???   not implemented         #  17:     goto   8
-    # ???   not implemented         #  19:     assign t1 <- 0
-    # ???   not implemented         #  21:     assign B <- t1
-    # ???   not implemented         #  22:     param  0 <- A
-    # ???   not implemented         #  23:     call   t2 <- foo
     # epilogue
     addl    $0, %esp                # remove locals
     popl    %edi                   
@@ -97,10 +112,33 @@ main:
     .align 4
 
     # scope: mytest
-A:                                  # <int>
-    .skip    4
-B:                                  # <bool>
+global_bool_a:                      # <bool>
     .skip    1
+global_bool_b:                      # <bool>
+    .skip    1
+global_bool_c:                      # <bool>
+    .skip    1
+global_bool_d:                      # <bool>
+    .skip    1
+global_boolarray_a:                 # <array 10 of <bool>>
+    .long    1
+    .long   10
+    .skip   10
+global_char_a:                      # <char>
+    .skip    1
+global_chararray_a:                 # <array 10 of <char>>
+    .long    1
+    .long   10
+    .skip   10
+    .align   4
+global_intarray_a:                  # <array 10 of <int>>
+    .long    1
+    .long   10
+    .skip   40
+global_integer_a:                   # <int>
+    .skip    4
+global_integer_b:                   # <int>
+    .skip    4
 
 
     # end of global data section

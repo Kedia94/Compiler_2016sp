@@ -202,7 +202,7 @@ void CBackendx86::EmitScope(CScope *scope)
 
   // TODO
   // ComputeStackOffsets(scope)
-  size_t stack_size = ComputeStackOffsets(scope->GetSymbolTable(), 0, 0);
+  size_t stack_size = ComputeStackOffsets(scope->GetSymbolTable(), 8, 12);
 
   //
   // emit function prologue
@@ -343,14 +343,6 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
   cout << "Insturction is " << i << endl;
   EOperation op = i->GetOperation();
 /*
-  opAnd,                            ///< && binary and
-  opOr,                             ///< || binary or
-
-  // unary operators
-  // dst = op src1
-  opNeg,                            ///< -  negation
-  opPos,                            ///< +  unary +
-  opNot,                            ///< !  binary not
 
   // memory operations
   // dst = src1
@@ -417,13 +409,27 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 		  break;
 
 	  case opAnd:
-		  cout << " asdlfkjslkdfkjl ks " << endl;
+	  case opOr:
+		  // Do nothing
+		  EmitInstruction("# ???", "not implemented", cmt.str());
+		  break;
 
 
     // TODO
     // unary operators
     // dst = op src1
-    // TODO
+	  case opNeg:
+	  	Load(i->GetSrc(1), "\%eax", cmt.str());
+		EmitInstruction("negl", "\%eax");
+		Store(i->GetDest(), 'a');
+		break;
+
+	  case opPos:
+	  case opNot:
+		// Do nothing
+		EmitInstruction("# ???", "not implemented", cmt.str());
+		break;
+
 
     // memory operations
     // dst = src1
@@ -575,8 +581,7 @@ int CBackendx86::OperandSize(CTac *t) const
   return size;
 }
 
-size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab,
-                                        int param_ofs,int local_ofs)
+size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab, int param_ofs, int local_ofs)
 {
   assert(symtab != NULL);
   vector<CSymbol*> slist = symtab->GetSymbols();
@@ -584,25 +589,7 @@ size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab,
   _out << _ind << "# stack offsets:"  << endl;
 
   size_t size = 0;
-
-  for (int i=0; i<slist.size(); ++i) {
-	  cout << "symbol name : " << slist[i]->GetName() << endl;
-	  cout << slist[i] << endl;
-	  cout << slist[i]->GetSymbolType() << endl;
-
-	  ESymbolType type = slist[i]->GetSymbolType();
-	  slist[i]->SetBaseRegister("\%ebp");
-
-	  switch (type) {
-		  case stLocal :
-
-			  break;
-	
-		  case stParam :
-
-			  break;
-	  }
-  }
+  int p_ofs = param_ofs, l_ofs = local_ofs;
 
   // TODO
   // foreach local symbol l in slist do
@@ -616,6 +603,31 @@ size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab,
   // align size
   //
   // dump stack frame to assembly file
+  for (int i=0; i<slist.size(); ++i) {
+	  ESymbolType type = slist[i]->GetSymbolType();
+	  slist[i]->SetBaseRegister("\%ebp");
 
-  return size;
+	  switch (type) {
+		  case stParam :
+			  slist[i]->SetOffset(p_ofs);
+			  p_ofs += 4;
+			  break;
+
+		  case stLocal :
+			  l_ofs += slist[i]->GetDataType()->GetSize();
+			  if (slist[i]->GetDataType()->GetSize() == 4 && l_ofs%4) l_ofs += 4 - (l_ofs%4);
+			  slist[i]->SetOffset(-l_ofs);
+			  break;
+	  }
+
+	  if (type == stParam || type == stLocal) 
+		  _out << _ind << "# " << right << setw(12) << to_string(slist[i]->GetOffset())
+			  + "(" + slist[i]->GetBaseRegister() + ")"
+			  << setw(4) << slist[i]->GetDataType()->GetSize()
+			  << "  " << slist[i] << endl;
+  }
+  _out << endl;
+
+  if (l_ofs%4) l_ofs += 4 - (l_ofs%4);
+  return l_ofs - local_ofs;
 }
