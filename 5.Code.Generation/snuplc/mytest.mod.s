@@ -23,9 +23,9 @@ foo:
     # stack offsets:
     #      8(%ebp)   1  [ %param_bool_a <bool> %ebp+8 ]
     #     12(%ebp)   1  [ %param_char <char> %ebp+12 ]
-    #     16(%ebp)   4  [ %param_intarray_a <ptr(4) to <array 10 of <int>>> %ebp+16 ]
-    #     20(%ebp)   4  [ %param_intarray_b <ptr(4) to <array 10 of <int>>> %ebp+20 ]
-    #     24(%ebp)   4  [ %param_integer <int> %ebp+24 ]
+    #     20(%ebp)   4  [ %param_intarray_a <ptr(4) to <array 10 of <int>>> %ebp+20 ]
+    #     24(%ebp)   4  [ %param_intarray_b <ptr(4) to <array 10 of <int>>> %ebp+24 ]
+    #     16(%ebp)   4  [ %param_integer <int> %ebp+16 ]
     #    -13(%ebp)   1  [ $t0       <bool> %ebp-13 ]
     #    -14(%ebp)   1  [ $t1       <bool> %ebp-14 ]
     #    -15(%ebp)   1  [ $t2       <bool> %ebp-15 ]
@@ -75,6 +75,33 @@ foo:
     # ???   not implemented         #  37:     return param_bool_a
     # epilogue
     addl    $12, %esp               # remove locals
+    popl    %edi                   
+    popl    %esi                   
+    popl    %ebx                   
+    popl    %ebp                   
+    ret                            
+
+    # scope bar
+bar:
+    # stack offsets:
+    #     20(%ebp)   4  [ %aab      <int> %ebp+20 ]
+    #     24(%ebp)   4  [ %aba      <int> %ebp+24 ]
+    #     16(%ebp)   4  [ %abb      <int> %ebp+16 ]
+    #     12(%ebp)   4  [ %baa      <int> %ebp+12 ]
+    #      8(%ebp)   4  [ %bbb      <int> %ebp+8 ]
+
+    # prologue
+    pushl   %ebp                   
+    movl    %esp, %ebp             
+    pushl   %ebx                    # save callee saved registers
+    pushl   %esi                   
+    pushl   %edi                   
+    subl    $0, %esp                # make room for locals
+
+    # function body
+    # ???   not implemented         #   0:     return 3
+    # epilogue
+    addl    $0, %esp                # remove locals
     popl    %edi                   
     popl    %esi                   
     popl    %ebx                   
@@ -139,6 +166,7 @@ global_integer_a:                   # <int>
     .skip    4
 global_integer_b:                   # <int>
     .skip    4
+
 
 
     # end of global data section

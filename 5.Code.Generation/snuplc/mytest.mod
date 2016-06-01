@@ -19,6 +19,11 @@ begin
 	return param_bool_a
 end foo;
 
+function bar (bbb, baa, abb, aab,  aba : integer) : integer;
+begin
+	return 3
+end bar;
+
 begin
 
 

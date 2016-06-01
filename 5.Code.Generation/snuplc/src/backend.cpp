@@ -36,6 +36,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cassert>
+#include <algorithm>
 
 #include "backend.h"
 using namespace std;
@@ -581,6 +582,11 @@ int CBackendx86::OperandSize(CTac *t) const
   return size;
 }
 
+bool cmp(const CSymbol* a, const CSymbol* b) {
+	return a->GetName() < b->GetName();
+}
+
+
 size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab, int param_ofs, int local_ofs)
 {
   assert(symtab != NULL);
@@ -589,7 +595,7 @@ size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab, int param_ofs, int loca
   _out << _ind << "# stack offsets:"  << endl;
 
   size_t size = 0;
-  int p_ofs = param_ofs, l_ofs = local_ofs;
+  int l_ofs = local_ofs;
 
   // TODO
   // foreach local symbol l in slist do
@@ -608,18 +614,24 @@ size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab, int param_ofs, int loca
 	  slist[i]->SetBaseRegister("\%ebp");
 
 	  switch (type) {
-		  case stParam :
-			  slist[i]->SetOffset(p_ofs);
-			  p_ofs += 4;
+		  case stParam : {
+			  CSymParam *cur = dynamic_cast<CSymParam *>(slist[i]);
+			  slist[i]->SetOffset(param_ofs + cur->GetIndex()*4);
 			  break;
+						 }
 
-		  case stLocal :
+		  case stLocal : {
 			  l_ofs += slist[i]->GetDataType()->GetSize();
 			  if (slist[i]->GetDataType()->GetSize() == 4 && l_ofs%4) l_ofs += 4 - (l_ofs%4);
 			  slist[i]->SetOffset(-l_ofs);
 			  break;
+						 }
 	  }
 
+  }
+
+  for (int i=0; i<slist.size(); ++i) {
+	  ESymbolType type = slist[i]->GetSymbolType();
 	  if (type == stParam || type == stLocal) 
 		  _out << _ind << "# " << right << setw(12) << to_string(slist[i]->GetOffset())
 			  + "(" + slist[i]->GetBaseRegister() + ")"

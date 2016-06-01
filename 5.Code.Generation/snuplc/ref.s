@@ -115,6 +115,36 @@ l_foo_exit:
     popl    %ebp                   
     ret                            
 
+    # scope bar
+bar:
+    # stack offsets:
+    #     20(%ebp)   4  [ %aab      <int> %ebp+20 ]
+    #     24(%ebp)   4  [ %aba      <int> %ebp+24 ]
+    #     16(%ebp)   4  [ %abb      <int> %ebp+16 ]
+    #     12(%ebp)   4  [ %baa      <int> %ebp+12 ]
+    #      8(%ebp)   4  [ %bbb      <int> %ebp+8 ]
+
+    # prologue
+    pushl   %ebp                   
+    movl    %esp, %ebp             
+    pushl   %ebx                    # save callee saved registers
+    pushl   %esi                   
+    pushl   %edi                   
+    subl    $0, %esp                # make room for locals
+
+    # function body
+    movl    $3, %eax                #   0:     return 3
+    jmp     l_bar_exit             
+
+l_bar_exit:
+    # epilogue
+    addl    $0, %esp                # remove locals
+    popl    %edi                   
+    popl    %esi                   
+    popl    %ebx                   
+    popl    %ebp                   
+    ret                            
+
     # scope mytest
 main:
     # stack offsets:
@@ -176,6 +206,7 @@ global_integer_a:                   # <int>
     .skip    4
 global_integer_b:                   # <int>
     .skip    4
+
 
 
     # end of global data section
