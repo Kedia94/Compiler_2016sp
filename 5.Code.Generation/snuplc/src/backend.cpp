@@ -140,6 +140,7 @@ void CBackendx86::EmitCode(void)
        << _ind << ".extern WriteLn" << endl
        << endl;
 
+
   // TODO
   // forall s in subscopes do
   //   EmitScope(s)
@@ -149,7 +150,10 @@ void CBackendx86::EmitCode(void)
   for (int i=0; i<children.size(); ++i)
 	  EmitScope(children[i]);
 
-  EmitScope(children[0]->GetParent());
+  
+  CScope *cur_scope = dynamic_cast<CScope *>(_m);
+  SetScope(cur_scope);
+  EmitScope(GetScope());
 
   _out << _ind << "# end of text section" << endl
        << _ind << "#-----------------------------------------" << endl
@@ -360,13 +364,8 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
   string mnm;
   cmt << i;
 
-  cout << "Insturction is " << i << endl;
   EOperation op = i->GetOperation();
 /*
-
-  // memory operations
-  // dst = src1
-  opAssign,                         ///< assignment
 
   // special and pointer operations
   opAddress,                        ///< reference: dst = &src1
@@ -445,6 +444,7 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 		break;
 
 	  case opPos:
+		// We have this but do we need this?
 	  case opNot:
 		// Do nothing
 		EmitInstruction("# ???", "not implemented", cmt.str());
@@ -454,6 +454,10 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
     // memory operations
     // dst = src1
     // TODO
+	  case opAssign:
+		Load(i->GetSrc(1), "\%eax", cmt.str());
+		Store(i->GetDest(), 'a');
+		break;
 
     // pointer operations
     // dst = &src1
@@ -478,7 +482,8 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 
     // special
     case opLabel:
-      //_out << Label(dynamic_cast<CTacLabel*>(i)) << ":" << endl;
+	  cout << "hi" << endl;
+      _out << Label(dynamic_cast<CTacLabel*>(i)) << ":" << endl;
       break;
 
     case opNop:
@@ -541,10 +546,32 @@ void CBackendx86::Store(CTac *dst, char src_base, string comment)
 string CBackendx86::Operand(const CTac *op)
 {
   string operand;
+//  cout << "Operand is " << op << endl;
+  const CTacReference *ref;
+  const CTacConst *con;
+  const CTacTemp *temp;
+  const CTacName *name;
 
   // TODO
   // return a string representing op
   // hint: take special care of references (op of type CTacReference)
+
+  if (con = dynamic_cast<const CTacConst *>(op)) {
+//	  cout << "const type" << endl << endl;
+	  return Imm(con->GetValue());
+  }
+  else if (temp = dynamic_cast<const CTacTemp *>(op)) {
+//	  cout << "temp type" << endl << endl;
+	  return to_string(temp->GetSymbol()->GetOffset()) + "(" + temp->GetSymbol()->GetBaseRegister() + ")";
+  }
+  else if (name = dynamic_cast<const CTacName *>(op)) {
+//	  cout << "name type" << endl << endl;
+	  return name->GetSymbol()->GetName();
+  }
+  else if (ref = dynamic_cast<const CTacReference *>(op)) {
+//	  cout << "ref type" << endl << endl;
+  }
+
 
   return operand;
 }
@@ -564,7 +591,6 @@ string CBackendx86::Label(const CTacLabel* label) const
   ostringstream o;
   o << "l_" << cs->GetName() << "_" << label->GetLabel();
   return o.str();
-  return "l_" + cs->GetName() + "_" + label->GetLabel();
 }
 
 string CBackendx86::Label(string label) const
