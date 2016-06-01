@@ -219,6 +219,25 @@ void CBackendx86::EmitScope(CScope *scope)
 
   // initializelocaldata(scope)
   //
+  if (stack_size == 0) {
+  	// do nothing
+  }
+  else if (stack_size/4 <= 4) {
+	  EmitInstruction("xorl", "\%eax, \%eax", "memset local stack area to 0");
+	  for (int i=stack_size/4 - 1; i>=0; --i)
+		  EmitInstruction("movl", "\%eax, " + to_string(i*4) + "(\%esp)");
+	  _out << endl;
+  }
+  else {
+	  EmitInstruction("cld", "", "memset local stack area to 0");
+	  EmitInstruction("xorl", "\%eax, \%eax");
+	  EmitInstruction("movl", Imm(stack_size/4) + ", \%ecx");
+	  EmitInstruction("mov", "\%esp, \%edi");
+	  EmitInstruction("rep", "stosl");
+	  _out << endl;
+  }
+	  
+	  
 
   // forall i in instructions do
   //   EmitInstruction(i)
@@ -581,11 +600,6 @@ int CBackendx86::OperandSize(CTac *t) const
 
   return size;
 }
-
-bool cmp(const CSymbol* a, const CSymbol* b) {
-	return a->GetName() < b->GetName();
-}
-
 
 size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab, int param_ofs, int local_ofs)
 {

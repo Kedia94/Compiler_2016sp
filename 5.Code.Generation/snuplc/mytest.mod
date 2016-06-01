@@ -19,8 +19,21 @@ begin
 	return param_bool_a
 end foo;
 
-function bar (bbb, baa, abb, aab,  aba : integer) : integer;
+function bar (a1, a2, a3, a4: integer; b1, b2 : boolean) : integer;
 begin
+	a1 := a2 + a3;
+	a1 := a2 + a3;
+
+	b1 := b1 && b2;
+	b1 := b1 && b2;
+	b1 := b1 && b2;
+	b1 := b1 && b2;
+
+	a1 := a2 + a3;
+
+	b1 := b1 && b2;
+	b1 := b1 && b2;
+	b1 := b1 && b2;
 	return 3
 end bar;
 
