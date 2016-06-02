@@ -1,5 +1,5 @@
 ##################################################
-# mytest
+# test01
 #
 
     #-----------------------------------------
@@ -18,13 +18,15 @@
     .extern WriteChar
     .extern WriteLn
 
-    # scope mytest
+    # scope test01
 main:
     # stack offsets:
-    #    -16(%ebp)   4  [ $t0       <int> %ebp-16 ]
+    #    -16(%ebp)   4  [ $t0       <ptr(4) to <array 10 of <bool>>> %ebp-16 ]
     #    -20(%ebp)   4  [ $t1       <int> %ebp-20 ]
-    #    -24(%ebp)   4  [ $t2       <int> %ebp-24 ]
+    #    -24(%ebp)   4  [ $t2       <ptr(4) to <array 10 of <bool>>> %ebp-24 ]
     #    -28(%ebp)   4  [ $t3       <int> %ebp-28 ]
+    #    -32(%ebp)   4  [ $t4       <int> %ebp-32 ]
+    #    -36(%ebp)   4  [ $t5       <int> %ebp-36 ]
 
     # prologue
     pushl   %ebp                   
@@ -32,44 +34,43 @@ main:
     pushl   %ebx                    # save callee saved registers
     pushl   %esi                   
     pushl   %edi                   
-    subl    $16, %esp               # make room for locals
+    subl    $24, %esp               # make room for locals
 
-    xorl    %eax, %eax              # memset local stack area to 0
-    movl    %eax, 12(%esp)         
-    movl    %eax, 8(%esp)          
-    movl    %eax, 4(%esp)          
-    movl    %eax, 0(%esp)          
+    cld                             # memset local stack area to 0
+    xorl    %eax, %eax             
+    movl    $6, %ecx               
+    mov     %esp, %edi             
+    rep     stosl                  
 
     # function body
-    movl    $1, %eax                #   0:     assign a <- 1
-    movl    %eax, a                
-    movl    $1, %eax                #   1:     add    t0 <- 1, 2
-    movl    $2, %ebx               
-    addl    %ebx, %eax             
+    leal    a, %eax                 #   0:     &()    t0 <- a
     movl    %eax, -16(%ebp)        
-    movl    -16(%ebp), %eax         #   2:     assign b <- t0
-    movl    %eax, b                
-    movl    a, %eax                 #   3:     sub    t1 <- a, b
-    movl    b, %ebx                
-    subl    %ebx, %eax             
-    movl    %eax, -20(%ebp)        
-    movl    -20(%ebp), %eax         #   4:     assign a <- t1
-    movl    %eax, a                
-    movl    a, %eax                 #   5:     mul    t2 <- a, b
-    movl    b, %ebx                
+    movzbl  $0, %eax                #   1:     mul    t1 <- 0, 1
+    movzbl  $1, %ebx               
     imull   %ebx                   
+    movl    %eax, -20(%ebp)        
+    leal    a, %eax                 #   2:     &()    t2 <- a
     movl    %eax, -24(%ebp)        
-    movl    -24(%ebp), %eax         #   6:     assign a <- t2
-    movl    %eax, a                
-    movl    a, %eax                 #   7:     div    t3 <- a, b
-    movl    b, %ebx                
-    cdq                            
-    idivl   %ebx                   
+    movl    -24(%ebp), %eax         #   3:     param  0 <- t2
+    pushl   %eax                   
+    call    DOFS                    #   4:     call   t3 <- DOFS
+    addl    $4, %esp               
     movl    %eax, -28(%ebp)        
-    movl    -28(%ebp), %eax         #   8:     assign b <- t3
-    movl    %eax, b                
+    movl    -20(%ebp), %eax         #   5:     add    t4 <- t1, t3
+    movl    -28(%ebp), %ebx        
+    addl    %ebx, %eax             
+    movl    %eax, -32(%ebp)        
+    movl    -16(%ebp), %eax         #   6:     add    t5 <- t0, t4
+    movl    -32(%ebp), %ebx        
+    addl    %ebx, %eax             
+    movl    %eax, -36(%ebp)        
+    movzbl  $1, %eax                #   7:     assign @t5 <- 1
+    movl    -36(%ebp), %edi        
+    movl    %eax, (%edi)           
+
+l_test01_exit:
     # epilogue
-    addl    $16, %esp               # remove locals
+    addl    $24, %esp               # remove locals
     popl    %edi                   
     popl    %esi                   
     popl    %ebx                   
@@ -85,11 +86,11 @@ main:
     .data
     .align 4
 
-    # scope: mytest
-a:                                  # <int>
-    .skip    4
-b:                                  # <int>
-    .skip    4
+    # scope: test01
+a:                                  # <array 10 of <bool>>
+    .long    1
+    .long   10
+    .skip   10
 
     # end of global data section
     #-----------------------------------------

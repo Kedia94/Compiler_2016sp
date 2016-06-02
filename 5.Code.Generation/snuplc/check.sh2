@@ -5,4 +5,3 @@ mv mytest.mod.s ref.s
 
 ./snuplc mytest.mod
 vimdiff mytest.mod.s ref.s
-

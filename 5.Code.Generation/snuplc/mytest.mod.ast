@@ -1,0 +1,109 @@
+mytest.mod:
+    CAstScope: 'test02'
+      symbol table:
+        [[
+          [ *DIM(<ptr(4) to <NULL>>,<int>) --> <int>           ]
+          [ *DOFS(<ptr(4) to <NULL>>) --> <int>           ]
+          [ *ReadInt() --> <int>           ]
+          [ *WriteChar(<char>) --> <NULL>           ]
+          [ *WriteInt(<int>) --> <NULL>           ]
+          [ *WriteLn() --> <NULL>           ]
+          [ *WriteStr(<ptr(4) to <array of <char>>>) --> <NULL>           ]
+          [ @a        <array 10 of <int>>           ]
+          [ @b        <bool>           ]
+          [ @c        <array 2 of <bool>>           ]
+          [ @d        <array 2 of <array 10 of <bool>>>           ]
+          [ *foo(<ptr(4) to <array 2 of <array 10 of <bool>>>>,<int>) --> <NULL>           ]
+          [ @i        <int>           ]
+          [ @x        <char>           ]
+        ]]
+      statement list:
+        := <int>
+          [ @a        <array 10 of <int>> ] <int>
+            0 <int>
+          1 <int>
+        call [ *foo(<ptr(4) to <array 2 of <array 10 of <bool>>>>,<int>) --> <NULL> ] <NULL>
+          &() <ptr(4) to <array 2 of <array 10 of <bool>>>>
+            [ @d        <array 2 of <array 10 of <bool>>> ] <array 2 of <array 10 of <bool>>>
+          [ @a        <array 10 of <int>> ] <int>
+            0 <int>
+        := <int>
+          [ @i        <int> ] <int>
+          1 <int>
+        while cond
+          < <bool>
+            [ @i        <int> ] <int>
+            10 <int>
+        while-body
+          := <int>
+            [ @a        <array 10 of <int>> ] <int>
+              [ @i        <int> ] <int>
+            sub <int>
+              10 <int>
+              [ @i        <int> ] <int>
+          := <int>
+            [ @i        <int> ] <int>
+            add <int>
+              [ @i        <int> ] <int>
+              1 <int>
+        := <char>
+          [ @x        <char> ] <char>
+          97 <char>
+        := <int>
+          [ @i        <int> ] <int>
+          0 <int>
+        while cond
+          < <bool>
+            [ @i        <int> ] <int>
+            10 <int>
+        while-body
+          call [ *WriteInt(<int>) --> <NULL> ] <NULL>
+            [ @a        <array 10 of <int>> ] <int>
+              [ @i        <int> ] <int>
+          := <int>
+            [ @i        <int> ] <int>
+            add <int>
+              [ @i        <int> ] <int>
+              1 <int>
+      nested scopes:
+        CAstScope: 'foo'
+          symbol table:
+            [[
+              [ %aaa      <ptr(4) to <array 2 of <array 10 of <bool>>>>               ]
+              [ %x        <int>               ]
+            ]]
+          statement list:
+            := <bool>
+              [ %aaa      <ptr(4) to <array 2 of <array 10 of <bool>>>> ] <bool>
+                0 <int>
+                0 <int>
+              true <bool>
+            := <bool>
+              [ %aaa      <ptr(4) to <array 2 of <array 10 of <bool>>>> ] <bool>
+                0 <int>
+                0 <int>
+              [ @b        <bool> ] <bool>
+          nested scopes:
+            empty.
+        
+    
+
+
+  symbol table:
+    [[
+      [ *DIM(<ptr(4) to <NULL>>,<int>) --> <int>       ]
+      [ *DOFS(<ptr(4) to <NULL>>) --> <int>       ]
+      [ *ReadInt() --> <int>       ]
+      [ *WriteChar(<char>) --> <NULL>       ]
+      [ *WriteInt(<int>) --> <NULL>       ]
+      [ *WriteLn() --> <NULL>       ]
+      [ *WriteStr(<ptr(4) to <array of <char>>>) --> <NULL>       ]
+      [ @a        <array 10 of <int>>       ]
+      [ @b        <bool>       ]
+      [ @c        <array 2 of <bool>>       ]
+      [ @d        <array 2 of <array 10 of <bool>>>       ]
+      [ *foo(<ptr(4) to <array 2 of <array 10 of <bool>>>>,<int>) --> <NULL>       ]
+      [ @i        <int>       ]
+      [ @x        <char>       ]
+    ]]
+

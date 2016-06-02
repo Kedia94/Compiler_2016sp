@@ -147,13 +147,15 @@ void CBackendx86::EmitCode(void)
   // EmitScope(program)
 
   const vector<CScope *> &children = _m->GetSubscopes();
-  for (int i=0; i<children.size(); ++i)
+  for (int i=0; i<children.size(); ++i) {
+	  SetScope(children[i]);
 	  EmitScope(children[i]);
+  }
 
-  
   CScope *cur_scope = dynamic_cast<CScope *>(_m);
   SetScope(cur_scope);
   EmitScope(GetScope());
+  
 
   _out << _ind << "# end of text section" << endl
        << _ind << "#-----------------------------------------" << endl
@@ -248,9 +250,11 @@ void CBackendx86::EmitScope(CScope *scope)
 
   _out << _ind << "# function body" << endl;
   EmitCodeBlock(scope->GetCodeBlock());
+  _out << endl;
 
   //
   // emit function epilogue
+  _out << Label(new CTacLabel("exit")) << ":" << endl;
   _out << _ind << "# epilogue" << endl;
   EmitInstruction("addl", Imm(stack_size) + ", \%esp", "remove locals");
   EmitInstruction("popl", "\%edi");
@@ -367,32 +371,9 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
   EOperation op = i->GetOperation();
 /*
 
-  // special and pointer operations
-  opAddress,                        ///< reference: dst = &src1
-  opDeref,                          ///< dereference: dst = *src1
-  opCast,                           ///< type cast: dst = (type)src1
 
-  // unconditional branching
-  // goto dst
-  opGoto,                           ///< dst = target
 
-  // conditional branching
-  // if src1 relOp src2 then goto dst
-  opEqual,                          ///< =  equal
-  opNotEqual,                       ///< #  not equal
-  opLessThan,                       ///< <  less than
-  opLessEqual,                      ///< <= less or equal
-  opBiggerThan,                     ///< >  bigger than
-  opBiggerEqual,                    ///< >= bigger or equal
 
-  // function call-related operations
-  opCall,                           ///< call:  dst = call src1
-  opReturn,                         ///< return: return optional src1
-  opParam,                          ///< parameter: dst = index,src1 = parameter
-
-  // special
-  opLabel,                          ///< jump label; no arguments
-  opNop,                            ///< no operation
   */
 
   switch (op) {
@@ -459,30 +440,82 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 		Store(i->GetDest(), 'a');
 		break;
 
-    // pointer operations
-    // dst = &src1
-    // TODO
-    // dst = *src1
-    case opDeref:
-      // opDeref not generated for now
-      EmitInstruction("# opDeref", "not implemented", cmt.str());
-      break;
 
 
     // unconditional branching
     // goto dst
     // TODO
 
+	case opGoto:
+	  EmitInstruction("jmp", Label(dynamic_cast<CTacLabel *>(i->GetDest())->GetLabel()), cmt.str());
+	  break;
+
     // conditional branching
     // if src1 relOp src2 then goto dst
     // TODO
+	case opEqual:
+	case opNotEqual:
+	case opLessThan:
+	case opLessEqual:
+	case opBiggerThan:
+  	case opBiggerEqual:
+	  Load(i->GetSrc(1), "\%eax", cmt.str());
+	  Load(i->GetSrc(2), "\%ebx");
+	  EmitInstruction("cmpl", "\%ebx, \%eax");
+	  EmitInstruction("j"+Condition(op), Label(dynamic_cast<CTacLabel *>(i->GetDest())->GetLabel()));
+	  break;
 
     // function call-related operations
+  	// opCall,                           ///< call:  dst = call src1
+  	// opReturn,                         ///< return: return optional src1
+  	// opParam,                          ///< parameter: dst = index,src1 = parameter
     // TODO
+	case opCall: {
+	  CTacName *name = dynamic_cast<CTacName *>(i->GetSrc(1));
+	  const CSymbol *sym = name->GetSymbol();
+	  const CSymProc *proc = dynamic_cast<const CSymProc *>(sym);
 
-    // special
+	  EmitInstruction("call", sym->GetName(), cmt.str());
+	  if (proc->GetNParams() > 0) {
+		  EmitInstruction("addl", Imm(proc->GetNParams()*4) + ", \%esp");
+	  }
+	  if (i->GetDest()) {
+		  Store(i->GetDest(), 'a');
+	  }
+	  break;
+				 }
+	case opReturn:
+	  if (i->GetSrc(1)) {
+		  Load(i->GetSrc(1), "\%eax", cmt.str());
+	  }
+	  EmitInstruction("jmp", Label("exit"));
+	  break;
+
+	case opParam: 
+	  Load(i->GetSrc(1), "\%eax", cmt.str());
+	  EmitInstruction("pushl", "\%eax");
+	  break;
+	
+	  	  
+	 
+  // special and pointer operations
+  // opAddress,                        ///< reference: dst = &src1
+  // opDeref,                          ///< dereference: dst = *src1
+  // opCast,                           ///< type cast: dst = (type)src1
+	case opAddress:
+	  EmitInstruction("leal", Operand(i->GetSrc(1))+ ", \%eax", cmt.str());
+	  Store(i->GetDest(), 'a');
+	  break;
+
+	case opDeref:
+	  EmitInstruction("abc");
+	  break;
+
+	case opCast:
+      EmitInstruction("# ???", "not implemented", cmt.str());
+	  break;
+
     case opLabel:
-	  cout << "hi" << endl;
       _out << Label(dynamic_cast<CTacLabel*>(i)) << ":" << endl;
       break;
 
@@ -546,7 +579,7 @@ void CBackendx86::Store(CTac *dst, char src_base, string comment)
 string CBackendx86::Operand(const CTac *op)
 {
   string operand;
-//  cout << "Operand is " << op << endl;
+  //cout << "Operand is " << op << endl;
   const CTacReference *ref;
   const CTacConst *con;
   const CTacTemp *temp;
@@ -557,19 +590,27 @@ string CBackendx86::Operand(const CTac *op)
   // hint: take special care of references (op of type CTacReference)
 
   if (con = dynamic_cast<const CTacConst *>(op)) {
-//	  cout << "const type" << endl << endl;
+	  //cout << "const type" << endl << endl;
 	  return Imm(con->GetValue());
   }
-  else if (temp = dynamic_cast<const CTacTemp *>(op)) {
-//	  cout << "temp type" << endl << endl;
-	  return to_string(temp->GetSymbol()->GetOffset()) + "(" + temp->GetSymbol()->GetBaseRegister() + ")";
+  else if (ref = dynamic_cast<const CTacReference *>(op)) {	// case @t1, @t2 ...
+	  //cout << "ref type" << endl << endl;
+	  const CSymbol *sym = ref->GetSymbol();
+	  if (sym->GetSymbolType() == stGlobal)
+		  EmitInstruction("movl", sym->GetName() + ", \%edi");
+	  else 
+		  EmitInstruction("movl", to_string(sym->GetOffset()) + "(" + sym->GetBaseRegister() + "), \%edi");
+
+	  return "(\%edi)";
   }
-  else if (name = dynamic_cast<const CTacName *>(op)) {
-//	  cout << "name type" << endl << endl;
-	  return name->GetSymbol()->GetName();
-  }
-  else if (ref = dynamic_cast<const CTacReference *>(op)) {
-//	  cout << "ref type" << endl << endl;
+  else if (name = dynamic_cast<const CTacName *>(op)) { // case a, b (global symbols or parameter ...)
+	  //cout << "name type" << endl << endl;
+	  const CSymbol *sym = name->GetSymbol();
+	  if (sym->GetSymbolType() == stGlobal)
+		  return sym->GetName();
+	  else 
+		  return to_string(sym->GetOffset()) + "(" + sym->GetBaseRegister() + ")";
+
   }
 
 
@@ -617,12 +658,48 @@ string CBackendx86::Condition(EOperation cond) const
 int CBackendx86::OperandSize(CTac *t) const
 {
   int size = 4;
-
   // TODO
   // compute the size for operand t of type CTacName
   // Hint: you need to take special care of references (incl. references to pointers!)
   //       and arrays. Compare your output to that of the reference implementation
   //       if you are not sure.
+  CTacName *name; 
+  CTacConst *con;
+ 
+  if (name = dynamic_cast<CTacName *>(t)) {
+	  const CSymbol *sym = name->GetSymbol();
+	  const CType *type = sym->GetDataType();
+
+	  if (type->IsArray()) {
+		  const CArrayType *arr = dynamic_cast<const CArrayType *>(type);
+		  size = arr->GetBaseType()->GetSize();
+	  }
+	  else if (type->IsScalar()) {
+		  if (type->IsBoolean() || type->IsChar()) size = 1;
+		  else if (type->IsInt()) size = 4;
+		  else if (type->IsPointer()) {
+			  /*
+			  const CPointerType *ptr = dynamic_cast<const CPointerType *>(type);
+			  type = ptr->GetBaseType();
+
+			  const CArrayType *arr = dynamic_cast<const CArrayType *>(type);
+			  size = arr->GetBaseType()->GetSize();
+			  */
+			  size = 4;
+		  }
+		  else if (type->IsNull()) {
+
+		  }
+	  }
+	  cout << sym->GetName() << " is " << sym->GetDataType() << " <<< " << size << endl << endl;
+  }
+  else if (con = dynamic_cast<CTacConst *>(t)) {
+	  cout << "constant !!!!!!!!!!!!!!!!!!!! " <<endl;
+
+  }
+  else {
+	  cout << "other !!#@Q#$@#$" <<endl;
+  }
 
   return size;
 }
