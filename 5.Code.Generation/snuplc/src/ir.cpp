@@ -94,17 +94,8 @@ char EOperationName[][OPERATION_STRLEN] = {
   "label",                          ///< jump label; no arguments
   "nop",                            ///< no operation
 };
-/*
-bool IsRelOp(EOperation t)
-{
-  return (t == opEqual) ||
-         (t == opNotEqual) ||
-         (t == opLessThan) ||
-         (t == opLessEqual) ||
-         (t == opBiggerThan) ||
-         (t == opBiggerEqual);
-}
-*/
+
+
 ostream& operator<<(ostream &out, EOperation t)
 {
   out << EOperationName[t];
@@ -203,9 +194,14 @@ CTacTemp::CTacTemp(const CSymbol *symbol)
 //------------------------------------------------------------------------------
 // CTacReference
 //
-CTacReference::CTacReference(const CSymbol *symbol)
-  : CTacName(symbol)
+CTacReference::CTacReference(const CSymbol *symbol, const CSymbol *deref)
+  : CTacName(symbol), _deref(deref)
 {
+}
+
+const CSymbol* CTacReference::GetDerefSymbol(void) const
+{
+  return _deref;
 }
 
 ostream& CTacReference::print(ostream &out, int indent) const

@@ -22,9 +22,9 @@
 sum_rec:
     # stack offsets:
     #      8(%ebp)   4  [ %n        <int> %ebp+8 ]
-    #    -16(%ebp)   4  [ $t11      <int> %ebp-16 ]
-    #    -20(%ebp)   4  [ $t12      <int> %ebp-20 ]
-    #    -24(%ebp)   4  [ $t13      <int> %ebp-24 ]
+    #    -16(%ebp)   4  [ $t0       <int> %ebp-16 ]
+    #    -20(%ebp)   4  [ $t1       <int> %ebp-20 ]
+    #    -24(%ebp)   4  [ $t2       <int> %ebp-24 ]
 
     # prologue
     pushl   %ebp                   
@@ -46,20 +46,20 @@ sum_rec:
     jg      l_sum_rec_1_if_true    
     jmp     l_sum_rec_2_if_false    #   1:     goto   2_if_false
 l_sum_rec_1_if_true:
-    movl    8(%ebp), %eax           #   3:     sub    t11 <- n, 1
+    movl    8(%ebp), %eax           #   3:     sub    t0 <- n, 1
     movl    $1, %ebx               
     subl    %ebx, %eax             
     movl    %eax, -16(%ebp)        
-    movl    -16(%ebp), %eax         #   4:     param  0 <- t11
+    movl    -16(%ebp), %eax         #   4:     param  0 <- t0
     pushl   %eax                   
-    call    sum_rec                 #   5:     call   t12 <- sum_rec
+    call    sum_rec                 #   5:     call   t1 <- sum_rec
     addl    $4, %esp               
     movl    %eax, -20(%ebp)        
-    movl    8(%ebp), %eax           #   6:     add    t13 <- n, t12
+    movl    8(%ebp), %eax           #   6:     add    t2 <- n, t1
     movl    -20(%ebp), %ebx        
     addl    %ebx, %eax             
     movl    %eax, -24(%ebp)        
-    movl    -24(%ebp), %eax         #   7:     return t13
+    movl    -24(%ebp), %eax         #   7:     return t2
     jmp     l_sum_rec_exit         
     jmp     l_sum_rec_0             #   8:     goto   0
 l_sum_rec_2_if_false:
@@ -82,8 +82,8 @@ sum_iter:
     #    -16(%ebp)   4  [ $i        <int> %ebp-16 ]
     #      8(%ebp)   4  [ %n        <int> %ebp+8 ]
     #    -20(%ebp)   4  [ $sum      <int> %ebp-20 ]
-    #    -24(%ebp)   4  [ $t11      <int> %ebp-24 ]
-    #    -28(%ebp)   4  [ $t12      <int> %ebp-28 ]
+    #    -24(%ebp)   4  [ $t0       <int> %ebp-24 ]
+    #    -28(%ebp)   4  [ $t1       <int> %ebp-28 ]
 
     # prologue
     pushl   %ebp                   
@@ -111,17 +111,17 @@ l_sum_iter_3_while_cond:
     jle     l_sum_iter_4_while_body
     jmp     l_sum_iter_2            #   4:     goto   2
 l_sum_iter_4_while_body:
-    movl    -20(%ebp), %eax         #   6:     add    t11 <- sum, i
+    movl    -20(%ebp), %eax         #   6:     add    t0 <- sum, i
     movl    -16(%ebp), %ebx        
     addl    %ebx, %eax             
     movl    %eax, -24(%ebp)        
-    movl    -24(%ebp), %eax         #   7:     assign sum <- t11
+    movl    -24(%ebp), %eax         #   7:     assign sum <- t0
     movl    %eax, -20(%ebp)        
-    movl    -16(%ebp), %eax         #   8:     add    t12 <- i, 1
+    movl    -16(%ebp), %eax         #   8:     add    t1 <- i, 1
     movl    $1, %ebx               
     addl    %ebx, %eax             
     movl    %eax, -28(%ebp)        
-    movl    -28(%ebp), %eax         #   9:     assign i <- t12
+    movl    -28(%ebp), %eax         #   9:     assign i <- t1
     movl    %eax, -16(%ebp)        
     jmp     l_sum_iter_3_while_cond #  10:     goto   3_while_cond
 l_sum_iter_2:
@@ -141,9 +141,9 @@ l_sum_iter_exit:
 sum_alg:
     # stack offsets:
     #      8(%ebp)   4  [ %n        <int> %ebp+8 ]
-    #    -16(%ebp)   4  [ $t11      <int> %ebp-16 ]
-    #    -20(%ebp)   4  [ $t12      <int> %ebp-20 ]
-    #    -24(%ebp)   4  [ $t13      <int> %ebp-24 ]
+    #    -16(%ebp)   4  [ $t0       <int> %ebp-16 ]
+    #    -20(%ebp)   4  [ $t1       <int> %ebp-20 ]
+    #    -24(%ebp)   4  [ $t2       <int> %ebp-24 ]
 
     # prologue
     pushl   %ebp                   
@@ -159,20 +159,20 @@ sum_alg:
     movl    %eax, 0(%esp)          
 
     # function body
-    movl    8(%ebp), %eax           #   0:     add    t11 <- n, 1
+    movl    8(%ebp), %eax           #   0:     add    t0 <- n, 1
     movl    $1, %ebx               
     addl    %ebx, %eax             
     movl    %eax, -16(%ebp)        
-    movl    8(%ebp), %eax           #   1:     mul    t12 <- n, t11
+    movl    8(%ebp), %eax           #   1:     mul    t1 <- n, t0
     movl    -16(%ebp), %ebx        
     imull   %ebx                   
     movl    %eax, -20(%ebp)        
-    movl    -20(%ebp), %eax         #   2:     div    t13 <- t12, 2
+    movl    -20(%ebp), %eax         #   2:     div    t2 <- t1, 2
     movl    $2, %ebx               
     cdq                            
     idivl   %ebx                   
     movl    %eax, -24(%ebp)        
-    movl    -24(%ebp), %eax         #   3:     return t13
+    movl    -24(%ebp), %eax         #   3:     return t2
     jmp     l_sum_alg_exit         
 
 l_sum_alg_exit:
@@ -189,7 +189,7 @@ ReadNumber:
     # stack offsets:
     #    -16(%ebp)   4  [ $i        <int> %ebp-16 ]
     #      8(%ebp)   4  [ %str      <ptr(4) to <array of <char>>> %ebp+8 ]
-    #    -20(%ebp)   4  [ $t11      <int> %ebp-20 ]
+    #    -20(%ebp)   4  [ $t0       <int> %ebp-20 ]
 
     # prologue
     pushl   %ebp                   
@@ -208,9 +208,9 @@ ReadNumber:
     pushl   %eax                   
     call    WriteStr                #   1:     call   WriteStr
     addl    $4, %esp               
-    call    ReadInt                 #   2:     call   t11 <- ReadInt
+    call    ReadInt                 #   2:     call   t0 <- ReadInt
     movl    %eax, -20(%ebp)        
-    movl    -20(%ebp), %eax         #   3:     assign i <- t11
+    movl    -20(%ebp), %eax         #   3:     assign i <- t0
     movl    %eax, -16(%ebp)        
     movl    -16(%ebp), %eax         #   4:     return i
     jmp     l_ReadNumber_exit      
@@ -254,13 +254,13 @@ main:
     rep     stosl                  
 
     # function body
-    leal    _str_1, %eax            #   0:     &()    t0 <- _str_1
+    leal    _str_16, %eax           #   0:     &()    t0 <- _str_16
     movl    %eax, -16(%ebp)        
     movl    -16(%ebp), %eax         #   1:     param  0 <- t0
     pushl   %eax                   
     call    WriteStr                #   2:     call   WriteStr
     addl    $4, %esp               
-    leal    _str_2, %eax            #   3:     &()    t1 <- _str_2
+    leal    _str_17, %eax           #   3:     &()    t1 <- _str_17
     movl    %eax, -20(%ebp)        
     movl    -20(%ebp), %eax         #   4:     param  0 <- t1
     pushl   %eax                   
@@ -276,7 +276,7 @@ l_test10_3_while_cond:
     jg      l_test10_4_while_body  
     jmp     l_test10_2              #   9:     goto   2
 l_test10_4_while_body:
-    leal    _str_3, %eax            #  11:     &()    t3 <- _str_3
+    leal    _str_18, %eax           #  11:     &()    t3 <- _str_18
     movl    %eax, -32(%ebp)        
     movl    -32(%ebp), %eax         #  12:     param  0 <- t3
     pushl   %eax                   
@@ -292,7 +292,7 @@ l_test10_4_while_body:
     call    WriteInt                #  17:     call   WriteInt
     addl    $4, %esp               
     call    WriteLn                 #  18:     call   WriteLn
-    leal    _str_4, %eax            #  19:     &()    t5 <- _str_4
+    leal    _str_19, %eax           #  19:     &()    t5 <- _str_19
     movl    %eax, -40(%ebp)        
     movl    -40(%ebp), %eax         #  20:     param  0 <- t5
     pushl   %eax                   
@@ -308,7 +308,7 @@ l_test10_4_while_body:
     call    WriteInt                #  25:     call   WriteInt
     addl    $4, %esp               
     call    WriteLn                 #  26:     call   WriteLn
-    leal    _str_5, %eax            #  27:     &()    t7 <- _str_5
+    leal    _str_20, %eax           #  27:     &()    t7 <- _str_20
     movl    %eax, -48(%ebp)        
     movl    -48(%ebp), %eax         #  28:     param  0 <- t7
     pushl   %eax                   
@@ -324,7 +324,7 @@ l_test10_4_while_body:
     call    WriteInt                #  33:     call   WriteInt
     addl    $4, %esp               
     call    WriteLn                 #  34:     call   WriteLn
-    leal    _str_6, %eax            #  35:     &()    t9 <- _str_6
+    leal    _str_21, %eax           #  35:     &()    t9 <- _str_21
     movl    %eax, -56(%ebp)        
     movl    -56(%ebp), %eax         #  36:     param  0 <- t9
     pushl   %eax                   
@@ -355,29 +355,29 @@ l_test10_exit:
     .align 4
 
     # scope: test10
-_str_1:                             # <array 25 of <char>>
+_str_16:                            # <array 25 of <char>>
     .long    1
     .long   25
     .asciz "Sum of natural numbers\n\n"
     .align   4
-_str_2:                             # <array 29 of <char>>
+_str_17:                            # <array 29 of <char>>
     .long    1
     .long   29
     .asciz "Enter a number (0 to exit): "
     .align   4
-_str_3:                             # <array 16 of <char>>
+_str_18:                            # <array 16 of <char>>
     .long    1
     .long   16
     .asciz " recursive   : "
-_str_4:                             # <array 16 of <char>>
+_str_19:                            # <array 16 of <char>>
     .long    1
     .long   16
     .asciz " iterative   : "
-_str_5:                             # <array 16 of <char>>
+_str_20:                            # <array 16 of <char>>
     .long    1
     .long   16
     .asciz " algorithmic : "
-_str_6:                             # <array 29 of <char>>
+_str_21:                            # <array 29 of <char>>
     .long    1
     .long   29
     .asciz "Enter a number (0 to exit): "

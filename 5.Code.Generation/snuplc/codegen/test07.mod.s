@@ -35,7 +35,7 @@ main:
     movl    %eax, 0(%esp)          
 
     # function body
-    leal    _str_1, %eax            #   0:     &()    t0 <- _str_1
+    leal    _str_22, %eax           #   0:     &()    t0 <- _str_22
     movl    %eax, -16(%ebp)        
     movl    -16(%ebp), %eax         #   1:     param  0 <- t0
     pushl   %eax                   
@@ -62,7 +62,7 @@ l_test07_exit:
     .align 4
 
     # scope: test07
-_str_1:                             # <array 14 of <char>>
+_str_22:                            # <array 14 of <char>>
     .long    1
     .long   14
     .asciz "Hello, world!"

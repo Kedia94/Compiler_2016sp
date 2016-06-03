@@ -1,15 +1,33 @@
 //
-// test01
+// test05
 //
-// simple computations with integers
+// computations with integers arrays
 //
-// expected output: 710-3 (no newline)
+// expected output: 1987654321 (no newline)
 //
 
-module test01;
+module test05;
 
-var a : boolean[10];
+var a : integer[10];
+
+procedure test(a: integer[]);
+var i: integer;
+begin
+  a[0] := 1;
+
+  i := 1;
+  while (i < 10) do
+    a[i] := 10-i;
+    i := i+1
+  end;
+
+  i := 0;
+  while (i < 10) do
+    WriteInt(a[i]);
+    i := i+1
+  end
+end test;
 
 begin
-	a[0] := true
-end test01.
+  test(a)
+end test05.

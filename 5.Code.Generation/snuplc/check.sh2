@@ -1,6 +1,5 @@
 #!/bin/bash
 
-../reference/snuplc mytest.mod
 mv mytest.mod.s ref.s
 
 ./snuplc mytest.mod

@@ -45,6 +45,7 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classCTacReference-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">CTacReference Class Reference</div>  </div>
@@ -67,9 +68,13 @@ Inheritance diagram for CTacReference:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">constructors/destructors</div></td></tr>
-<tr class="memitem:a1b683725a8e10c4636fe85c7ba7ed2ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCTacReference.html#a1b683725a8e10c4636fe85c7ba7ed2ab">CTacReference</a> (const <a class="el" href="classCSymbol.html">CSymbol</a> *symbol)</td></tr>
-<tr class="memdesc:a1b683725a8e10c4636fe85c7ba7ed2ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">constructor  <a href="#a1b683725a8e10c4636fe85c7ba7ed2ab">More...</a><br/></td></tr>
-<tr class="separator:a1b683725a8e10c4636fe85c7ba7ed2ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fa2135c8e04b6867b9d6559a1bd1c7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCTacReference.html#a0fa2135c8e04b6867b9d6559a1bd1c7e">CTacReference</a> (const <a class="el" href="classCSymbol.html">CSymbol</a> *symbol, const <a class="el" href="classCSymbol.html">CSymbol</a> *deref)</td></tr>
+<tr class="memdesc:a0fa2135c8e04b6867b9d6559a1bd1c7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">constructor  <a href="#a0fa2135c8e04b6867b9d6559a1bd1c7e">More...</a><br/></td></tr>
+<tr class="separator:a0fa2135c8e04b6867b9d6559a1bd1c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">properties</div></td></tr>
+<tr class="memitem:a9a6d4ab202005b98b067b46676704ea5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCSymbol.html">CSymbol</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCTacReference.html#a9a6d4ab202005b98b067b46676704ea5">GetDerefSymbol</a> (void) const </td></tr>
+<tr class="memdesc:a9a6d4ab202005b98b067b46676704ea5"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the symbol  <a href="#a9a6d4ab202005b98b067b46676704ea5">More...</a><br/></td></tr>
+<tr class="separator:a9a6d4ab202005b98b067b46676704ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">output</div></td></tr>
 <tr class="memitem:a2f453dae8b42c0e78c918d6371d03fd6"><td class="memItemLeft" align="right" valign="top">virtual ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCTacReference.html#a2f453dae8b42c0e78c918d6371d03fd6">print</a> (ostream &amp;out, int indent=0) const </td></tr>
 <tr class="memdesc:a2f453dae8b42c0e78c918d6371d03fd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">print the node to an output stream  <a href="#a2f453dae8b42c0e78c918d6371d03fd6">More...</a><br/></td></tr>
@@ -92,8 +97,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9898a1125bc9cd6e6c6cca1dfa6edd47 inherit pub_methods_classCTac"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCTac.html#a9898a1125bc9cd6e6c6cca1dfa6edd47">~CTac</a> (void)</td></tr>
 <tr class="separator:a9898a1125bc9cd6e6c6cca1dfa6edd47 inherit pub_methods_classCTac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:acabd9b7e8785bbf815302c9d518495c3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCSymbol.html">CSymbol</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCTacReference.html#acabd9b7e8785bbf815302c9d518495c3">_deref</a></td></tr>
+<tr class="memdesc:acabd9b7e8785bbf815302c9d518495c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">symbol this reference is pointing to  <a href="#acabd9b7e8785bbf815302c9d518495c3">More...</a><br/></td></tr>
+<tr class="separator:acabd9b7e8785bbf815302c9d518495c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classCTacName"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classCTacName')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classCTacName.html">CTacName</a></td></tr>
 <tr class="memitem:a07a09feae3ba6b6c1897f54b44a88d31 inherit pro_attribs_classCTacName"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCSymbol.html">CSymbol</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCTacName.html#a07a09feae3ba6b6c1897f54b44a88d31">_symbol</a></td></tr>
 <tr class="memdesc:a07a09feae3ba6b6c1897f54b44a88d31 inherit pro_attribs_classCTacName"><td class="mdescLeft">&#160;</td><td class="mdescRight">symbol  <a href="#a07a09feae3ba6b6c1897f54b44a88d31">More...</a><br/></td></tr>
@@ -103,7 +111,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock">
 <p>Definition at line <a class="el" href="ir_8h_source.html#l00270">270</a> of file <a class="el" href="ir_8h_source.html">ir.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a1b683725a8e10c4636fe85c7ba7ed2ab"></a>
+<a class="anchor" id="a0fa2135c8e04b6867b9d6559a1bd1c7e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -111,21 +119,51 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">CTacReference::CTacReference </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classCSymbol.html">CSymbol</a> *&#160;</td>
-          <td class="paramname"><em>symbol</em></td><td>)</td>
+          <td class="paramname"><em>symbol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="classCSymbol.html">CSymbol</a> *&#160;</td>
+          <td class="paramname"><em>deref</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>constructor </p>
 <p>other than CTacName/Temp the symbol of a <a class="el" href="classCTacReference.html">CTacReference</a> is holding a reference to the storage location</p>
-<p>param symbol value holding the reference </p>
+<p>param symbol value holding the reference param deref the symbol behind the reference </p>
 
 <p>Definition at line <a class="el" href="ir_8cpp_source.html#l00206">206</a> of file <a class="el" href="ir_8cpp_source.html">ir.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a9a6d4ab202005b98b067b46676704ea5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classCSymbol.html">CSymbol</a> * CTacReference::GetDerefSymbol </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>return the symbol </p>
+
+<p>Definition at line <a class="el" href="ir_8cpp_source.html#l00211">211</a> of file <a class="el" href="ir_8cpp_source.html">ir.cpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a2f453dae8b42c0e78c918d6371d03fd6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -169,7 +207,32 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classCTacName.html#a231272d4d4785d0d4f347e6d5aa10efe">CTacName</a>.</p>
 
-<p>Definition at line <a class="el" href="ir_8cpp_source.html#l00211">211</a> of file <a class="el" href="ir_8cpp_source.html">ir.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ir_8cpp_source.html#l00216">216</a> of file <a class="el" href="ir_8cpp_source.html">ir.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="acabd9b7e8785bbf815302c9d518495c3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classCSymbol.html">CSymbol</a>* CTacReference::_deref</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>symbol this reference is pointing to </p>
+
+<p>Definition at line <a class="el" href="ir_8h_source.html#l00307">307</a> of file <a class="el" href="ir_8h_source.html">ir.h</a>.</p>
 
 </div>
 </div>
@@ -180,7 +243,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 31 2016 19:41:25 for SnuPL Compiler by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 2 2016 22:18:25 for SnuPL Compiler by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

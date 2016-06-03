@@ -369,10 +369,12 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
   cmt << i;
 
   EOperation op = i->GetOperation();
+
 /*
 
-
-
+  cout << "operation is " << op << endl;
+  if (i->GetSrc(1)) cout << "src is " <<  i->GetSrc(1) << endl;
+  if (i->GetDest()) cout << "dst is " << i->GetDest() << endl;
 
   */
 
@@ -655,6 +657,36 @@ string CBackendx86::Condition(EOperation cond) const
   }
 }
 
+int BaseSize(const CType *type) {
+	int size = 4;
+//	cout << type;
+	if (type->IsArray()) {
+//		cout << "array" << endl;
+		const CArrayType *arr = dynamic_cast<const CArrayType *>(type);
+		size = arr->GetBaseType()->GetSize();
+	}
+	else {
+//		cout << "scalar : " ;
+		if (type->IsBoolean())  { 
+//			cout << "bool" <<endl;
+			size = 1;
+		} 
+		else if (type->IsChar()) {
+//			cout << "char " << endl;
+			size = 1;
+		}
+		else if (type->IsInt()) {
+//			cout << "int" << endl;
+			size = 4;
+		}
+		else if (type->IsPointer()) {
+//			cout << "pointer" << endl;
+			size = 4;
+		}
+	}
+//	cout << " [size = " << size << "]" << endl;
+	return size;
+}
 int CBackendx86::OperandSize(CTac *t) const
 {
   int size = 4;
@@ -663,13 +695,21 @@ int CBackendx86::OperandSize(CTac *t) const
   // Hint: you need to take special care of references (incl. references to pointers!)
   //       and arrays. Compare your output to that of the reference implementation
   //       if you are not sure.
-  CTacName *name; 
+  // FIXME
+  CTacTemp *temp; 
   CTacConst *con;
+  CTacName *name;
+  CTacReference *ref;
+  const CSymbol *sym;
+  const CType *type;
  
-  if (name = dynamic_cast<CTacName *>(t)) {
-	  const CSymbol *sym = name->GetSymbol();
-	  const CType *type = sym->GetDataType();
-
+  //cout << "OperandSize (" << t << ")" << endl;
+  if (ref = dynamic_cast<CTacReference *>(t)) {
+	  //cout << "[Reference type] " << endl;
+	  sym = ref->GetDerefSymbol();
+	  //cout << "[dereferenced symbol] " << ref->GetSymbol() << "-> " << sym << endl;
+	  size = BaseSize(sym->GetDataType());
+	  /*
 	  if (type->IsArray()) {
 		  const CArrayType *arr = dynamic_cast<const CArrayType *>(type);
 		  size = arr->GetBaseType()->GetSize();
@@ -678,29 +718,26 @@ int CBackendx86::OperandSize(CTac *t) const
 		  if (type->IsBoolean() || type->IsChar()) size = 1;
 		  else if (type->IsInt()) size = 4;
 		  else if (type->IsPointer()) {
-			  /*
 			  const CPointerType *ptr = dynamic_cast<const CPointerType *>(type);
 			  type = ptr->GetBaseType();
 
 			  const CArrayType *arr = dynamic_cast<const CArrayType *>(type);
 			  size = arr->GetBaseType()->GetSize();
-			  */
-			  size = 4;
-		  }
-		  else if (type->IsNull()) {
-
 		  }
 	  }
-	  cout << sym->GetName() << " is " << sym->GetDataType() << " <<< " << size << endl << endl;
+	  */
+  } 
+  else if (name = dynamic_cast<CTacName *>(t)) {
+	  //cout << "[name type] " << endl;
+	  sym = name->GetSymbol();
+	  //cout << "[original symbol] " << sym << endl;
+	  size = BaseSize(sym->GetDataType());
   }
-  else if (con = dynamic_cast<CTacConst *>(t)) {
-	  cout << "constant !!!!!!!!!!!!!!!!!!!! " <<endl;
-
-  }
-  else {
-	  cout << "other !!#@Q#$@#$" <<endl;
-  }
-
+  //cout << endl;
+  /*
+  if (type == NULL)
+  	cout << t << "  [size : " << size  << "]" << "  [type : " << type << "]" << endl << endl;
+  */
   return size;
 }
 

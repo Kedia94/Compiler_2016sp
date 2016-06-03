@@ -1,4 +1,5 @@
 compile:
+	@../snuplc --exe `find . -type f -and -iname \*.mod -exec echo {} \+`
 	@echo "snuplc --exe `find . -type f -and -iname \*.mod -exec echo {} \+`"
 
 clean:

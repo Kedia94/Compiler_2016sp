@@ -61,19 +61,19 @@ l_test04_2_while_cond:
     jl      l_test04_3_while_body  
     jmp     l_test04_1              #   3:     goto   1
 l_test04_3_while_body:
-    movl    i, %eax                 #   5:     if     i > 2 goto 6
+    movl    i, %eax                 #   5:     if     i > 2 goto 7
     movl    $2, %ebx               
     cmpl    %ebx, %eax             
-    jg      l_test04_6             
-    jmp     l_test04_7              #   6:     goto   7
-l_test04_6:
+    jg      l_test04_7             
+    jmp     l_test04_8              #   6:     goto   8
+l_test04_7:
     movl    $1, %eax                #   8:     assign t0 <- 1
     movb    %al, -13(%ebp)         
-    jmp     l_test04_8              #   9:     goto   8
-l_test04_7:
+    jmp     l_test04_9              #   9:     goto   9
+l_test04_8:
     movl    $0, %eax                #  11:     assign t0 <- 0
     movb    %al, -13(%ebp)         
-l_test04_8:
+l_test04_9:
     leal    a, %eax                 #  13:     &()    t1 <- a
     movl    %eax, -20(%ebp)        
     movl    i, %eax                 #  14:     mul    t2 <- i, 1
@@ -108,13 +108,13 @@ l_test04_8:
 l_test04_1:
     movl    $0, %eax                #  25:     assign i <- 0
     movl    %eax, i                
-l_test04_13_while_cond:
-    movl    i, %eax                 #  27:     if     i < 10 goto 14_while_body
+l_test04_14_while_cond:
+    movl    i, %eax                 #  27:     if     i < 10 goto 15_while_body
     movl    $10, %ebx              
     cmpl    %ebx, %eax             
-    jl      l_test04_14_while_body 
-    jmp     l_test04_12             #  28:     goto   12
-l_test04_14_while_body:
+    jl      l_test04_15_while_body 
+    jmp     l_test04_13             #  28:     goto   13
+l_test04_15_while_body:
     leal    a, %eax                 #  30:     &()    t8 <- a
     movl    %eax, -68(%ebp)        
     movl    i, %eax                 #  31:     mul    t9 <- i, 1
@@ -137,31 +137,31 @@ l_test04_14_while_body:
     addl    %ebx, %eax             
     movl    %eax, -36(%ebp)        
     movl    -36(%ebp), %edi        
-    movzbl  (%edi), %eax            #  37:     if     @t13 = 1 goto 17_if_true
+    movzbl  (%edi), %eax            #  37:     if     @t13 = 1 goto 18_if_true
     movl    $1, %ebx               
     cmpl    %ebx, %eax             
-    je      l_test04_17_if_true    
-    jmp     l_test04_18_if_false    #  38:     goto   18_if_false
-l_test04_17_if_true:
+    je      l_test04_18_if_true    
+    jmp     l_test04_19_if_false    #  38:     goto   19_if_false
+l_test04_18_if_true:
     movl    $1, %eax                #  40:     param  0 <- 1
     pushl   %eax                   
     call    WriteInt                #  41:     call   WriteInt
     addl    $4, %esp               
-    jmp     l_test04_16             #  42:     goto   16
-l_test04_18_if_false:
+    jmp     l_test04_17             #  42:     goto   17
+l_test04_19_if_false:
     movl    $0, %eax                #  44:     param  0 <- 0
     pushl   %eax                   
     call    WriteInt                #  45:     call   WriteInt
     addl    $4, %esp               
-l_test04_16:
+l_test04_17:
     movl    i, %eax                 #  47:     add    t14 <- i, 1
     movl    $1, %ebx               
     addl    %ebx, %eax             
     movl    %eax, -40(%ebp)        
     movl    -40(%ebp), %eax         #  48:     assign i <- t14
     movl    %eax, i                
-    jmp     l_test04_13_while_cond  #  49:     goto   13_while_cond
-l_test04_12:
+    jmp     l_test04_14_while_cond  #  49:     goto   14_while_cond
+l_test04_13:
 
 l_test04_exit:
     # epilogue

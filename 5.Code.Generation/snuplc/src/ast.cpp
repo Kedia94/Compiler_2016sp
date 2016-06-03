@@ -1480,7 +1480,7 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 	// It's almost same as CAstArrayDesignator
 	// I'll explain only different part from CAstArrayDesignator
 	CAstArrayDesignator *array;
-	const CSymbol *temp;
+	const CSymbol *temp, *debug;
 	CSymtab* symtab = cb->GetOwner()->GetSymbolTable();
 
 	// string constant part
@@ -1589,7 +1589,8 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 
 		// &() s1 <- ret
 		//cout << "ret->GetSymbol is " << ret->GetSymbol() << endl;
-		cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
+		debug = new CSymbol("deref", stLocal, ((CArrayType *)temp->GetDataType())->GetBaseType());
+		cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol(), debug), NULL));
 		return s1;
 	}
 	else {
@@ -1653,7 +1654,9 @@ CTacAddr* CAstSpecialOp::ToTac(CCodeBlock *cb)
 		cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
 
 		s1 = cb->CreateTemp(CTypeManager::Get()->GetPointer(((CArrayType *)array->GetType())->GetBaseType()));
-		cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol()), NULL));
+
+		debug = new CSymbol("deref", stLocal, ((CArrayType *)temp->GetDataType())->GetBaseType());
+		cb->AddInstr(new CTacInstr(opAddress, s1, new CTacReference(ret->GetSymbol(), debug), NULL));
 		return s1;
 	}
 }
@@ -2043,6 +2046,7 @@ void CAstArrayDesignator::toDot(ostream &out, int indent) const
 CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 {
 	CSymtab* symtab = cb->GetOwner()->GetSymbolTable();
+	CSymbol* debug;
 
 	if (GetSymbol()->GetDataType()->IsArray()){
 		// It is array, so we have to get address of array.
@@ -2098,7 +2102,8 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 		cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
 		cb->AddInstr(new CTacInstr(opAdd, ret, src, s3));
 
-		return new CTacReference(ret->GetSymbol());
+		debug = new CSymbol("deref", stLocal, GetSymbol()->GetDataType());
+		return new CTacReference(ret->GetSymbol(), debug);
 	}
 	else {
 		// Case if variable is pointer of array
@@ -2133,19 +2138,17 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 		s5 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 
 		cb->AddInstr(new CTacInstr(opMul, s5, s4, new CTacConst(GetType()->GetSize())));
-
 		cb->AddInstr(new CTacInstr(opParam, new CTacConst(0), pointer));
 
 		s2 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 		cb->AddInstr(new CTacInstr(opCall, s2, new CTacName(symtab->FindSymbol("DOFS")), NULL));    
-
 		s3 = cb->CreateTemp(CTypeManager::Get()->GetInt());
 		cb->AddInstr(new CTacInstr(opAdd, s3, s5, s2));
-
 		ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
 		cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
 
-		return new CTacReference(ret->GetSymbol());
+		debug = new CSymbol("deref", stLocal, GetSymbol()->GetDataType());
+		return new CTacReference(ret->GetSymbol(), debug);
 
 	}
 }
