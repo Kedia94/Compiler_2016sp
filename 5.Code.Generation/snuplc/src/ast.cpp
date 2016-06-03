@@ -1957,6 +1957,11 @@ bool CAstArrayDesignator::TypeCheck(CToken *t, string *msg) const
 		if (msg != NULL) *msg = "dimension is superfluous";
 		return false;
 	}
+        else if (at->GetNDim() > GetNIndices()){
+          if (t != NULL) *t = GetToken();
+          if (msg != NULL) *msg = "incomplete array expression (sub-arrays are not supported).";
+          return false;
+        }
 
 	for (int i=0; i<_idx.size(); ++i) {								// Iterate through index expressions
 		CAstExpression* e = _idx[i];
