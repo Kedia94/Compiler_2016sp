@@ -91,7 +91,7 @@ l_test_9:
     movl    %eax, -40(%ebp)        
     movzbl  -17(%ebp), %eax         #  18:     assign @t4 <- t0
     movl    -40(%ebp), %edi        
-    movl    %eax, (%edi)           
+    movb    %al, (%edi)            
     movl    -16(%ebp), %eax         #  19:     add    t5 <- i, 1
     movl    $1, %ebx               
     addl    %ebx, %eax             
@@ -127,7 +127,7 @@ l_test_15_while_body:
     addl    %ebx, %eax             
     movl    %eax, -60(%ebp)        
     movl    -60(%ebp), %edi        
-    movl    (%edi), %eax            #  33:     if     @t9 = 1 goto 18_if_true
+    movzbl  (%edi), %eax            #  33:     if     @t9 = 1 goto 18_if_true
     movl    $1, %ebx               
     cmpl    %ebx, %eax             
     je      l_test_18_if_true      

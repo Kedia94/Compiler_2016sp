@@ -1,33 +1,36 @@
 //
-// test05
+// test12
 //
-// computations with integers arrays
+// function return values
 //
-// expected output: 1987654321 (no newline)
+// expected output: returned values are stored according to 
+// their size
 //
 
-module test05;
+module test12;
 
-var a : integer[10];
-
-procedure test(a: integer[]);
-var i: integer;
+function Int():integer;
 begin
-  a[0] := 1;
+end Int;
 
-  i := 1;
-  while (i < 10) do
-    a[i] := 10-i;
-    i := i+1
-  end;
+function Char(): char;
+begin
+end Char;
 
-  i := 0;
-  while (i < 10) do
-    WriteInt(a[i]);
-    i := i+1
-  end
-end test;
+function Bool(): boolean;
+begin
+end Bool;
+
+procedure Test();
+var b: boolean;
+    c: char;
+    i: integer;
+begin
+  b := Bool();
+  c := Char();
+  i := Int()
+end Test;
 
 begin
-  test(a)
-end test05.
+  Test()
+end test12.

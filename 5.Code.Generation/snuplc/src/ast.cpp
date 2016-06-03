@@ -2147,7 +2147,8 @@ CTacAddr* CAstArrayDesignator::ToTac(CCodeBlock *cb)
 		ret = cb->CreateTemp(CTypeManager::Get()->GetInt());
 		cb->AddInstr(new CTacInstr(opAdd, ret, pointer, s3));
 
-		debug = new CSymbol("deref", stLocal, GetSymbol()->GetDataType());
+		const CPointerType *ppp = dynamic_cast<const CPointerType *>(GetSymbol()->GetDataType());
+		debug = new CSymbol("deref", stLocal, ppp->GetBaseType());
 		return new CTacReference(ret->GetSymbol(), debug);
 
 	}

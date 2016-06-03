@@ -659,32 +659,32 @@ string CBackendx86::Condition(EOperation cond) const
 
 int BaseSize(const CType *type) {
 	int size = 4;
-//	cout << type;
+  	cout << type;
 	if (type->IsArray()) {
-//		cout << "array" << endl;
+  		cout << "array" << endl;
 		const CArrayType *arr = dynamic_cast<const CArrayType *>(type);
 		size = arr->GetBaseType()->GetSize();
 	}
 	else {
-//		cout << "scalar : " ;
+  		cout << "scalar : " ;
 		if (type->IsBoolean())  { 
-//			cout << "bool" <<endl;
+  			cout << "bool" <<endl;
 			size = 1;
 		} 
 		else if (type->IsChar()) {
-//			cout << "char " << endl;
+  			cout << "char " << endl;
 			size = 1;
 		}
 		else if (type->IsInt()) {
-//			cout << "int" << endl;
+  			cout << "int" << endl;
 			size = 4;
 		}
 		else if (type->IsPointer()) {
-//			cout << "pointer" << endl;
+  			cout << "pointer" << endl;
 			size = 4;
 		}
 	}
-//	cout << " [size = " << size << "]" << endl;
+  	cout << " [size = " << size << "]" << endl;
 	return size;
 }
 int CBackendx86::OperandSize(CTac *t) const
@@ -703,11 +703,11 @@ int CBackendx86::OperandSize(CTac *t) const
   const CSymbol *sym;
   const CType *type;
  
-  //cout << "OperandSize (" << t << ")" << endl;
+    cout << "OperandSize (" << t << ")" << endl;
   if (ref = dynamic_cast<CTacReference *>(t)) {
-	  //cout << "[Reference type] " << endl;
+	    cout << "[Reference type] " << endl;
 	  sym = ref->GetDerefSymbol();
-	  //cout << "[dereferenced symbol] " << ref->GetSymbol() << "-> " << sym << endl;
+	    cout << "[dereferenced symbol] " << ref->GetSymbol() << "-> " << sym << endl;
 	  size = BaseSize(sym->GetDataType());
 	  /*
 	  if (type->IsArray()) {
@@ -728,12 +728,12 @@ int CBackendx86::OperandSize(CTac *t) const
 	  */
   } 
   else if (name = dynamic_cast<CTacName *>(t)) {
-	  //cout << "[name type] " << endl;
+	    cout << "[name type] " << endl;
 	  sym = name->GetSymbol();
-	  //cout << "[original symbol] " << sym << endl;
+	    cout << "[original symbol] " << sym << endl;
 	  size = BaseSize(sym->GetDataType());
   }
-  //cout << endl;
+    cout << endl;
   /*
   if (type == NULL)
   	cout << t << "  [size : " << size  << "]" << "  [type : " << type << "]" << endl << endl;
