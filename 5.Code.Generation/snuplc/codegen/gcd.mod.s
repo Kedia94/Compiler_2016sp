@@ -823,7 +823,7 @@ ReadNumbers:
     rep     stosl                  
 
     # function body
-    leal    _str_23, %eax           #   0:     &()    t0 <- _str_23
+    leal    _str_24, %eax           #   0:     &()    t0 <- _str_24
     movl    %eax, -20(%ebp)        
     movl    -20(%ebp), %eax         #   1:     param  0 <- t0
     pushl   %eax                   
@@ -851,7 +851,7 @@ ReadNumbers:
     movl    -24(%ebp), %eax         #   9:     assign @t5 <- t1
     movl    -48(%ebp), %edi        
     movl    %eax, (%edi)           
-    leal    _str_24, %eax           #  10:     &()    t6 <- _str_24
+    leal    _str_25, %eax           #  10:     &()    t6 <- _str_25
     movl    %eax, -52(%ebp)        
     movl    -52(%ebp), %eax         #  11:     param  0 <- t6
     pushl   %eax                   
@@ -919,7 +919,7 @@ main:
     rep     stosl                  
 
     # function body
-    leal    _str_25, %eax           #   0:     &()    t0 <- _str_25
+    leal    _str_26, %eax           #   0:     &()    t0 <- _str_26
     movl    %eax, -16(%ebp)        
     movl    -16(%ebp), %eax         #   1:     param  0 <- t0
     pushl   %eax                   
@@ -933,7 +933,7 @@ main:
     pushl   %eax                   
     call    ReadNumbers             #   7:     call   ReadNumbers
     addl    $4, %esp               
-    leal    _str_26, %eax           #   8:     &()    t2 <- _str_26
+    leal    _str_27, %eax           #   8:     &()    t2 <- _str_27
     movl    %eax, -28(%ebp)        
     movl    -28(%ebp), %eax         #   9:     param  0 <- t2
     pushl   %eax                   
@@ -951,7 +951,7 @@ main:
     call    WriteInt                #  15:     call   WriteInt
     addl    $4, %esp               
     call    WriteLn                 #  16:     call   WriteLn
-    leal    _str_27, %eax           #  17:     &()    t5 <- _str_27
+    leal    _str_28, %eax           #  17:     &()    t5 <- _str_28
     movl    %eax, -40(%ebp)        
     movl    -40(%ebp), %eax         #  18:     param  0 <- t5
     pushl   %eax                   
@@ -969,7 +969,7 @@ main:
     call    WriteInt                #  24:     call   WriteInt
     addl    $4, %esp               
     call    WriteLn                 #  25:     call   WriteLn
-    leal    _str_28, %eax           #  26:     &()    t8 <- _str_28
+    leal    _str_29, %eax           #  26:     &()    t8 <- _str_29
     movl    %eax, -52(%ebp)        
     movl    -52(%ebp), %eax         #  27:     param  0 <- t8
     pushl   %eax                   
@@ -1007,32 +1007,32 @@ l_gcd_exit:
     .align 4
 
     # scope: gcd
-_str_23:                            # <array 22 of <char>>
+_str_24:                            # <array 22 of <char>>
     .long    1
     .long   22
     .asciz "Enter first number : "
     .align   4
-_str_24:                            # <array 22 of <char>>
+_str_25:                            # <array 22 of <char>>
     .long    1
     .long   22
     .asciz "Enter second number: "
     .align   4
-_str_25:                            # <array 25 of <char>>
+_str_26:                            # <array 25 of <char>>
     .long    1
     .long   25
     .asciz "Greatest commond divisor"
     .align   4
-_str_26:                            # <array 14 of <char>>
+_str_27:                            # <array 14 of <char>>
     .long    1
     .long   14
     .asciz " subtract  : "
     .align   4
-_str_27:                            # <array 14 of <char>>
+_str_28:                            # <array 14 of <char>>
     .long    1
     .long   14
     .asciz " divide    : "
     .align   4
-_str_28:                            # <array 14 of <char>>
+_str_29:                            # <array 14 of <char>>
     .long    1
     .long   14
     .asciz " recursive : "
