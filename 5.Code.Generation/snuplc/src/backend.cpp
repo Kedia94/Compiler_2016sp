@@ -421,6 +421,7 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 
 			// unary operators
 			// dst = op src1
+			// Store src to %eax and do operation
 		case opNeg:
 			Load(i->GetSrc(1), "\%eax", cmt.str());
 			EmitInstruction("negl", "\%eax");
@@ -441,6 +442,7 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 
 			// memory operations
 			// dst = src1
+			// Store src to %eax and do Store operation
 		case opAssign:
 			Load(i->GetSrc(1), "\%eax", cmt.str());
 			Store(i->GetDest(), 'a');
@@ -450,6 +452,7 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 
 			// unconditional branching
 			// goto dst
+			// Add jmp instruction to new label
 		case opGoto:
 			EmitInstruction("jmp", Label(dynamic_cast<CTacLabel *>(i->GetDest())->GetLabel()), cmt.str());
 			break;
@@ -478,15 +481,19 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 						 const CSymProc *proc = dynamic_cast<const CSymProc *>(sym);
 
 						 EmitInstruction("call", sym->GetName(), cmt.str());
+						 // align stack offsets after call
 						 if (proc->GetNParams() > 0) {
 							 EmitInstruction("addl", Imm(proc->GetNParams()*4) + ", \%esp");
 						 }
+						 // if it has return value
 						 if (i->GetDest()) {
 							 Store(i->GetDest(), 'a');
 						 }
 						 break;
 					 }
+
 		case opReturn:
+					 // if it has return value, save to %eax
 					 if (i->GetSrc(1)) {
 						 Load(i->GetSrc(1), "\%eax", cmt.str());
 					 }
@@ -593,8 +600,10 @@ string CBackendx86::Operand(const CTac *op)
 	else if (ref = dynamic_cast<const CTacReference *>(op)) {
 		// case @t1, @t2 ...	
 		const CSymbol *sym = ref->GetSymbol();
+		// If it is global symbol
 		if (sym->GetSymbolType() == stGlobal)
 			EmitInstruction("movl", sym->GetName() + ", \%edi");
+		// Else it is local symbol
 		else 
 			EmitInstruction("movl", to_string(sym->GetOffset()) + "(" + sym->GetBaseRegister() + "), \%edi");
 
