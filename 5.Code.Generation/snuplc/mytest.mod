@@ -8,29 +8,10 @@
 //
 
 module test12;
-
-function Int():integer;
+var i : integer;
 begin
-end Int;
-
-function Char(): char;
-begin
-end Char;
-
-function Bool(): boolean;
-begin
-end Bool;
-
-procedure Test();
-var b: boolean;
-    c: char;
-    i: integer;
-begin
-  b := Bool();
-  c := Char();
-  i := Int()
-end Test;
-
-begin
-  Test()
+	i := 4;
+	WriteInt(i);
+	i := +i;
+	WriteInt(i)
 end test12.

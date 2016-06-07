@@ -428,6 +428,10 @@ void CBackendx86::EmitInstruction(CTacInstr *i)
 			break;
 
 		case opPos:
+			Load(i->GetSrc(1), "\%eax", cmt.str());
+			Store(i->GetDest(), 'a');
+			break;
+
 		case opNot:
 			// Do nothing
 			// Because our TAC implementation doesn't use opPos and opNot

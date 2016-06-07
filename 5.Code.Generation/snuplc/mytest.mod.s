@@ -18,125 +18,10 @@
     .extern WriteChar
     .extern WriteLn
 
-    # scope Int
-Int:
-    # stack offsets:
-
-    # prologue
-    pushl   %ebp                   
-    movl    %esp, %ebp             
-    pushl   %ebx                    # save callee saved registers
-    pushl   %esi                   
-    pushl   %edi                   
-    subl    $0, %esp                # make room for locals
-
-    # function body
-
-l_Int_exit:
-    # epilogue
-    addl    $0, %esp                # remove locals
-    popl    %edi                   
-    popl    %esi                   
-    popl    %ebx                   
-    popl    %ebp                   
-    ret                            
-
-    # scope Char
-Char:
-    # stack offsets:
-
-    # prologue
-    pushl   %ebp                   
-    movl    %esp, %ebp             
-    pushl   %ebx                    # save callee saved registers
-    pushl   %esi                   
-    pushl   %edi                   
-    subl    $0, %esp                # make room for locals
-
-    # function body
-
-l_Char_exit:
-    # epilogue
-    addl    $0, %esp                # remove locals
-    popl    %edi                   
-    popl    %esi                   
-    popl    %ebx                   
-    popl    %ebp                   
-    ret                            
-
-    # scope Bool
-Bool:
-    # stack offsets:
-
-    # prologue
-    pushl   %ebp                   
-    movl    %esp, %ebp             
-    pushl   %ebx                    # save callee saved registers
-    pushl   %esi                   
-    pushl   %edi                   
-    subl    $0, %esp                # make room for locals
-
-    # function body
-
-l_Bool_exit:
-    # epilogue
-    addl    $0, %esp                # remove locals
-    popl    %edi                   
-    popl    %esi                   
-    popl    %ebx                   
-    popl    %ebp                   
-    ret                            
-
-    # scope Test
-Test:
-    # stack offsets:
-    #    -13(%ebp)   1  [ $b        <bool> %ebp-13 ]
-    #    -14(%ebp)   1  [ $c        <char> %ebp-14 ]
-    #    -20(%ebp)   4  [ $i        <int> %ebp-20 ]
-    #    -21(%ebp)   1  [ $t0       <bool> %ebp-21 ]
-    #    -22(%ebp)   1  [ $t1       <char> %ebp-22 ]
-    #    -28(%ebp)   4  [ $t2       <int> %ebp-28 ]
-
-    # prologue
-    pushl   %ebp                   
-    movl    %esp, %ebp             
-    pushl   %ebx                    # save callee saved registers
-    pushl   %esi                   
-    pushl   %edi                   
-    subl    $16, %esp               # make room for locals
-
-    xorl    %eax, %eax              # memset local stack area to 0
-    movl    %eax, 12(%esp)         
-    movl    %eax, 8(%esp)          
-    movl    %eax, 4(%esp)          
-    movl    %eax, 0(%esp)          
-
-    # function body
-    call    Bool                    #   0:     call   t0 <- Bool
-    movb    %al, -21(%ebp)         
-    movzbl  -21(%ebp), %eax         #   1:     assign b <- t0
-    movb    %al, -13(%ebp)         
-    call    Char                    #   2:     call   t1 <- Char
-    movb    %al, -22(%ebp)         
-    movzbl  -22(%ebp), %eax         #   3:     assign c <- t1
-    movb    %al, -14(%ebp)         
-    call    Int                     #   4:     call   t2 <- Int
-    movl    %eax, -28(%ebp)        
-    movl    -28(%ebp), %eax         #   5:     assign i <- t2
-    movl    %eax, -20(%ebp)        
-
-l_Test_exit:
-    # epilogue
-    addl    $16, %esp               # remove locals
-    popl    %edi                   
-    popl    %esi                   
-    popl    %ebx                   
-    popl    %ebp                   
-    ret                            
-
     # scope test12
 main:
     # stack offsets:
+    #    -16(%ebp)   4  [ $t0       <int> %ebp-16 ]
 
     # prologue
     pushl   %ebp                   
@@ -144,14 +29,30 @@ main:
     pushl   %ebx                    # save callee saved registers
     pushl   %esi                   
     pushl   %edi                   
-    subl    $0, %esp                # make room for locals
+    subl    $4, %esp                # make room for locals
+
+    xorl    %eax, %eax              # memset local stack area to 0
+    movl    %eax, 0(%esp)          
 
     # function body
-    call    Test                    #   0:     call   Test
+    movl    $4, %eax                #   0:     assign i <- 4
+    movl    %eax, i                
+    movl    i, %eax                 #   1:     param  0 <- i
+    pushl   %eax                   
+    call    WriteInt                #   2:     call   WriteInt
+    addl    $4, %esp               
+    movl    i, %eax                 #   3:     pos    t0 <- i
+    movl    %eax, -16(%ebp)        
+    movl    -16(%ebp), %eax         #   4:     assign i <- t0
+    movl    %eax, i                
+    movl    i, %eax                 #   5:     param  0 <- i
+    pushl   %eax                   
+    call    WriteInt                #   6:     call   WriteInt
+    addl    $4, %esp               
 
 l_test12_exit:
     # epilogue
-    addl    $0, %esp                # remove locals
+    addl    $4, %esp                # remove locals
     popl    %edi                   
     popl    %esi                   
     popl    %ebx                   
@@ -167,10 +68,9 @@ l_test12_exit:
     .data
     .align 4
 
-
-
-
-
+    # scope: test12
+i:                                  # <int>
+    .skip    4
 
     # end of global data section
     #-----------------------------------------
