@@ -21,7 +21,7 @@
     # scope test
 test:
     # stack offsets:
-    #   -124(%ebp) 112  [ $a        <array 10 of <array 10 of <bool>>> %ebp-124 ]
+    #   -124(%ebp)  112  [ $a        <array 10 of <array 10 of <bool>>> %ebp-124 ]
     #   -128(%ebp)   4  [ $i        <int> %ebp-128 ]
     #   -129(%ebp)   1  [ $t0       <bool> %ebp-129 ]
     #   -136(%ebp)   4  [ $t1       <ptr(4) to <array 10 of <array 10 of <bool>>>> %ebp-136 ]
@@ -74,19 +74,19 @@ l_test_2_while_cond:
     jl      l_test_3_while_body    
     jmp     l_test_1                #   3:     goto   1
 l_test_3_while_body:
-    movl    -128(%ebp), %eax        #   5:     if     i > 2 goto 7
+    movl    -128(%ebp), %eax        #   5:     if     i > 2 goto 6
     movl    $2, %ebx               
     cmpl    %ebx, %eax             
-    jg      l_test_7               
-    jmp     l_test_8                #   6:     goto   8
-l_test_7:
+    jg      l_test_6               
+    jmp     l_test_7                #   6:     goto   7
+l_test_6:
     movl    $1, %eax                #   8:     assign t0 <- 1
     movb    %al, -129(%ebp)        
-    jmp     l_test_9                #   9:     goto   9
-l_test_8:
+    jmp     l_test_8                #   9:     goto   8
+l_test_7:
     movl    $0, %eax                #  11:     assign t0 <- 0
     movb    %al, -129(%ebp)        
-l_test_9:
+l_test_8:
     leal    -124(%ebp), %eax        #  13:     &()    t1 <- a
     movl    %eax, -136(%ebp)       
     movl    $2, %eax                #  14:     param  1 <- 2
@@ -138,13 +138,13 @@ l_test_9:
 l_test_1:
     movl    $0, %eax                #  31:     assign i <- 0
     movl    %eax, -128(%ebp)       
-l_test_14_while_cond:
-    movl    -128(%ebp), %eax        #  33:     if     i < 10 goto 15_while_body
+l_test_13_while_cond:
+    movl    -128(%ebp), %eax        #  33:     if     i < 10 goto 14_while_body
     movl    $10, %ebx              
     cmpl    %ebx, %eax             
-    jl      l_test_15_while_body   
-    jmp     l_test_13               #  34:     goto   13
-l_test_15_while_body:
+    jl      l_test_14_while_body   
+    jmp     l_test_12               #  34:     goto   12
+l_test_14_while_body:
     leal    -124(%ebp), %eax        #  36:     &()    t12 <- a
     movl    %eax, -148(%ebp)       
     movl    $2, %eax                #  37:     param  1 <- 2
@@ -184,31 +184,31 @@ l_test_15_while_body:
     addl    %ebx, %eax             
     movl    %eax, -188(%ebp)       
     movl    -188(%ebp), %edi       
-    movzbl  (%edi), %eax            #  49:     if     @t21 = 1 goto 18_if_true
+    movzbl  (%edi), %eax            #  49:     if     @t21 = 1 goto 17_if_true
     movl    $1, %ebx               
     cmpl    %ebx, %eax             
-    je      l_test_18_if_true      
-    jmp     l_test_19_if_false      #  50:     goto   19_if_false
-l_test_18_if_true:
+    je      l_test_17_if_true      
+    jmp     l_test_18_if_false      #  50:     goto   18_if_false
+l_test_17_if_true:
     movl    $1, %eax                #  52:     param  0 <- 1
     pushl   %eax                   
     call    WriteInt                #  53:     call   WriteInt
     addl    $4, %esp               
-    jmp     l_test_17               #  54:     goto   17
-l_test_19_if_false:
+    jmp     l_test_16               #  54:     goto   16
+l_test_18_if_false:
     movl    $0, %eax                #  56:     param  0 <- 0
     pushl   %eax                   
     call    WriteInt                #  57:     call   WriteInt
     addl    $4, %esp               
-l_test_17:
+l_test_16:
     movl    -128(%ebp), %eax        #  59:     add    t22 <- i, 1
     movl    $1, %ebx               
     addl    %ebx, %eax             
     movl    %eax, -192(%ebp)       
     movl    -192(%ebp), %eax        #  60:     assign i <- t22
     movl    %eax, -128(%ebp)       
-    jmp     l_test_14_while_cond    #  61:     goto   14_while_cond
-l_test_13:
+    jmp     l_test_13_while_cond    #  61:     goto   13_while_cond
+l_test_12:
 
 l_test_exit:
     # epilogue

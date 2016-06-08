@@ -233,6 +233,7 @@ void CBackendx86::EmitScope(CScope *scope)
 		EmitInstruction("xorl", "\%eax, \%eax", "memset local stack area to 0");
 		for (int i=stack_size/4 - 1; i>=0; --i)
 			EmitInstruction("movl", "\%eax, " + to_string(i*4) + "(\%esp)");
+		EmitLocalData(scope);
 		_out << endl;
 	}
 	// else use 'rep' operation to initialize local data
@@ -242,9 +243,9 @@ void CBackendx86::EmitScope(CScope *scope)
 		EmitInstruction("movl", Imm(stack_size/4) + ", \%ecx");
 		EmitInstruction("mov", "\%esp, \%edi");
 		EmitInstruction("rep", "stosl");
+		EmitLocalData(scope);
 		_out << endl;
 	}
-
 
 
 	// forall i in instructions do
@@ -343,10 +344,31 @@ void CBackendx86::EmitGlobalData(CScope *scope)
 	while (sit != scope->GetSubscopes().end()) EmitGlobalData(*sit++);
 }
 
+/* CBackendx86::EmitLocalData
+ * Description : Treat initializing dimensions and sizes for local arrays
+ */
 void CBackendx86::EmitLocalData(CScope *scope)
 {
 	assert(scope != NULL);
-	// We don't use  this function
+	CSymtab *symtab = scope->GetSymbolTable();
+	vector<CSymbol*> slist = symtab->GetSymbols();
+
+	for (int i=0; i<slist.size(); ++i) {
+		ESymbolType type = slist[i]->GetSymbolType();
+
+		if (type == stLocal && slist[i]->GetDataType()->IsArray()) {
+			const CArrayType *inner = dynamic_cast<const CArrayType *>(slist[i]->GetDataType());
+			int dim = inner->GetNDim();
+			int off = slist[i]->GetOffset();
+			EmitInstruction("movl", Imm(dim) + "," + to_string(off) + "(\%ebp)",
+					"local array \'" + slist[i]->GetName() + "\': " + to_string(dim) + " dimensions");
+			for (int j=1; j<=dim; ++j) {
+				EmitInstruction("movl", Imm(inner->GetNElem()) + "," + to_string(off + 4*j) + "(\%ebp)",
+						"  dimension " + to_string(j) + ": " + to_string(inner->GetNElem()) + " elements");
+				inner = (const CArrayType *) inner->GetInnerType();
+			}
+		}
+	}
 }
 
 /* CBackendx86::EmitCodeBlock
@@ -749,7 +771,7 @@ size_t CBackendx86::ComputeStackOffsets(CSymtab *symtab, int param_ofs, int loca
 						   //   set base register to %ebp
 			case stLocal : {
 							   l_ofs += slist[i]->GetDataType()->GetSize();
-							   if (slist[i]->GetDataType()->GetSize() == 4 && l_ofs%4) l_ofs += 4 - (l_ofs%4);
+							   if (slist[i]->GetDataType()->GetSize() != 1 && l_ofs%4) l_ofs += 4 - (l_ofs%4);
 							   slist[i]->SetOffset(-l_ofs);
 							   break;
 						   }

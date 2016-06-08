@@ -334,7 +334,8 @@ l_fint_13:
     call    fint                    #  86:     call   t44 <- fint
     addl    $12, %esp              
     movl    %eax, -176(%ebp)       
-    # ???   not implemented         #  87:     pos    t45 <- t44
+    movl    -176(%ebp), %eax        #  87:     pos    t45 <- t44
+    movl    %eax, -180(%ebp)       
     movl    -180(%ebp), %eax        #  88:     return t45
     jmp     l_fint_exit            
 l_fint_6:

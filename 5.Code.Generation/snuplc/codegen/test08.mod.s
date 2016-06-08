@@ -58,6 +58,8 @@ test:
     movl    $34, %ecx              
     mov     %esp, %edi             
     rep     stosl                  
+    movl    $1,-60(%ebp)            # local array 'a': 1 dimensions
+    movl    $10,-56(%ebp)           #   dimension 1: 10 elements
 
     # function body
     leal    -60(%ebp), %eax         #   0:     &()    t0 <- a
